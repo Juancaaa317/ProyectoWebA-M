@@ -1,12 +1,12 @@
 # Sistema de Gestión - Academia Arte y Movimiento
 
-*Universidad Autónoma de Occidente - Proyecto Final Desarrollo Web Full-Stack*
+Universidad Autónoma de Occidente - Proyecto Final Desarrollo Web Full-Stack
 
-# Contexto y Planteamiento del Problema
+Contexto y Planteamiento del Problema
 
 Tras los eventos sociales ocurridos en Cali durante 2021 y un posterior cambio de ubicación, la academia de baile Arte y Movimiento experimentó una disminución en su visibilidad y captación de alumnos, contando actualmente con una base de 26 estudiantes. Además de la falta de presencia digital para promocionar su historia y logros, la academia enfrenta un reto operativo: la gestión de pagos, asignación de horarios, inscripciones y control de asistencia se realiza de forma manual y desarticulada mediante herramientas descentralizadas. Esto dificulta la escalabilidad del negocio y genera desorden administrativo tanto para el personal como para los estudiantes.
 
-# Alcance del Proyecto
+Alcance del Proyecto
 
 Desarrollar una aplicación web full-stack funcional que centralice y automatice la gestión de la academia. El sistema estará dividido en dos frentes principales:
 
@@ -14,7 +14,7 @@ Desarrollar una aplicación web full-stack funcional que centralice y automatice
 
 *Plataforma de Gestión Interna:* Un sistema seguro con control de acceso y separación de rutas que administre la oferta de clases, toma de asistencia y gestión financiera. El sistema garantizará la persistencia dual (base de datos y sistema de archivos) para los soportes de pago cargados por los usuarios.
 
-# Roles de Usuario
+Roles de Usuario
 
 *Administrador:* Posee control total del sistema. Puede crear y modificar horarios, clases, gestionar inscripciones, registrar profesores, auditar pagos y visualizar el registro general de asistencias.
 
@@ -22,7 +22,7 @@ Desarrollar una aplicación web full-stack funcional que centralice y automatice
 
 *Estudiante:* A través de un panel protegido, puede visualizar la oferta de profesores y horarios, inscribirse a clases específicas, consultar su historial de asistencia y cargar digitalmente sus comprobantes de pago de mensualidades.
 
-# Arquitectura y Tecnologias
+Arquitectura y Tecnologias
 
 *Frontend:* React + Vite (HTML5, CSS3, JavaScript/JSX) para la interfaz de usuario y consumo de la API REST.
 
