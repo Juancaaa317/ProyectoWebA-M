@@ -1,121 +1,67 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app-container">
+      {/* Barra de Navegación */}
+      <nav className="navbar">
+        <div className="logo">
+          <h2>💃 Arte y Movimiento</h2>
         </div>
-        <div>
-          <h1>Get started</h1>
+        <ul className="nav-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#nosotros">Nuestra Historia</a></li>
+          <li><a href="#clases">Clases</a></li>
+          <li><button className="btn-login">Iniciar Sesión</button></li>
+        </ul>
+      </nav>
+
+      {/* Sección Hero (Encabezado principal) */}
+      <header id="inicio" className="hero-section">
+        <div className="hero-content">
+          <h1>Siente el ritmo, vive el movimiento</h1>
+          <p>Tu academia de baile en Cali. Aprende Salsa Caleña, Bachata, Danza Urbana y más.</p>
+          <button className="btn-primary">Inscríbete Ahora</button>
+        </div>
+      </header>
+
+      {/* Contenido de la página */}
+      <main>
+        {/* Sección de Historia */}
+        <section id="nosotros" className="about-section">
+          <h2>Nuestra Historia</h2>
           <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            Superando los retos de la ciudad desde el 2021, Arte y Movimiento se ha renovado 
+            para ofrecerte el mejor espacio de formación integral. Únete a nuestros más de 26 
+            estudiantes activos y descubre tu pasión por el baile.
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        </section>
 
-      <div className="ticks"></div>
+        {/* Sección de Clases */}
+        <section id="clases" className="classes-section">
+          <h2>Nuestros Ritmos</h2>
+          <div className="classes-grid">
+            <div className="class-card">
+              <h3>Salsa Caleña</h3>
+              <p>Nivel básico, intermedio y avanzado.</p>
+            </div>
+            <div className="class-card">
+              <h3>Danza Urbana</h3>
+              <p>Expresión corporal y ritmos modernos.</p>
+            </div>
+            <div className="class-card">
+              <h3>Bachata</h3>
+              <p>Pasos libres y baile en pareja.</p>
+            </div>
+          </div>
+        </section>
+      </main>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      {/* Pie de página */}
+      <footer className="footer">
+        <p>&copy; 2026 Academia Arte y Movimiento - Cali, Colombia. Proyecto Web UAO.</p>
+      </footer>
+    </div>
   )
 }
 
