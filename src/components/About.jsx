@@ -48,7 +48,7 @@ function Nosotros() {
   return (
     <section id="nosotros" className="nosotros">
       <div className="nosotros-imagen">
-        <img src="/Images/ImgPresentacion1.jpg" alt="Estudiantes de Arte y Movimiento bailando" />
+        <img src="/images/ImgPresentacion1.jpg" alt="Estudiantes de Arte y Movimiento bailando" />
       </div>
 
       <div className="nosotros-texto">

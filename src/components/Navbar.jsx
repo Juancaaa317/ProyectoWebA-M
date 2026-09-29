@@ -10,8 +10,15 @@ function Navbar() {
   return (
     <header className="navbar">
       {/* 2. El logo ahora lleva al inicio (/) */}
-      <Link to="/" className="navbar-logo" onClick={closeMenu}>
-        ARTE <span>&</span> MOVIMIENTO
+     <Link to="/" className="navbar-logo" onClick={closeMenu}>
+    <img
+      src="/images/Logo1.png"
+      alt="Logo de Arte y Movimiento"
+      className="navbar-logo-img"
+    />
+   <span className="navbar-logo-text">
+    ARTE <span>&</span> MOVIMIENTO
+    </span>
       </Link>
 
       <button
