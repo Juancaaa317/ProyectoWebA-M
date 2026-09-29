@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { Link } from "react-router-dom"; // 1. Importamos Link
 import "../styles/navbar.css";
 
 function Navbar() {
@@ -9,9 +9,10 @@ function Navbar() {
 
   return (
     <header className="navbar">
-      <a href="#inicio" className="navbar-logo">
+      {/* 2. El logo ahora lleva al inicio (/) */}
+      <Link to="/" className="navbar-logo" onClick={closeMenu}>
         ARTE <span>&</span> MOVIMIENTO
-      </a>
+      </Link>
 
       <button
         className="menu-toggle"
@@ -23,8 +24,11 @@ function Navbar() {
       </button>
 
       <nav className={menuOpen ? "nav-links active" : "nav-links"}>
-        <a href="#inicio" onClick={closeMenu}>Inicio</a>
-        <a href="#nosotros" onClick={closeMenu}>Nosotros</a>
+        {/* 3. Inicio e Historia usan <Link> para navegar entre páginas */}
+        <Link to="/" onClick={closeMenu}>Inicio</Link>
+        <Link to="/historia" onClick={closeMenu}>Historia</Link>
+        
+        {/* Los demás mantienen <a> si son secciones dentro de la misma página */}
         <a href="#profesores" onClick={closeMenu}>Profesores</a>
         <a href="#clases" onClick={closeMenu}>Clases</a>
         <a href="#logros" onClick={closeMenu}>Logros</a>
