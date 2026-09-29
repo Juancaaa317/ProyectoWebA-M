@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import "../styles/about.css";
 
 const stats = [
-  { valor: 10, sufijo: "+", texto: "Años de trayectoria" },
-  { valor: 26, sufijo: "", texto: "Alumnos activos" },
-  { valor: 5, sufijo: "+", texto: "Estilos de baile" },
-  { valor: 30, sufijo: "+", texto: "Presentaciones" },
+  { valor: 12, sufijo: "", texto: "Años de trayectoria" },
+  { valor: 23, sufijo: "", texto: "Alumnos activos" },
+  { valor: 6, sufijo: "", texto: "Estilos de baile" },
+  { valor: 12, sufijo: "", texto: "Presentaciones" },
 ];
 
 function Contador({ valor, sufijo }) {
