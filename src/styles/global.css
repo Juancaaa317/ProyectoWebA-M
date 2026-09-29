@@ -1,3 +1,13 @@
+:root {
+  --bg: #121019;
+  --bg-soft: #1b1724;
+  --purple: #9133d2;
+  --magenta: #ff1f9c;
+  --accent: #c34bff;
+  --text: #ffffff;
+  --text-soft: #e0d6e6;
+  --gradient: linear-gradient(90deg, #7a2ff0, #ff1f6b);
+}
 
 * {
   margin: 0;
@@ -11,9 +21,13 @@ html {
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #121019;
-  color: white;
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  text-decoration: none;
 }
 
 button,
