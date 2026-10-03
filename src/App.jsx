@@ -1,16 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Historia from "./pages/Historia";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Ruta principal que carga tu Home actual */}
                 <Route path="/" element={<Home />} />
-
-                {/* Nueva ruta para la historia de la academia */}
                 <Route path="/historia" element={<Historia />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </BrowserRouter>
     );
