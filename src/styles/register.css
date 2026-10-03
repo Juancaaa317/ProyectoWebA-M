@@ -1,0 +1,161 @@
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background: #17131f;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 520px;
+    padding: 45px;
+    background: #0f0d15;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(139, 55, 255, 0.15);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.register-subtitle {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #a855f7;
+}
+
+.register-header h1 {
+    margin: 0 0 15px;
+    font-size: 36px;
+    line-height: 1.1;
+    color: white;
+}
+
+.register-description {
+    margin: 0;
+    color: #b8b2c4;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.register-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    background: #191620;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #777080;
+}
+
+.form-group input:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+.register-error {
+    margin: -5px 0 0;
+    color: #ff6b8a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.register-button {
+    margin-top: 5px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #8b3dff, #d21d91);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.register-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.register-button:active {
+    transform: translateY(0);
+}
+
+.register-login {
+    margin: 25px 0 0;
+    text-align: center;
+    color: #aaa3b5;
+    font-size: 14px;
+}
+
+.register-login a {
+    color: #b45cff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .register-page {
+        padding: 25px 15px;
+    }
+
+    .register-card {
+        padding: 30px 22px;
+        border-radius: 16px;
+    }
+
+    .register-header h1 {
+        font-size: 30px;
+    }
+
+    .register-description {
+        font-size: 14px;
+    }
+
+    .register-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
