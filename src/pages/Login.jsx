@@ -1,111 +1,89 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import "../styles/login.css";
 
 function Login() {
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-    const [correo, setCorreo] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    if (!correo || !password) {
+      setError("Por favor, completa todos los campos.");
+      return;
+    }
 
-        if (!correo || !password) {
-            setError("Por favor, completa todos los campos.");
-            return;
-        }
+    setError("");
+    console.log("Formulario listo para enviar");
+  };
 
-        setError("");
-        console.log("Formulario listo para enviar");
-    };
+  return (
+    <>
+      <Navbar />
 
-    return (
-        <main className="login-page">
+      <main className="login-page">
+        <section className="login-card">
+          <div className="login-header">
+            <p className="login-subtitle">ARTE & MOVIMIENTO</p>
 
-            <section className="login-card">
+            <h1>Bienvenido de nuevo</h1>
 
-                <div className="login-header">
+            <p className="login-description">
+              Inicia sesión para acceder a tu cuenta y continuar con tu
+              experiencia en la academia.
+            </p>
+          </div>
 
-                    <p className="login-subtitle">
-                        ARTE & MOVIMIENTO
-                    </p>
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="correo">Correo electrónico</label>
 
-                    <h1>
-                        Bienvenido de nuevo
-                    </h1>
+              <input
+                type="email"
+                id="correo"
+                placeholder="correo@ejemplo.com"
+                value={correo}
+                onChange={(event) => setCorreo(event.target.value)}
+              />
+            </div>
 
-                    <p className="login-description">
-                        Inicia sesión para acceder a tu cuenta
-                        y continuar con tu experiencia en la academia.
-                    </p>
+            <div className="form-group">
+              <label htmlFor="password">Contraseña</label>
 
-                </div>
+              <input
+                type="password"
+                id="password"
+                placeholder="Ingresa tu contraseña"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
 
-                <form
-                    className="login-form"
-                    onSubmit={handleSubmit}
-                >
+            {error && (
+              <p className="login-error">
+                {error}
+              </p>
+            )}
 
-                    <div className="form-group">
+            <button
+              type="submit"
+              className="login-button"
+            >
+              Iniciar sesión
+            </button>
+          </form>
 
-                        <label htmlFor="correo">
-                            Correo electrónico
-                        </label>
-
-                        <input
-                            type="email"
-                            id="correo"
-                            placeholder="correo@ejemplo.com"
-                            value={correo}
-                            onChange={(event) =>
-                                setCorreo(event.target.value)
-                            }
-                        />
-
-                    </div>
-
-                    <div className="form-group">
-
-                        <label htmlFor="password">
-                            Contraseña
-                        </label>
-
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Ingresa tu contraseña"
-                            value={password}
-                            onChange={(event) =>
-                                setPassword(event.target.value)
-                            }
-                        />
-
-                    </div>
-
-                    {error && (
-                        <p className="login-error">
-                            {error}
-                        </p>
-                    )}
-
-                    <button
-                        type="submit"
-                        className="login-button"
-                    >
-                        Iniciar sesión
-                    </button>
-
-                </form>
-
-                <p className="login-register">
-                    ¿No tienes una cuenta?
-                    <a href="/register"> Regístrate</a>
-                </p>
-
-            </section>
-
-        </main>
-    );
+          <p className="login-register">
+            ¿No tienes una cuenta?
+            <Link to="/register"> Regístrate</Link>
+          </p>
+        </section>
+      </main>
+    </>
+  );
 }
 
 export default Login;
