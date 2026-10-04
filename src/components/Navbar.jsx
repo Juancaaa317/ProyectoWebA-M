@@ -43,9 +43,9 @@ function Navbar() {
         <a href="#profesores" onClick={closeMenu}>
           Profesores
         </a>
-        <a href="#clases" onClick={closeMenu}>
-          Clases
-        </a>
+        <Link to="/m-v" onClick={closeMenu}>
+          M-V
+        </Link>
         <a href="#logros" onClick={closeMenu}>
           Logros
         </a>
@@ -53,9 +53,14 @@ function Navbar() {
           Contacto
         </a>
 
+        <Link to="/login" className="nav-login" onClick={closeMenu}>
+          Ingresar
+        </Link>
+
         <Link to="/register" className="nav-register" onClick={closeMenu}>
           Inscríbete
         </Link>
+
       </nav>
     </header>
   );

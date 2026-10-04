@@ -27,7 +27,7 @@ function Hero() {
           </a>
 
           <a href="#nosotros" className="hero-secondary">
-            Nuestra historia
+            Un poco de nosotros
           </a>
         </div>
       </div>

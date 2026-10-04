@@ -17,19 +17,19 @@ function Historia() {
                     <section className="historia-content">
                         <div className="historia-texto">
                             <p>
-                                Arte y Movimiento nació del amor por el baile. Tras los eventos sociales
-                                ocurridos en Cali durante 2021 y un posterior cambio de ubicación, la academia
-                                experimentó una reinvención total para seguir inspirando a través del movimiento.
+                                Fundada en septiembre de 2014, nuestra academia nació para enseñar la técnica clásica en la primera 
+                                infancia, respetando el desarrollo de los niños. Con el tiempo, incluimos géneros como Danza Acrobática,
+                                Contemporánea, Jazz, Ritmos Latinos y Urbanos, promoviendo la disciplina de la danza en todas las edades.
                             </p>
                             <p>
-                                Hoy contamos con una sólida base de estudiantes activos. Nos enfocamos
-                                en la formación integral a través de la salsa caleña, la danza urbana y la bachata,
-                                superando todos los retos administrativos para ofrecer un espacio de calidad.
+                                Promovemos la danza como una herramienta fundamental para fortalecer el desarrollo motor, corporal, 
+                                emocional, creativo y social, mediante experiencias de aprendizaje que favorecen la coordinación, 
+                                el equilibrio, la expresión corporal, la disciplina, la autonomía y la confianza en sí mismos.
                             </p>
                         </div>
 
                         <div className="historia-imagen">
-                            <img src="/images/ImgPresentacion1.jpg" alt="Historia de Arte y Movimiento" />
+                            <img src="/images/ImgArco1.jpg" alt="Historia de Arte y Movimiento" />
                         </div>
                     </section>
                 </main>

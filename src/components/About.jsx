@@ -48,21 +48,20 @@ function Nosotros() {
   return (
     <section id="nosotros" className="nosotros">
       <div className="nosotros-imagen">
-        <img src="/images/ImgPresentacion1.jpg" alt="Estudiantes de Arte y Movimiento bailando" />
+        <img src="/images/ImgArco1.jpg" alt="Estudiantes de Arte y Movimiento bailando" />
       </div>
 
       <div className="nosotros-texto">
-        <span className="section-label">NUESTRA HISTORIA</span>
+        <span className="section-label">UN POCO DE NOSOTROS</span>
 
         <h2>
           Una academia que <span>vuelve a moverse</span>
         </h2>
 
         <p>
-          Arte y Movimiento nació del amor por el baile en Cali. Después de
-          atravesar momentos difíciles y cambiar de ubicación, seguimos de pie
-          gracias a nuestra comunidad y a nuestro compromiso con formar
-          bailarines con disciplina y pasión.
+          Arte & Movimiento (A&M) es una academia ubicada en la ciudad de Cali, Colombia, 
+          orientada al desarrollo integral de niños, niñas y jóvenes a través de la danza 
+          y las diferentes expresiones artísticas.
         </p>
 
         <p>
