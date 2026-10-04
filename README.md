@@ -3,7 +3,7 @@
 Universidad Autónoma de Occidente - Proyecto Final Desarrollo Web Full-Stack
 Planteamiento del Problema
 
-Tras los eventos sociales ocurridos en Cali durante 2021 y un posterior cambio de ubicación, la academia de danza Arte y Movimiento experimentó una disminución en su visibilidad y captación de alumnos, contando actualmente con una base de 26 estudiantes. Además de la falta de presencia digital para promocionar su historia y logros, la academia enfrenta un reto operativo: la gestión de pagos, asignación de horarios, inscripciones y control de asistencia se realiza de forma manual y mediante herramientas clasicas. Esto dificulta la escalabilidad del negocio y genera desorden administrativo tanto para el personal como para los estudiantes.
+Tras los eventos sociales ocurridos en Cali durante 2021 y un posterior cambio de ubicación, la academia de danza Arte y Movimiento experimentó una disminución en su visibilidad y captación de alumnos, contando actualmente con una base de 23 estudiantes. Además de la falta de presencia digital para promocionar su historia y logros, la academia enfrenta un reto operativo: la gestión de pagos, asignación de horarios, inscripciones y control de asistencia se realiza de forma manual y mediante herramientas clasicas. Esto dificulta la escalabilidad del negocio y genera desorden administrativo tanto para el personal como para los estudiantes.
 
 Alcance del Proyecto
 
