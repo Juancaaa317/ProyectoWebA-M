@@ -25,8 +25,8 @@ Arquitectura y Tecnologias
 
 *Frontend:* React + Vite (HTML5, CSS3, JavaScript/JSX) para la interfaz de usuario y consumo de la API REST.
 
-*Backend:* Lenguaje y framework por definir (se implementará un servidor que exponga endpoints REST semánticos).
+*Backend:* Java + Spring Boot, encargado de implementar el servidor y exponer los servicios de la aplicación mediante una API REST.
 
-*Base de Datos:* Motor por definir (SQL o NoSQL) para estructurar usuarios, clases, horarios e inscripciones.
+*Base de Datos:* MySQL, utilizada para almacenar la información de usuarios, clases, horarios, inscripciones, asistencia y comprobantes de pago.
 
-*Persistencia de Archivos:* Sistema por definir (almacenamiento local o en la nube) para guardar los comprobantes de pago físico y enlazar sus metadatos en la base de datos.
+*Persistencia de Archivos:* Se utilizará MySQL para la persistencia de la información del sistema y almacenamiento local para los archivos asociados.
