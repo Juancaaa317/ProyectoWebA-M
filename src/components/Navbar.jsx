@@ -53,9 +53,14 @@ function Navbar() {
           Contacto
         </a>
 
+        <Link to="/login" className="nav-login" onClick={closeMenu}>
+          Ingresar
+        </Link>
+
         <Link to="/register" className="nav-register" onClick={closeMenu}>
           Inscríbete
         </Link>
+        
       </nav>
     </header>
   );

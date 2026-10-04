@@ -71,6 +71,17 @@
   filter: brightness(1.15);
 }
 
+.nav-links .nav-login {
+  background: transparent;
+  color: white;
+  padding: 10px 26px; /* Ligeramente menor que Inscríbete para compensar el borde */
+  border: 2px solid var(--accent); /* Usa el mismo color de tu logo */
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -116,5 +127,10 @@
   .nav-links .nav-register {
     text-align: center;
     margin-top: 8px;
+  }
+.nav-links .nav-login:hover {
+  color: white;
+  background: rgba(255, 31, 156, 0.1); /* Fondo sutil al pasar el mouse */
+  transform: translateY(-2px);
   }
 }
