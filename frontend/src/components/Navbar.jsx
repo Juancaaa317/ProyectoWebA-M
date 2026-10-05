@@ -40,18 +40,27 @@ function Navbar() {
         </Link>
 
         {/* Los demás mantienen <a> si son secciones dentro de la misma página */}
+        {/* 
         <a href="#profesores" onClick={closeMenu}>
           Profesores
-        </a>
+        </a> 
+        */}
+        
         <Link to="/m-v" onClick={closeMenu}>
           M-V
         </Link>
+        
+        {/* 
         <a href="#logros" onClick={closeMenu}>
           Logros
-        </a>
+        </a> 
+        */}
+        
+        {/* 
         <a href="#contacto" onClick={closeMenu}>
           Contacto
-        </a>
+        </a> 
+        */}
 
         <Link to="/login" className="nav-login" onClick={closeMenu}>
           Ingresar
@@ -60,7 +69,6 @@ function Navbar() {
         <Link to="/register" className="nav-register" onClick={closeMenu}>
           Inscríbete
         </Link>
-
       </nav>
     </header>
   );
