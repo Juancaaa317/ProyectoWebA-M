@@ -14,20 +14,20 @@ function MV() {
         </section>
 
         <section className="mv-content">
-            <article className="mv-card">
-                <div className="mv-icon" aria-hidden="true"> </div>
-                <h2 className="mv-card-title">Misión</h2>
-                <p className="mv-card-description">
-                    Nuestra misión es brindar una educación artística de calidad, fomentando la creatividad, la expresión personal y el desarrollo integral de nuestros estudiantes. Nos comprometemos a ofrecer un entorno inclusivo y estimulante que inspire a cada individuo a alcanzar su máximo potencial.
-                </p>
-            </article>
-            <article className="mv-card">
-                <div className="mv-icon" aria-hidden="true"> </div>
-                <h2 className="mv-card-title">Visión</h2>
-                <p className="mv-card-description">
-                    Nuestra visión es ser una institución reconocida por su excelencia en la educación artística, formando ciudadanos críticos, creativos y comprometidos con el desarrollo cultural de su comunidad.
-                </p>
-            </article>
+          <article className="mv-card">
+            <div className="mv-icon" aria-hidden="true"> </div>
+            <h2 className="mv-card-title">Misión</h2>
+            <p className="mv-card-description">
+              Arte y Movimiento (a&m) es una academia ubicada en la ciudad  Cali (Colombia), que se enfoca en el desarrollo artístico e integral de sus  estudiantes, a través de técnicas básicas de la danza y el arte, en donde se enfoca en el aprendizaje y desarrollo  corporal humano.
+            </p>
+          </article>
+          <article className="mv-card">
+            <div className="mv-icon" aria-hidden="true"> </div>
+            <h2 className="mv-card-title">Visión</h2>
+            <p className="mv-card-description">
+              En el 2028 Arte y Movimiento (a&m) será reconocida a nivel nacional como una institución artística que fomenta y prepara a sus estudiantes integralmente, respetando sus procesos de formación, aprendizaje y desarrollo corporal.
+            </p>
+          </article>
         </section>
       </PageLayout>
       <Footer />
