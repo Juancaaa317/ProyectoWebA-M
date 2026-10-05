@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Historia from "./pages/Historia";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import MV from './pages/M-V';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/historia" element={<Historia />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/m-v" element={<MV />} />
             </Routes>
         </BrowserRouter>
     );

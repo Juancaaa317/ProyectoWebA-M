@@ -1,12 +1,12 @@
-import NAvbar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import pageStyles from "../styles/m-v.css";
-import "../styles/m-v.css";
+import PageLayout from "../components/PageLayout";
+import "../styles/M-V.css";
 
 function MV() {
   return (
     <>
-      <NAvbar />
+      <Navbar />
       <PageLayout className="mv-page">
         <section className="mv-section">
           <span className="mv-subtitle">Nuestro Propósito</span>
@@ -35,3 +35,4 @@ function MV() {
   );
 }
 
+export default MV;
