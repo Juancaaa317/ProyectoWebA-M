@@ -1,11 +1,12 @@
 # Sistema de Gestión - Academia Arte y Movimiento
 
 Universidad Autónoma de Occidente - Proyecto Final Desarrollo Web Full-Stack
-Planteamiento del Problema
+
+*Planteamiento del Problema*
 
 Tras los eventos sociales ocurridos en Cali durante 2021 y un posterior cambio de ubicación, la academia de danza Arte y Movimiento experimentó una disminución en su visibilidad y captación de alumnos, contando actualmente con una base de 23 estudiantes. Además de la falta de presencia digital para promocionar su historia y logros, la academia enfrenta un reto operativo: la gestión de pagos, asignación de horarios, inscripciones y control de asistencia se realiza de forma manual y mediante herramientas clasicas. Esto dificulta la escalabilidad del negocio y genera desorden administrativo tanto para el personal como para los estudiantes.
 
-Objetivos Específicos
+*Objetivos Específicos*
 
 Visibilizar la academia: Diseñar un portal público interactivo que exponga la historia, logros y oferta de profesores para incentivar la captación de nuevos estudiantes.
 
@@ -13,7 +14,7 @@ Digitalizar el control operativo: Implementar un sistema de roles que permita a 
 
 Centralizar la gestión financiera: Habilitar un módulo seguro para que los estudiantes carguen sus comprobantes de pago y los administradores puedan auditarlos.
 
-Alcance del Proyecto
+*Alcance del Proyecto*
 
 Desarrollar una aplicación web full-stack funcional que centralice y automatice la gestión de la academia A&M. El sistema estará dividido en dos frentes principales:
 
