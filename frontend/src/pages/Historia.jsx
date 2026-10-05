@@ -29,7 +29,7 @@ function Historia() {
                         </div>
 
                         <div className="historia-imagen">
-                            <img src="/images/ImgArco1.jpg" alt="Historia de Arte y Movimiento" />
+                            <img src="/images/ImgPresentacion1.jpg" alt="Historia de Arte y Movimiento" />
                         </div>
                     </section>
                 </main>
