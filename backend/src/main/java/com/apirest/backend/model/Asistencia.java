@@ -1,11 +1,13 @@
 package com.apirest.backend.model;
 
-import java.sql.Date;
 
 import com.apirest.backend.Enums.EstadoAsistencia;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +21,18 @@ import lombok.NoArgsConstructor;
 public class Asistencia {
     @Id 
     protected Integer idAsistencia;
-    protected Date fechaAsistencia;
+    
+    @ManyToOne
+    @JoinColumn (name = "idInscripcion")
+    @Column(unique = true)
+    protected Inscripcion idInscripcion;
+
+    @ManyToOne
+    @JoinColumn (name = "idSesion")
+    @Column(unique = true)
+    protected SesionClase idSesion;
+
+
     protected EstadoAsistencia estado;
+    protected String observaciones;
 }
