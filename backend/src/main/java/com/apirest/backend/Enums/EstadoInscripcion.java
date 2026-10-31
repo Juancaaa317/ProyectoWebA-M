@@ -1,5 +1,5 @@
 package com.apirest.backend.Enums;
 
-public enum Estado {
+public enum EstadoInscripcion {
     pendiente, activa, cancelada
 }

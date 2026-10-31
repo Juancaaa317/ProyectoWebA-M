@@ -2,10 +2,12 @@ package com.apirest.backend.model;
 
 import java.sql.Date;
 
-import com.apirest.backend.Enums.Estado;
+import com.apirest.backend.Enums.EstadoInscripcion;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +21,16 @@ import lombok.NoArgsConstructor;
 public class Inscripcion {
     @Id 
     protected Integer idInscripcion;
+
+    @ManyToOne
+    @JoinColumn (name = "idEstudiante")
+    protected Estudiante idEstudiante;
+
+    @ManyToOne
+    @JoinColumn (name = "idClase")
+    protected Clase idClase;
+
     protected Date fechaInscripcion;
     
-    protected Estado estado;
+    protected EstadoInscripcion estadoInscripcion;
 }
