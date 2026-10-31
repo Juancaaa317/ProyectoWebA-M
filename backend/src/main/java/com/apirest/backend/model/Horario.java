@@ -1,6 +1,7 @@
 package com.apirest.backend.model;
 
-import java.sql.Date;
+
+import java.sql.Time;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,20 +13,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
-@NoArgsConstructor 
 @AllArgsConstructor 
-@Data 
+@NoArgsConstructor 
 @Entity 
-@Table (name = "actividad")
-public class Actividad {
+@Data 
+@Table (name = "horario")
+public class Horario {
+    
     @Id 
-    protected Integer idActividad;
+    protected Integer idHorario;
+
     @ManyToOne 
-    @JoinColumn (name = "idUsuario")
-    protected Usuario idUsuario;
-    protected String accion;
-    protected String entidad;
-    protected Integer idReferencia;
-    protected Date fecha;
+    @JoinColumn (name = "idClase")
+    protected Clase idClase;
+    protected Time horaInicio;
+    protected Time horaFin;
+
+
 }

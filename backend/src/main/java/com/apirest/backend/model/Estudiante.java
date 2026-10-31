@@ -1,10 +1,15 @@
 package com.apirest.backend.model;
 
-import com.apirest.backend.Enums.Rol;
+import java.sql.Date;
+
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +25,18 @@ public class Estudiante {
     
     @Id 
     protected Integer idEstudiante;
+
+    
+    @OneToOne 
+    @JoinColumn (name = "idUsuario")
+    @Column(unique = true)
+    protected Usuario idUsuario;
     
 
     protected String nombre;
-    protected Integer edad;
+    
     @Column(unique = true)
     protected Integer tarjetaIdentidad;
-    protected String colegio;
-    protected Rol rol;
+
+    protected Date fechaNacimiento;
 }
