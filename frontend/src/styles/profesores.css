@@ -1,0 +1,44 @@
+.profesores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.profesores-card {
+    padding: 28px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid #302738;
+    border-radius: 16px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.profesores-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+}
+
+.profesores-avatar {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    background: var(--gradient);
+    border-radius: 50%;
+}
+
+.profesores-card h2 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+}
+
+.profesores-card p {
+    margin: 0;
+    color: var(--accent);
+    font-weight: 600;
+}
