@@ -1,15 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"; // 1. Importamos Link
+import { useEffect, useRef, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import "../styles/navbar.css";
+
+const menuLinks = [
+  { to: "/", label: "Inicio" },
+  { to: "/historia", label: "Historia" },
+  { to: "/m-v", label: "Misión y Visión" },
+  { to: "/clases", label: "Clases" },
+  { to: "/horario", label: "Horario" },
+  { to: "/profesores", label: "Profesores" },
+];
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const wrapperRef = useRef(null);
 
   const closeMenu = () => setMenuOpen(false);
 
+  // Cierra el menú al hacer clic fuera o al presionar Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [menuOpen]);
+
   return (
     <header className="navbar">
-      {/* 2. El logo ahora lleva al inicio (/) */}
       <Link to="/" className="navbar-logo" onClick={closeMenu}>
         <img
           src="/images/Logo1.png"
@@ -21,55 +51,43 @@ function Navbar() {
         </span>
       </Link>
 
-      <button
-        className="menu-toggle"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Abrir o cerrar menú"
-        aria-expanded={menuOpen}
-      >
-        {menuOpen ? "✕" : "☰"}
-      </button>
-
-      <nav className={menuOpen ? "nav-links active" : "nav-links"}>
-        {/* 3. Inicio e Historia usan <Link> para navegar entre páginas */}
-        <Link to="/" onClick={closeMenu}>
-          Inicio
-        </Link>
-        <Link to="/historia" onClick={closeMenu}>
-          Historia
-        </Link>
-
-        {/* Los demás mantienen <a> si son secciones dentro de la misma página */}
-        {/* 
-        <a href="#profesores" onClick={closeMenu}>
-          Profesores
-        </a> 
-        */}
-        
-        <Link to="/m-v" onClick={closeMenu}>
-          M-V
-        </Link>
-        
-        {/* 
-        <a href="#logros" onClick={closeMenu}>
-          Logros
-        </a> 
-        */}
-        
-        {/* 
-        <a href="#contacto" onClick={closeMenu}>
-          Contacto
-        </a> 
-        */}
-
-        <Link to="/login" className="nav-login" onClick={closeMenu}>
+      <div className="navbar-actions">
+        <Link to="/login" className="nav-login">
           Ingresar
         </Link>
-
-        <Link to="/register" className="nav-register" onClick={closeMenu}>
+        <Link to="/register" className="nav-register">
           Inscríbete
         </Link>
-      </nav>
+
+        <div className="menu-wrapper" ref={wrapperRef}>
+          <button
+            className="menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Abrir o cerrar menú"
+            aria-expanded={menuOpen}
+            aria-controls="menu-dropdown"
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+
+          <nav
+            id="menu-dropdown"
+            className={menuOpen ? "menu-dropdown open" : "menu-dropdown"}
+          >
+            {menuLinks.map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === "/"}
+                className={({ isActive }) => (isActive ? "active" : "")}
+                onClick={closeMenu}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      </div>
     </header>
   );
 }
