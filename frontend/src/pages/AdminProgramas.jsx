@@ -71,6 +71,7 @@ function AdminProgramas() {
     };
 
     const confirmarEliminar = async () => {
+        if (!aEliminar) return;
         const ok = await eliminar(aEliminar.idPrograma);
         if (ok) {
             setAEliminar(null);
@@ -149,7 +150,7 @@ function AdminProgramas() {
                         <h2>Eliminar programa</h2>
                         <p className="admin-confirmar-texto">
                             ¿Seguro que quieres eliminar{" "}
-                            <strong>{aEliminar.nombrePrograma}</strong>? Esta acción no se
+                            <strong>{aEliminar?.nombrePrograma}</strong>? Esta acción no se
                             puede deshacer.
                         </p>
 
