@@ -153,13 +153,18 @@ function Navbar() {
                 <span>{user.rol}</span>
               </div>
 
-              <Link to="/perfil" onClick={closeAll}>
-                Mi perfil
-              </Link>
-
-              {user.rol === "ADMIN" && (
-                <Link to="/admin/programas" onClick={closeAll}>
-                  Panel de programas
+              {user.rol === "ADMIN" ? (
+                <>
+                  <Link to="/admin/perfil" onClick={closeAll}>
+                    Mi perfil
+                  </Link>
+                  <Link to="/admin" onClick={closeAll}>
+                    Panel de administración
+                  </Link>
+                </>
+              ) : (
+                <Link to="/perfil" onClick={closeAll}>
+                  Mi perfil
                 </Link>
               )}
 

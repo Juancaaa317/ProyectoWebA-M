@@ -32,7 +32,7 @@ function Login() {
       // Si no: el admin va a su panel y los demás al inicio.
       const destino =
         location.state?.from?.pathname ??
-        (usuario.rol === "ADMIN" ? "/admin/programas" : "/");
+        (usuario.rol === "ADMIN" ? "/admin" : "/");
 
       navigate(destino, { replace: true });
     } catch (err) {

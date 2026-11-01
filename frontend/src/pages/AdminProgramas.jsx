@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import ProgramaTable from "../components/ProgramaTable";
 import ProgramaForm from "../components/ProgramaForm";
 import usePrograms from "../hooks/usePrograms";
@@ -81,9 +79,7 @@ function AdminProgramas() {
 
     return (
         <>
-            <Navbar />
-
-            <main className="admin">
+            <div className="admin">
                 <div className="admin-header">
                     <div>
                         <p className="admin-subtitle">PANEL DE ADMINISTRACIÓN</p>
@@ -126,7 +122,7 @@ function AdminProgramas() {
                         disabled={saving}
                     />
                 )}
-            </main>
+            </div>
 
             {/* Modal: crear / editar */}
             {formAbierto && (
@@ -177,8 +173,6 @@ function AdminProgramas() {
                     </div>
                 </div>
             )}
-
-            <Footer />
         </>
     );
 }
