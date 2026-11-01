@@ -20,7 +20,7 @@ npm run dev
 
 Abrir en el navegador la dirección que muestre la terminal (normalmente `http://localhost:5173`).
 
-> El archivo `frontend/.env` (plantilla en `.env.example`) tiene `VITE_USE_MOCK=true`, que usa datos simulados.
+> Copia `frontend/.env.example` a `frontend/.env` antes de iniciar. Configura `VITE_USE_MOCK=true` para usar datos simulados.
 > Con `VITE_USE_MOCK=false` se usa el backend real.
 > Usuario de prueba (solo modo mock): `admin@arteymovimiento.com` / `admin123`
 
