@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/navbar.css";
 
 const menuLinks = [
@@ -13,21 +14,51 @@ const menuLinks = [
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const wrapperRef = useRef(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const userRef = useRef(null);
 
-  const closeMenu = () => setMenuOpen(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  // Cierra el menú al hacer clic fuera o al presionar Escape
+  const closeAll = () => {
+    setMenuOpen(false);
+    setUserMenuOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setUserMenuOpen(false);
+    setMenuOpen((v) => !v);
+  };
+
+  const toggleUserMenu = () => {
+    setMenuOpen(false);
+    setUserMenuOpen((v) => !v);
+  };
+
+  const handleLogout = () => {
+    closeAll();
+    logout();
+    navigate("/");
+  };
+
+  // Cierra los menús al hacer clic fuera o presionar Escape
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !userMenuOpen) return;
 
     const handleClickOutside = (e) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false);
+      }
+      if (userRef.current && !userRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
       }
     };
     const handleEscape = (e) => {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        setUserMenuOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -36,11 +67,13 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [menuOpen]);
+  }, [menuOpen, userMenuOpen]);
+
+  const inicial = user?.correo?.charAt(0).toUpperCase() ?? "?";
 
   return (
     <header className="navbar">
-      <Link to="/" className="navbar-logo" onClick={closeMenu}>
+      <Link to="/" className="navbar-logo" onClick={closeAll}>
         <img
           src="/images/Logo1.png"
           alt="Logo de Arte y Movimiento"
@@ -52,17 +85,23 @@ function Navbar() {
       </Link>
 
       <div className="navbar-actions">
-        <Link to="/login" className="nav-login">
-          Ingresar
-        </Link>
-        <Link to="/register" className="nav-register">
-          Inscríbete
-        </Link>
+        {/* Solo se muestran si NO hay sesión */}
+        {!user && (
+          <>
+            <Link to="/login" className="nav-login">
+              Ingresar
+            </Link>
+            <Link to="/register" className="nav-register">
+              Inscríbete
+            </Link>
+          </>
+        )}
 
-        <div className="menu-wrapper" ref={wrapperRef}>
+        {/* Menú de navegación (3 rayas) */}
+        <div className="menu-wrapper" ref={menuRef}>
           <button
             className="menu-btn"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={toggleMenu}
             aria-label="Abrir o cerrar menú"
             aria-expanded={menuOpen}
             aria-controls="menu-dropdown"
@@ -80,13 +119,56 @@ function Navbar() {
                 to={to}
                 end={to === "/"}
                 className={({ isActive }) => (isActive ? "active" : "")}
-                onClick={closeMenu}
+                onClick={closeAll}
               >
                 {label}
               </NavLink>
             ))}
           </nav>
         </div>
+
+        {/* Menú de usuario: solo CON sesión */}
+        {user && (
+          <div className="menu-wrapper" ref={userRef}>
+            <button
+              className="user-btn"
+              onClick={toggleUserMenu}
+              aria-label="Menú de usuario"
+              aria-expanded={userMenuOpen}
+              aria-controls="user-dropdown"
+            >
+              {inicial}
+            </button>
+
+            <nav
+              id="user-dropdown"
+              className={
+                userMenuOpen
+                  ? "menu-dropdown user-dropdown open"
+                  : "menu-dropdown user-dropdown"
+              }
+            >
+              <div className="user-info">
+                <strong>{user.correo}</strong>
+                <span>{user.rol}</span>
+              </div>
+
+              <Link to="/perfil" onClick={closeAll}>
+                Mi perfil
+              </Link>
+
+              {user.rol === "ADMIN" && (
+                <Link to="/admin/programas" onClick={closeAll}>
+                  Panel de programas
+                </Link>
+              )}
+
+              <button type="button" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
