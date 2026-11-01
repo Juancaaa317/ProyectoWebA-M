@@ -1,5 +1,15 @@
 ## Cómo probar el manejo de errores (Avance 2)
 
+### Contrato esperado para autenticación real
+
+El frontend consume estos endpoints cuando `VITE_USE_MOCK=false`:
+
+- `POST /api/auth/login` recibe `{ "correo": "...", "password": "..." }`.
+- `POST /api/auth/register` recibe `{ "nombre": "...", "apellido": "...", "correo": "...", "telefono": "...", "password": "..." }`.
+- Ambos deben responder con `{ "token": "...", "usuario": { "id": 1, "correo": "...", "rol": "ESTUDIANTE" } }` (el rol de registro público debe asignarlo el backend).
+
+El modo mock conserva las cuentas registradas solo en memoria; no se debe usar para datos reales. La sesión mock sí persiste durante la navegación y recarga mientras exista en el almacenamiento local del navegador.
+
 ### 1. Ejecutar el frontend
 
 ```bash

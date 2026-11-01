@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import GuestRoute from "./components/GuestRoute";
 import AdminLayout from "./components/AdminLayout";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -30,8 +31,22 @@ function App() {
                     <Route path="/clases" element={<Clases />} />
                     <Route path="/horario" element={<Horario />} />
                     <Route path="/profesores" element={<Profesores />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <GuestRoute>
+                                <Login />
+                            </GuestRoute>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <GuestRoute>
+                                <Register />
+                            </GuestRoute>
+                        }
+                    />
 
                     {/* Perfil para usuarios que no son admin (luego tendrán su propio layout) */}
                     <Route

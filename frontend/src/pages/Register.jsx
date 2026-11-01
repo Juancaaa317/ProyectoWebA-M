@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 import "../styles/register.css";
 
 function Register() {
@@ -11,15 +12,18 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (
-      !nombre ||
-      !apellido ||
-      !correo ||
-      !telefono ||
+      !nombre.trim() ||
+      !apellido.trim() ||
+      !correo.trim() ||
+      !telefono.trim() ||
       !password ||
       !confirmPassword
     ) {
@@ -27,8 +31,13 @@ function Register() {
       return;
     }
 
-    if (!/^\d+$/.test(telefono)) {
-      setError("El teléfono solo debe contener números.");
+    if (!/^[+\d\s()-]{7,20}$/.test(telefono) || !/\d{7,}/.test(telefono)) {
+      setError("Ingresa un teléfono válido.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres.");
       return;
     }
 
@@ -38,7 +47,22 @@ function Register() {
     }
 
     setError("");
-    console.log("Formulario de registro listo para enviar");
+    setLoading(true);
+
+    try {
+      await register({
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        correo: correo.trim().toLowerCase(),
+        telefono: telefono.trim(),
+        password,
+      });
+      navigate("/perfil", { replace: true });
+    } catch (err) {
+      setError(err.message || "No se pudo crear la cuenta.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,6 +99,9 @@ function Register() {
                   id="nombre"
                   placeholder="Tu nombre"
                   value={nombre}
+                  autoComplete="given-name"
+                  required
+                  disabled={loading}
                   onChange={(event) =>
                     setNombre(event.target.value)
                   }
@@ -91,6 +118,9 @@ function Register() {
                   id="apellido"
                   placeholder="Tu apellido"
                   value={apellido}
+                  autoComplete="family-name"
+                  required
+                  disabled={loading}
                   onChange={(event) =>
                     setApellido(event.target.value)
                   }
@@ -108,9 +138,12 @@ function Register() {
                 id="correo"
                 placeholder="correo@ejemplo.com"
                 value={correo}
+                autoComplete="email"
+                required
                 onChange={(event) =>
                   setCorreo(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -124,9 +157,12 @@ function Register() {
                 id="telefono"
                 placeholder="300 123 4567"
                 value={telefono}
+                autoComplete="tel"
+                required
                 onChange={(event) =>
                   setTelefono(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -140,9 +176,13 @@ function Register() {
                 id="password"
                 placeholder="Crea una contraseña"
                 value={password}
+                autoComplete="new-password"
+                minLength={8}
+                required
                 onChange={(event) =>
                   setPassword(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -156,14 +196,18 @@ function Register() {
                 id="confirmPassword"
                 placeholder="Repite tu contraseña"
                 value={confirmPassword}
+                autoComplete="new-password"
+                minLength={8}
+                required
                 onChange={(event) =>
                   setConfirmPassword(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
             {error && (
-              <p className="register-error">
+              <p className="register-error" role="alert">
                 {error}
               </p>
             )}
@@ -171,8 +215,9 @@ function Register() {
             <button
               type="submit"
               className="register-button"
+              disabled={loading}
             >
-              Crear cuenta
+              {loading ? "Creando cuenta..." : "Crear cuenta"}
             </button>
           </form>
 

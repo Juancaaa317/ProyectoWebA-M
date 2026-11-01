@@ -86,7 +86,7 @@ function Login() {
               />
             </div>
 
-            {error && <p className="login-error">{error}</p>}
+            {error && <p className="login-error" role="alert">{error}</p>}
 
             <button type="submit" className="login-button" disabled={loading}>
               {loading ? "Ingresando..." : "Iniciar sesión"}
