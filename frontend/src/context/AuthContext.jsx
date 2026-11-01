@@ -1,26 +1,43 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { apiFetch, ApiError } from "../services/api";
+import { MENUS } from "../config/roles";
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 const AuthContext = createContext(null);
 
-// Lee la sesión guardada (así no se pierde al recargar la página)
+// Lee la sesión guardada (así no se pierde al recargar la página).
+// Si el rol guardado ya no existe (por ejemplo "ADMIN"), la descarta.
 const leerSesion = () => {
     try {
         const raw = localStorage.getItem("usuario");
-        return raw ? JSON.parse(raw) : null;
+        const usuario = raw ? JSON.parse(raw) : null;
+        return usuario && MENUS[usuario.rol] ? usuario : null;
     } catch {
         return null;
     }
 };
 
-// Login simulado, SOLO mientras el backend no exista
+// Login simulado, SOLO mientras el backend no tenga /auth/login
+const USUARIOS_MOCK = [
+    { correo: "admin@arteymovimiento.com", password: "admin123", rol: "ADMINISTRADOR" },
+    { correo: "profe@arteymovimiento.com", password: "profe123", rol: "PROFESOR" },
+    { correo: "estudiante@arteymovimiento.com", password: "estudiante123", rol: "ESTUDIANTE" },
+];
+
 const loginMock = async (correo, password) => {
     await new Promise((r) => setTimeout(r, 600));
-    if (correo === "admin@arteymovimiento.com" && password === "admin123") {
-        return { token: "mock-token", usuario: { id: 1, correo, rol: "ADMIN" } };
-    }
-    throw new ApiError("Correo o contraseña incorrectos", 401);
+    const encontrado = USUARIOS_MOCK.find(
+        (u) => u.correo === correo && u.password === password
+    );
+    if (!encontrado) throw new ApiError("Correo o contraseña incorrectos", 401);
+    return {
+        token: "mock-token",
+        usuario: {
+            id: USUARIOS_MOCK.indexOf(encontrado) + 1,
+            correo: encontrado.correo,
+            rol: encontrado.rol,
+        },
+    };
 };
 
 const loginReal = (correo, password) =>

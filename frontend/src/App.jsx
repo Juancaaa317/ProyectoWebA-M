@@ -1,9 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
-import AdminLayout from "./components/AdminLayout";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import PanelLayout from "./components/PanelLayout";
+import { ROLES } from "./config/roles";
 import Home from "./pages/Home";
 import Historia from "./pages/Historia";
 import Login from "./pages/Login";
@@ -12,8 +11,10 @@ import MV from "./pages/M-V";
 import Clases from "./pages/Clases";
 import Horario from "./pages/Horario";
 import Profesores from "./pages/Profesores";
+import Resumen from "./pages/Resumen";
 import Perfil from "./pages/Perfil";
 import AdminProgramas from "./pages/AdminProgramas";
+import SeccionPendiente from "./pages/SeccionPendiente";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -33,34 +34,27 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* Perfil para usuarios que no son admin (luego tendrán su propio layout) */}
+                    {/* Panel único: el menú cambia según el rol */}
                     <Route
-                        path="/perfil"
+                        path="/panel"
                         element={
                             <PrivateRoute>
-                                <>
-                                    <Navbar />
-                                    <main>
-                                        <Perfil />
-                                    </main>
-                                    <Footer />
-                                </>
-                            </PrivateRoute>
-                        }
-                    />
-
-                    {/* Panel de administración (solo ADMIN) */}
-                    <Route
-                        path="/admin"
-                        element={
-                            <PrivateRoute roles={["ADMIN"]}>
-                                <AdminLayout />
+                                <PanelLayout />
                             </PrivateRoute>
                         }
                     >
-                        <Route index element={<Navigate to="programas" replace />} />
-                        <Route path="programas" element={<AdminProgramas />} />
+                        <Route index element={<Resumen />} />
                         <Route path="perfil" element={<Perfil />} />
+                        <Route
+                            path="programas"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN]}>
+                                    <AdminProgramas />
+                                </PrivateRoute>
+                            }
+                        />
+                        {/* Cualquier otra sección del menú del rol */}
+                        <Route path=":seccion" element={<SeccionPendiente />} />
                     </Route>
 
                     <Route path="*" element={<NotFound />} />
