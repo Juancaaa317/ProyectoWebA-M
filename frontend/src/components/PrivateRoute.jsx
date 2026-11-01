@@ -1,12 +1,21 @@
-import { Navigate } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export const PrivateRoute = ({children}) => {
+function PrivateRoute({ children, roles }) {
+    const { user } = useAuth();
+    const location = useLocation();
 
-
-    if (!user){
-        return<Navigate to="/" />
+    // Sin sesión: al login, recordando a dónde quería ir
+    if (!user) {
+        return <Navigate to="/login" replace state={{ from: location }} />;
     }
 
+    // Con sesión pero sin el rol requerido: al inicio
+    if (roles && !roles.includes(user.rol)) {
+        return <Navigate to="/" replace />;
+    }
 
-    return children
+    return children;
 }
+
+export default PrivateRoute;

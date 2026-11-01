@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 import Home from "./pages/Home";
 import Historia from "./pages/Historia";
 import Login from "./pages/Login";
@@ -7,23 +9,40 @@ import MV from "./pages/M-V";
 import Clases from "./pages/Clases";
 import Horario from "./pages/Horario";
 import Profesores from "./pages/Profesores";
+import AdminProgramas from "./pages/AdminProgramas";
+import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
     return (
-        <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/historia" element={<Historia />} />
-                <Route path="/m-v" element={<MV />} />
-                <Route path="/clases" element={<Clases />} />
-                <Route path="/horario" element={<Horario />} />
-                <Route path="/profesores" element={<Profesores />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-            </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <ScrollToTop />
+                <Routes>
+                    {/* Rutas públicas */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/historia" element={<Historia />} />
+                    <Route path="/m-v" element={<MV />} />
+                    <Route path="/clases" element={<Clases />} />
+                    <Route path="/horario" element={<Horario />} />
+                    <Route path="/profesores" element={<Profesores />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+
+                    {/* Rutas privadas */}
+                    <Route
+                        path="/admin/programas"
+                        element={
+                            <PrivateRoute roles={["ADMIN"]}>
+                                <AdminProgramas />
+                            </PrivateRoute>
+                        }
+                    />
+
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 

@@ -1,23 +1,45 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 import "../styles/login.css";
 
 function Login() {
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!correo || !password) {
+    if (!correo.trim() || !password) {
       setError("Por favor, completa todos los campos.");
       return;
     }
 
     setError("");
-    console.log("Formulario listo para enviar");
+    setLoading(true);
+
+    try {
+      const usuario = await login(correo.trim(), password);
+
+      // Si venía de una ruta privada, lo devolvemos ahí.
+      // Si no: el admin va a su panel y los demás al inicio.
+      const destino =
+        location.state?.from?.pathname ??
+        (usuario.rol === "ADMIN" ? "/admin/programas" : "/");
+
+      navigate(destino, { replace: true });
+    } catch (err) {
+      setError(err.message || "No se pudo iniciar sesión.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +69,7 @@ function Login() {
                 placeholder="correo@ejemplo.com"
                 value={correo}
                 onChange={(event) => setCorreo(event.target.value)}
+                disabled={loading}
               />
             </div>
 
@@ -59,20 +82,14 @@ function Login() {
                 placeholder="Ingresa tu contraseña"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                disabled={loading}
               />
             </div>
 
-            {error && (
-              <p className="login-error">
-                {error}
-              </p>
-            )}
+            {error && <p className="login-error">{error}</p>}
 
-            <button
-              type="submit"
-              className="login-button"
-            >
-              Iniciar sesión
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Ingresando..." : "Iniciar sesión"}
             </button>
           </form>
 
