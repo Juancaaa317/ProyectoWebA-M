@@ -1,0 +1,61 @@
+.clases,
+.profesores {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    color: white;
+}
+
+.clases-header,
+.profesores-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.clases-subtitle,
+.profesores-subtitle {
+    letter-spacing: 3px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.clases-header h1,
+.profesores-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 8px 0;
+}
+
+.clases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.clases-card {
+    padding: 28px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid #302738;
+    border-radius: 16px;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.clases-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+}
+
+.clases-card h2 {
+    margin: 0 0 12px;
+    font-size: 1.3rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.clases-card p {
+    margin: 0;
+    line-height: 1.6;
+    color: #e7e0eb;
+}
