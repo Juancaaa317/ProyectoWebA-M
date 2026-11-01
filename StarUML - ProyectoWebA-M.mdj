@@ -14279,12 +14279,12 @@
 										"$ref": "AAAAAAGg6vBjjAhtpMo="
 									},
 									"font": "Arial;13;0",
-									"left": 846,
-									"top": 923,
+									"left": 845,
+									"top": 943,
 									"width": 42.64990234375,
 									"height": 13,
-									"alpha": 4.087502634638103,
-									"distance": 75.21303078589507,
+									"alpha": -1.9401302111809655,
+									"distance": 66.48308055437865,
 									"hostEdge": {
 										"$ref": "AAAAAAGg6vBjjAhtpMo="
 									},
@@ -14826,7 +14826,7 @@
 									"font": "Arial;13;1",
 									"left": 24,
 									"top": 773,
-									"width": 358.6689453125,
+									"width": 370.93896484375,
 									"height": 13,
 									"text": "Asistencia"
 								},
@@ -14852,7 +14852,7 @@
 											"font": "Arial;13;0",
 											"left": 29,
 											"top": 796,
-											"width": 348.6689453125,
+											"width": 360.93896484375,
 											"height": 13
 										},
 										{
@@ -14867,7 +14867,7 @@
 											"font": "Arial;13;0",
 											"left": 29,
 											"top": 811,
-											"width": 348.6689453125,
+											"width": 360.93896484375,
 											"height": 13
 										},
 										{
@@ -14882,7 +14882,7 @@
 											"font": "Arial;13;0",
 											"left": 29,
 											"top": 826,
-											"width": 348.6689453125,
+											"width": 360.93896484375,
 											"height": 13
 										},
 										{
@@ -14897,7 +14897,7 @@
 											"font": "Arial;13;0",
 											"left": 29,
 											"top": 841,
-											"width": 348.6689453125,
+											"width": 360.93896484375,
 											"height": 13
 										},
 										{
@@ -14912,21 +14912,21 @@
 											"font": "Arial;13;0",
 											"left": 29,
 											"top": 856,
-											"width": 348.6689453125,
+											"width": 360.93896484375,
 											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 24,
 									"top": 791,
-									"width": 358.6689453125,
+									"width": 370.93896484375,
 									"height": 83
 								}
 							],
 							"font": "Arial;13;0",
 							"left": 24,
 							"top": 768,
-							"width": 358.6689453125,
+							"width": 370.93896484375,
 							"height": 121,
 							"nameLabel": {
 								"$ref": "AAAAAAGhCiYhUxSlagA="
@@ -15869,7 +15869,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 419,
+									"left": 425,
 									"top": 796,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -15886,7 +15886,7 @@
 										"$ref": "AAAAAAGhCjkLoRZuIXM="
 									},
 									"font": "Arial;13;0",
-									"left": 407,
+									"left": 419,
 									"top": 796,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -15921,7 +15921,7 @@
 								"$ref": "AAAAAAGhCiYhUxSk85g="
 							},
 							"lineStyle": 2,
-							"points": "382:817;456:817",
+							"points": "394:817;456:817",
 							"nameLabel": {
 								"$ref": "AAAAAAGhCjkLoRZvwOg="
 							},
@@ -16030,8 +16030,8 @@
 										"$ref": "AAAAAAGhil/Ilac0k2o="
 									},
 									"font": "Arial;13;1",
-									"left": 800,
-									"top": 1213,
+									"left": 816,
+									"top": 1245,
 									"width": 273,
 									"height": 13,
 									"text": "Programa"
@@ -16056,8 +16056,8 @@
 												"$ref": "AAAAAAGhil/e7Kc/Njw="
 											},
 											"font": "Arial;13;0",
-											"left": 805,
-											"top": 1236,
+											"left": 821,
+											"top": 1268,
 											"width": 263,
 											"height": 13
 										},
@@ -16071,8 +16071,8 @@
 												"$ref": "AAAAAAGhimBxV6dGb8A="
 											},
 											"font": "Arial;13;0",
-											"left": 805,
-											"top": 1251,
+											"left": 821,
+											"top": 1283,
 											"width": 263,
 											"height": 13
 										},
@@ -16086,8 +16086,8 @@
 												"$ref": "AAAAAAGhimCG7qdNzRo="
 											},
 											"font": "Arial;13;0",
-											"left": 805,
-											"top": 1266,
+											"left": 821,
+											"top": 1298,
 											"width": 263,
 											"height": 13
 										},
@@ -16101,22 +16101,22 @@
 												"$ref": "AAAAAAGhimCTF6dUgtE="
 											},
 											"font": "Arial;13;0",
-											"left": 805,
-											"top": 1281,
+											"left": 821,
+											"top": 1313,
 											"width": 263,
 											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 800,
-									"top": 1231,
+									"left": 816,
+									"top": 1263,
 									"width": 273,
 									"height": 68
 								}
 							],
 							"font": "Arial;13;0",
-							"left": 800,
-							"top": 1208,
+							"left": 816,
+							"top": 1240,
 							"width": 273,
 							"height": 121,
 							"nameLabel": {
@@ -16161,7 +16161,7 @@
 										"$ref": "AAAAAAGhimFF0adpTeM="
 									},
 									"font": "Arial;13;0",
-									"left": 774,
+									"left": 790,
 									"top": 1296,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -16196,7 +16196,7 @@
 								"$ref": "AAAAAAGhil/Ilac0k2o="
 							},
 							"lineStyle": 2,
-							"points": "800:1288;752:1288;752:1182",
+							"points": "816:1288;752:1288;752:1182",
 							"nameLabel": {
 								"$ref": "AAAAAAGhimFF0adqlQc="
 							},
@@ -17084,36 +17084,6 @@
 					"ownedElements": [
 						{
 							"_type": "ERDRelationship",
-							"_id": "AAAAAAGg6udOOQeI9A0=",
-							"_parent": {
-								"$ref": "AAAAAAGg6twM6gaQw4A="
-							},
-							"name": "tiene",
-							"end1": {
-								"_type": "ERDRelationshipEnd",
-								"_id": "AAAAAAGg6udOOQeJRKI=",
-								"_parent": {
-									"$ref": "AAAAAAGg6udOOQeI9A0="
-								},
-								"reference": {
-									"$ref": "AAAAAAGg6twM6gaQw4A="
-								},
-								"cardinality": "1..*"
-							},
-							"end2": {
-								"_type": "ERDRelationshipEnd",
-								"_id": "AAAAAAGg6udOOQeKFLg=",
-								"_parent": {
-									"$ref": "AAAAAAGg6udOOQeI9A0="
-								},
-								"reference": {
-									"$ref": "AAAAAAGg6tnf4QX92Oc="
-								},
-								"cardinality": "1..*"
-							}
-						},
-						{
-							"_type": "ERDRelationship",
 							"_id": "AAAAAAGhin3Ntqh3EOs=",
 							"_parent": {
 								"$ref": "AAAAAAGg6twM6gaQw4A="
@@ -17725,7 +17695,8 @@
 							"name": "idInscripcion",
 							"type": "INTEGER",
 							"length": 0,
-							"foreignKey": true
+							"foreignKey": true,
+							"unique": true
 						},
 						{
 							"_type": "ERDColumn",
@@ -17736,7 +17707,8 @@
 							"name": "idSesion",
 							"type": "INTEGER",
 							"length": 0,
-							"foreignKey": true
+							"foreignKey": true,
+							"unique": true
 						},
 						{
 							"_type": "ERDColumn",
