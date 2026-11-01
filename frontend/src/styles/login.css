@@ -87,7 +87,7 @@
     outline: none;
 
     transition: border-color 0.2s ease,
-                box-shadow 0.2s ease;
+        box-shadow 0.2s ease;
 }
 
 .form-group input::placeholder {
@@ -108,11 +108,9 @@
     border: none;
     border-radius: 10px;
 
-    background: linear-gradient(
-        90deg,
-        #8b3dff,
-        #d21d91
-    );
+    background: linear-gradient(90deg,
+            #8b3dff,
+            #d21d91);
 
     color: white;
 
@@ -122,7 +120,7 @@
     cursor: pointer;
 
     transition: transform 0.2s ease,
-                opacity 0.2s ease;
+        opacity 0.2s ease;
 }
 
 .login-button:hover {
@@ -177,4 +175,20 @@
     .login-description {
         font-size: 14px;
     }
+}
+
+.login-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-error {
+    margin: 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #ff8fb8;
+    background: rgba(255, 31, 156, 0.1);
+    border: 1px solid rgba(255, 31, 156, 0.35);
+    border-radius: 10px;
 }
