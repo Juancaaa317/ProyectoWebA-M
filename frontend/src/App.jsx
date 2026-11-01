@@ -9,6 +9,7 @@ import MV from "./pages/M-V";
 import Clases from "./pages/Clases";
 import Horario from "./pages/Horario";
 import Profesores from "./pages/Profesores";
+import Perfil from "./pages/Perfil";
 import AdminProgramas from "./pages/AdminProgramas";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
@@ -30,6 +31,14 @@ function App() {
                     <Route path="/register" element={<Register />} />
 
                     {/* Rutas privadas */}
+                    <Route
+                        path="/perfil"
+                        element={
+                            <PrivateRoute>
+                                <Perfil />
+                            </PrivateRoute>
+                        }
+                    />
                     <Route
                         path="/admin/programas"
                         element={
