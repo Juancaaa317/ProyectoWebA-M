@@ -1,6 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminLayout from "./components/AdminLayout";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Historia from "./pages/Historia";
 import Login from "./pages/Login";
@@ -30,23 +33,35 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* Rutas privadas */}
+                    {/* Perfil para usuarios que no son admin (luego tendrán su propio layout) */}
                     <Route
                         path="/perfil"
                         element={
                             <PrivateRoute>
-                                <Perfil />
+                                <>
+                                    <Navbar />
+                                    <main>
+                                        <Perfil />
+                                    </main>
+                                    <Footer />
+                                </>
                             </PrivateRoute>
                         }
                     />
+
+                    {/* Panel de administración (solo ADMIN) */}
                     <Route
-                        path="/admin/programas"
+                        path="/admin"
                         element={
                             <PrivateRoute roles={["ADMIN"]}>
-                                <AdminProgramas />
+                                <AdminLayout />
                             </PrivateRoute>
                         }
-                    />
+                    >
+                        <Route index element={<Navigate to="programas" replace />} />
+                        <Route path="programas" element={<AdminProgramas />} />
+                        <Route path="perfil" element={<Perfil />} />
+                    </Route>
 
                     <Route path="*" element={<NotFound />} />
                 </Routes>
