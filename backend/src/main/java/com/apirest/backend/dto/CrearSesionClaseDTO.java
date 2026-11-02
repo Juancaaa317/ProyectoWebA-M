@@ -1,6 +1,6 @@
 package com.apirest.backend.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,5 +16,5 @@ public class CrearSesionClaseDTO {
     private Integer idHorario;
 
     @NotNull(message = "La fecha de la sesión es obligatoria")
-    private Date fecha;
+    private LocalDate fecha;
 }

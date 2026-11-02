@@ -1,6 +1,7 @@
 package com.apirest.backend.service;
 
 import java.util.Locale;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,8 @@ import com.apirest.backend.dto.LoginRespuestaDTO;
 import com.apirest.backend.dto.UsuarioSesionDTO;
 import com.apirest.backend.dto.RegistroProfesorDTO;
 import com.apirest.backend.dto.RegistroProfesorRespuestaDTO;
+import com.apirest.backend.dto.EstudianteListadoDTO;
+import com.apirest.backend.dto.ProfesorListadoDTO;
 import com.apirest.backend.model.Estudiante;
 import com.apirest.backend.model.Profesor;
 import com.apirest.backend.model.Usuario;
@@ -201,5 +204,40 @@ public class UsuarioServiceImp implements IUsuarioService {
                 usuarioGuardado.getCorreo(),
                 profesorGuardado.getAreaDocencia(),
                 usuarioGuardado.getRol());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EstudianteListadoDTO> listarEstudiantes(String busqueda) {
+        String filtro = normalizarFiltro(busqueda);
+        return estudianteRepository.buscarParaPanel(filtro).stream()
+                .map(estudiante -> new EstudianteListadoDTO(
+                        estudiante.getIdEstudiante(),
+                        estudiante.getNombre(),
+                        estudiante.getTarjetaIdentidad(),
+                        estudiante.getIdUsuario().getCorreo(),
+                        estudiante.getIdUsuario().getTelefono()))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProfesorListadoDTO> listarProfesores(String busqueda) {
+        String filtro = normalizarFiltro(busqueda);
+        return profesorRepository.buscarParaPanel(filtro).stream()
+                .map(profesor -> new ProfesorListadoDTO(
+                        profesor.getIdProfesor(),
+                        profesor.getNombre(),
+                        profesor.getIdUsuario().getCorreo(),
+                        profesor.getTelefono(),
+                        profesor.getAreaDocencia()))
+                .toList();
+    }
+
+    private String normalizarFiltro(String busqueda) {
+        if (busqueda == null || busqueda.isBlank()) {
+            return null;
+        }
+        return busqueda.trim();
     }
 }

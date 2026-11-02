@@ -2,6 +2,7 @@ package com.apirest.backend.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class SesionClaseServiceImp implements ISesionClaseService {
                     "No se pueden programar sesiones para una clase finalizada o cancelada.");
         }
 
-        LocalDate fecha = datos.getFecha().toLocalDate();
+        LocalDate fecha = datos.getFecha();
         DiaSemana diaFecha = convertirDia(fecha.getDayOfWeek());
         if (diaFecha != horario.getDiaSemana()) {
             throw new IllegalArgumentException(
@@ -69,25 +70,25 @@ public class SesionClaseServiceImp implements ISesionClaseService {
         }
 
         if (clase.getFechaInicio() != null
-                && datos.getFecha().before(clase.getFechaInicio())) {
+                && fecha.isBefore(clase.getFechaInicio().toLocalDate())) {
             throw new IllegalArgumentException(
                     "La sesión no puede ser anterior a la fecha de inicio de la clase.");
         }
         if (clase.getFechaFinalizacion() != null
-                && datos.getFecha().after(clase.getFechaFinalizacion())) {
+                && fecha.isAfter(clase.getFechaFinalizacion().toLocalDate())) {
             throw new IllegalArgumentException(
                     "La sesión no puede ser posterior a la fecha final de la clase.");
         }
 
         if (sesionRepository.existsByIdClase_IdClaseAndFechaAndHoraInicio(
-                clase.getIdClase(), datos.getFecha(), horario.getHoraInicio())) {
+                clase.getIdClase(), Date.valueOf(fecha), horario.getHoraInicio())) {
             throw new RecursoDuplicadoException(
                     "Ya existe una sesión para esa clase, fecha y hora.");
         }
 
         SesionClase sesion = new SesionClase();
         sesion.setIdClase(clase);
-        sesion.setFecha(datos.getFecha());
+        sesion.setFecha(Date.valueOf(fecha));
         sesion.setHoraInicio(horario.getHoraInicio());
         sesion.setHoraFin(horario.getHoraFin());
         sesion.setEstadoSesion(EstadoSesion.PROGRAMADA);

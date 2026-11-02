@@ -15,7 +15,7 @@ function Perfil() {
 
                 <dl>
                     <dt>Nombre</dt>
-                    <dd>{user.nombre} {user.apellido}</dd>
+                    <dd>{user.nombre || "—"}</dd>
 
                     <dt>Correo</dt>
                     <dd>{user.correo}</dd>

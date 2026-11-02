@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { MENUS, ROL_INFO, rutaDe } from "../config/roles";
+import PanelIcon from "./PanelIcon";
 import "../styles/adminLayout.css";
 
 function PanelLayout() {
@@ -30,7 +31,7 @@ function PanelLayout() {
                     onClick={() => setAbierto(true)}
                     aria-label="Abrir menú"
                 >
-                    ☰
+                    <PanelIcon name="menu" className="al-icono" />
                 </button>
                 <span className="al-topbar-titulo">{titulo}</span>
             </header>
@@ -64,20 +65,19 @@ function PanelLayout() {
                             }
                             onClick={cerrarMenu}
                         >
-                            <span className="al-icono">{item.icon}</span>
+                            <PanelIcon name={item.icon} className="al-icono" />
                             {item.label}
-                            {item.pronto && <span className="al-pronto">Pronto</span>}
                         </NavLink>
                     ))}
                 </nav>
 
                 <div className="al-pie">
                     <Link to="/" className="al-link" onClick={cerrarMenu}>
-                        <span className="al-icono">🌐</span>
+                        <PanelIcon name="sitio" className="al-icono" />
                         Ver sitio
                     </Link>
                     <button type="button" className="al-link" onClick={handleLogout}>
-                        <span className="al-icono">🚪</span>
+                        <PanelIcon name="salir" className="al-icono" />
                         Cerrar sesión
                     </button>
                 </div>

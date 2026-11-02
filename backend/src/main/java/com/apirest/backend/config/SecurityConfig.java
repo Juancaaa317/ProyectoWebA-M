@@ -45,6 +45,18 @@ public class SecurityConfig {
                     // Permitir solicitudes preflight del navegador
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                    // Documentación interactiva y especificación OpenAPI
+                    .requestMatchers(
+                            "/docs",
+                            "/docs/**",
+                            "/docs.json",
+                            "/docs.json/**",
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/v3/api-docs",
+                            "/v3/api-docs/**"
+                    ).permitAll()
+
                     // Registro e inicio de sesión públicos
                     .requestMatchers(
                             "/api/auth/register",
