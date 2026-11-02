@@ -7,5 +7,7 @@ import com.apirest.backend.model.Estudiante;
 public interface IEstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
         boolean existsByTarjetaIdentidad(String tarjetaIdentidad);
-    
+
+
+
 }

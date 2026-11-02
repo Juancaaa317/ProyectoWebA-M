@@ -10,10 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.apirest.backend.Enums.Rol;
 import com.apirest.backend.dto.RegistroEstudianteDTO;
 import com.apirest.backend.dto.RegistroEstudianteRespuestaDTO;
+import com.apirest.backend.dto.LoginDTO;
+import com.apirest.backend.dto.LoginRespuestaDTO;
+import com.apirest.backend.dto.UsuarioSesionDTO;
 import com.apirest.backend.model.Estudiante;
 import com.apirest.backend.model.Usuario;
 import com.apirest.backend.repository.IEstudianteRepository;
 import com.apirest.backend.repository.IUsuarioRepository;
+import com.apirest.backend.exception.RecursoDuplicadoException;
+import com.apirest.backend.exception.CredencialesInvalidasException;
+import com.apirest.backend.security.JwtService;
 
 @Service
 public class UsuarioServiceImp implements IUsuarioService {
@@ -26,6 +32,9 @@ public class UsuarioServiceImp implements IUsuarioService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtService jwtService;
 
     // Registrar estudiante
     @Override
@@ -40,7 +49,7 @@ public class UsuarioServiceImp implements IUsuarioService {
 
         // Comprobar si el correo ya existe
         if (usuarioRepository.existsByCorreo(correo)) {
-            throw new IllegalArgumentException(
+            throw new RecursoDuplicadoException(
                     "Ya existe un usuario registrado con ese correo.");
         }
 
@@ -68,7 +77,7 @@ public class UsuarioServiceImp implements IUsuarioService {
                 estudianteRepository.existsByTarjetaIdentidad(
                         tarjetaIdentidad)) {
 
-            throw new IllegalArgumentException(
+            throw new RecursoDuplicadoException(
                     "La tarjeta de identidad ya está registrada.");
         }
 
@@ -109,5 +118,26 @@ public class UsuarioServiceImp implements IUsuarioService {
                 usuarioGuardado.getCorreo(),
                 usuarioGuardado.getRol()
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LoginRespuestaDTO iniciarSesion(LoginDTO login) {
+        String correo = login.getCorreo().trim().toLowerCase(Locale.ROOT);
+
+        Usuario usuario = usuarioRepository.findByCorreo(correo)
+                .orElseThrow(CredencialesInvalidasException::new);
+
+        if (!passwordEncoder.matches(login.getPassword(), usuario.getContrasena())) {
+            throw new CredencialesInvalidasException();
+        }
+
+        String token = jwtService.generarToken(usuario);
+        UsuarioSesionDTO sesion = new UsuarioSesionDTO(
+                usuario.getIdUsuario(),
+                usuario.getCorreo(),
+                usuario.getRol());
+
+        return new LoginRespuestaDTO(token, sesion);
     }
 }
