@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { apiFetch } from "../services/api";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { apiFetch, SESSION_EXPIRED_EVENT, tokenVigente } from "../services/api";
 import { MENUS } from "../config/roles";
 
 const AuthContext = createContext(null);
@@ -11,7 +11,7 @@ const leerSesion = () => {
         const raw = localStorage.getItem("usuario");
         const token = localStorage.getItem("token");
         const usuario = raw ? JSON.parse(raw) : null;
-        if (token && usuario && MENUS[usuario.rol]) return usuario;
+        if (token && tokenVigente(token) && usuario && MENUS[usuario.rol]) return usuario;
     } catch {
         // Una sesión dañada se elimina para que no deje datos inválidos guardados.
     }
@@ -40,21 +40,33 @@ const register = (datos) =>
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(leerSesion);
 
+    const logout = useCallback(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        setUser(null);
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener(SESSION_EXPIRED_EVENT, logout);
+        const sincronizarCierreEnOtraPestana = (event) => {
+            if (event.key === "token" && event.newValue === null) logout();
+        };
+        window.addEventListener("storage", sincronizarCierreEnOtraPestana);
+        return () => {
+            window.removeEventListener(SESSION_EXPIRED_EVENT, logout);
+            window.removeEventListener("storage", sincronizarCierreEnOtraPestana);
+        };
+    }, [logout]);
+
     const iniciarSesion = async (correo, password) => {
         const usuario = await login(correo, password);
         setUser(usuario);
         return usuario;
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        setUser(null);
-    };
-
     const value = useMemo(
         () => ({ user, login: iniciarSesion, register, logout }),
-        [user]
+        [user, logout]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

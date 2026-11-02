@@ -8,6 +8,22 @@ import "../styles/adminProgramas.css";
 const claseVacia = { idProfesor: "", idPrograma: "", fechaInicio: "", fechaFinalizacion: "", nombre: "", cupoMaximo: 10, estadoClase: "PROGRAMADA" };
 const horarioVacio = { diaSemana: "LUNES", horaInicio: "", horaFin: "" };
 const DIAS = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
+const ESTADOS_SESION = ["PROGRAMADA", "REALIZADA", "CANCELADA"];
+
+function estadosSesionPermitidos(estadoActual) {
+    return estadoActual === "PROGRAMADA" ? ESTADOS_SESION : [estadoActual];
+}
+
+function diaDeLaFecha(fecha) {
+    if (!fecha) return "";
+    const [anio, mes, dia] = fecha.split("-").map(Number);
+    const fechaUTC = new Date(Date.UTC(anio, mes - 1, dia));
+    return DIAS[(fechaUTC.getUTCDay() + 6) % 7];
+}
+
+function normalizarFecha(fecha) {
+    return fecha ? String(fecha).slice(0, 10) : "";
+}
 
 function AdminClases() {
     const { user } = useAuth();
@@ -20,11 +36,22 @@ function AdminClases() {
     const [claseForm, setClaseForm] = useState(null);
     const [horarioForm, setHorarioForm] = useState(null);
     const [sesionFecha, setSesionFecha] = useState("");
+    const [horarioSesionId, setHorarioSesionId] = useState("");
     const [claseSeleccionada, setClaseSeleccionada] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const [mensaje, setMensaje] = useState("");
+
+    const claseSesion = clases.find((clase) => String(clase.idClase) === claseSeleccionada);
+    const fechaMinimaSesion = normalizarFecha(claseSesion?.fechaInicio);
+    const fechaMaximaSesion = normalizarFecha(claseSesion?.fechaFinalizacion);
+    const fueraDelRangoDeClase = Boolean(sesionFecha && (
+        (fechaMinimaSesion && sesionFecha < fechaMinimaSesion) ||
+        (fechaMaximaSesion && sesionFecha > fechaMaximaSesion)
+    ));
+    const horarioDeSesion = horarios.find((horario) => String(horario.idHorario) === horarioSesionId);
+    const diaNoCoincide = Boolean(sesionFecha && horarioDeSesion && diaDeLaFecha(sesionFecha) !== horarioDeSesion.diaSemana);
 
     const cargar = useCallback(async () => {
         setLoading(true);
@@ -49,7 +76,12 @@ function AdminClases() {
         if (!claseSeleccionada) return;
         let activa = true;
         horarioService.listarPorClase(claseSeleccionada)
-            .then((data) => { if (activa) setHorarios(data); })
+            .then((data) => {
+                if (activa) {
+                    setHorarios(data);
+                    setHorarioSesionId(data.length ? String(data[0].idHorario) : "");
+                }
+            })
             .catch((err) => { if (activa) setError(err.message); });
         return () => { activa = false; };
     }, [claseSeleccionada]);
@@ -114,10 +146,18 @@ function AdminClases() {
 
     const crearSesion = async (event) => {
         event.preventDefault();
-        const horarioId = event.currentTarget.elements.horarioId.value;
+        const horarioSesion = horarios.find((horario) => String(horario.idHorario) === horarioSesionId);
+        if (fueraDelRangoDeClase) {
+            setError("La fecha debe estar dentro del periodo configurado para la clase.");
+            return;
+        }
+        if (horarioSesion && diaDeLaFecha(sesionFecha) !== horarioSesion.diaSemana) {
+            setError(`Selecciona una fecha que sea ${horarioSesion.diaSemana.toLowerCase()}.`);
+            return;
+        }
         setSaving(true); setError("");
         try {
-            await sesionService.crear(horarioId, sesionFecha);
+            await sesionService.crear(horarioSesionId, sesionFecha);
             setMensaje("Sesión programada.");
             setSesionFecha("");
             setSesiones(await sesionService.listarPorClase(claseSeleccionada));
@@ -186,12 +226,14 @@ function AdminClases() {
                 <label>Clase<select value={claseSeleccionada} onChange={(e) => setClaseSeleccionada(e.target.value)}><option value="">Selecciona una clase</option>{clases.map((c) => <option key={c.idClase} value={c.idClase}>{c.nombre}</option>)}</select></label>
             </header>
             {claseSeleccionada && horarios.length > 0 && <form className="panel-form-inline" onSubmit={crearSesion}>
-                <label>Horario<select name="horarioId" required>{horarios.map((h) => <option key={h.idHorario} value={h.idHorario}>{h.diaSemana} · {String(h.horaInicio).slice(0, 5)}–{String(h.horaFin).slice(0, 5)}</option>)}</select></label>
-                <label>Fecha<input type="date" required value={sesionFecha} onChange={(e) => setSesionFecha(e.target.value)} /></label>
-                <button className="login-button" disabled={saving}>{saving ? "Guardando..." : "Programar sesión"}</button>
+                <label>Horario<select name="horarioId" required value={horarioSesionId} onChange={(e) => { setHorarioSesionId(e.target.value); setError(""); }}>{horarios.map((h) => <option key={h.idHorario} value={h.idHorario}>{h.diaSemana} · {String(h.horaInicio).slice(0, 5)}–{String(h.horaFin).slice(0, 5)}</option>)}</select></label>
+                <label>Fecha<input type="date" required min={fechaMinimaSesion || undefined} max={fechaMaximaSesion || undefined} value={sesionFecha} onChange={(e) => { setSesionFecha(e.target.value); setError(""); }} /></label>
+                <button className="login-button" disabled={saving || !sesionFecha || fueraDelRangoDeClase || diaNoCoincide}>{saving ? "Guardando..." : "Programar sesión"}</button>
+                {fueraDelRangoDeClase && <p className="panel-ayuda">La fecha debe estar dentro del periodo de la clase: {fechaMinimaSesion || "sin fecha inicial"} a {fechaMaximaSesion || "sin fecha final"}.</p>}
+                {!fueraDelRangoDeClase && diaNoCoincide && <p className="panel-ayuda">La fecha debe ser {horarioDeSesion.diaSemana.toLowerCase()} para el horario seleccionado.</p>}
             </form>}
             {sesiones.length > 0 && <div className="admin-tabla-wrapper"><table className="admin-tabla"><thead><tr><th>Fecha</th><th>Clase</th><th>Horario</th><th>Estado</th></tr></thead><tbody>{sesiones.map((s) => <tr key={s.idSesion}>
-                <td>{s.fecha}</td><td>{s.nombreClase}</td><td>{s.horaInicio}–{s.horaFin}</td><td><select value={s.estadoSesion} onChange={(e) => cambiarEstadoSesion(s.idSesion, e.target.value)}>{["PROGRAMADA", "REALIZADA", "CANCELADA"].map((estado) => <option key={estado}>{estado}</option>)}</select></td>
+                <td>{s.fecha}</td><td>{s.nombreClase}</td><td>{s.horaInicio}–{s.horaFin}</td><td><select value={s.estadoSesion} onChange={(e) => cambiarEstadoSesion(s.idSesion, e.target.value)}>{estadosSesionPermitidos(s.estadoSesion).map((estado) => <option key={estado}>{estado}</option>)}</select></td>
             </tr>)}</tbody></table></div>}
             {claseSeleccionada && sesiones.length === 0 && <p className="admin-vacio">No hay sesiones programadas.</p>}
         </section>}

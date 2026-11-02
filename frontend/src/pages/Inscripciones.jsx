@@ -7,6 +7,13 @@ import "../styles/adminProgramas.css";
 
 const ESTADOS = ["PENDIENTE", "ACTIVA", "CANCELADA"];
 
+function estadosPermitidos(estadoActual) {
+    if (estadoActual === "PENDIENTE") return ESTADOS;
+    if (estadoActual === "ACTIVA") return ["ACTIVA", "CANCELADA"];
+    if (estadoActual === "CANCELADA") return ["CANCELADA", "PENDIENTE"];
+    return [estadoActual];
+}
+
 function Inscripciones() {
     const { user } = useAuth();
     const esAdmin = user.rol === ROLES.ADMIN;
@@ -119,7 +126,9 @@ function Inscripciones() {
                                         <select aria-label={`Cambiar estado de inscripción ${item.idInscripcion}`} value={item.estadoInscripcion}
                                             disabled={savingId === item.idInscripcion}
                                             onChange={(e) => cambiarEstado(item.idInscripcion, e.target.value)}>
-                                            {ESTADOS.map((estado) => <option key={estado}>{estado}</option>)}
+                                            {estadosPermitidos(item.estadoInscripcion).map((estado) => <option key={estado} value={estado}>
+                                                {item.estadoInscripcion === "CANCELADA" && estado === "PENDIENTE" ? "PENDIENTE (reabrir solicitud)" : estado}
+                                            </option>)}
                                         </select>
                                     </td>}
                                 </tr>

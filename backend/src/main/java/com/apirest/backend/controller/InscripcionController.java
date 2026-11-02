@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,6 @@ import com.apirest.backend.dto.ApiErrorDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/inscripciones")
 @Tag(name = "Inscripciones")
@@ -83,12 +81,13 @@ public class InscripcionController {
     }
 
     @PatchMapping("/{idInscripcion}/estado")
-    @Operation(summary = "Cambiar estado de inscripción", description = "Permite aprobar o cancelar una solicitud según las transiciones válidas. Requiere rol ADMINISTRADOR.", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "Cambiar estado de inscripción", description = "Permite aprobar o cancelar una solicitud. Una inscripción cancelada puede reabrirse como pendiente, si hay cupo disponible. Requiere rol ADMINISTRADOR.", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Estado actualizado."),
             @ApiResponse(responseCode = "400", description = "La transición de estado no está permitida.", content = @Content(schema = @Schema(implementation = ApiErrorDTO.class))),
             @ApiResponse(responseCode = "403", description = "Se requiere rol ADMINISTRADOR."),
-            @ApiResponse(responseCode = "404", description = "No existe la inscripción indicada.", content = @Content(schema = @Schema(implementation = ApiErrorDTO.class)))
+            @ApiResponse(responseCode = "404", description = "No existe la inscripción indicada.", content = @Content(schema = @Schema(implementation = ApiErrorDTO.class))),
+            @ApiResponse(responseCode = "409", description = "La clase alcanzó su cupo máximo y no se puede reabrir la solicitud.", content = @Content(schema = @Schema(implementation = ApiErrorDTO.class)))
     })
     public ResponseEntity<InscripcionRespuestaDTO> actualizarEstado(
             @Parameter(description = "Identificador de la inscripción.") @PathVariable Integer idInscripcion,

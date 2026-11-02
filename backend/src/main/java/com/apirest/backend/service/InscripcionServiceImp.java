@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.apirest.backend.Enums.EstadoClase;
@@ -38,7 +39,7 @@ public class InscripcionServiceImp implements IInscripcionService {
     IClaseRepository claseRepository;
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public InscripcionRespuestaDTO crearInscripcion(String correo, CrearInscripcionDTO datos) {
         Estudiante estudiante = estudianteRepository.findByIdUsuario_Correo(correo)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
@@ -109,7 +110,7 @@ public class InscripcionServiceImp implements IInscripcionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public InscripcionRespuestaDTO actualizarEstado(
             Integer idInscripcion, EstadoInscripcion nuevoEstado) {
 
@@ -124,11 +125,29 @@ public class InscripcionServiceImp implements IInscripcionService {
                         || nuevoEstado == EstadoInscripcion.CANCELADA);
         boolean puedeCancelar = estadoActual == EstadoInscripcion.ACTIVA
                 && nuevoEstado == EstadoInscripcion.CANCELADA;
+        boolean puedeReabrir = estadoActual == EstadoInscripcion.CANCELADA
+                && nuevoEstado == EstadoInscripcion.PENDIENTE;
 
-        if (!mismoEstado && !puedeAprobarOCancelar && !puedeCancelar) {
+        if (!mismoEstado && !puedeAprobarOCancelar && !puedeCancelar && !puedeReabrir) {
             throw new IllegalArgumentException(
-                    "Solo se puede aprobar o cancelar una inscripción pendiente, "
-                    + "o cancelar una inscripción activa.");
+                    "Una inscripción cancelada solo puede reabrirse como pendiente; "
+                    + "una inscripción pendiente puede aprobarse o cancelarse, "
+                    + "y una activa solo puede cancelarse.");
+        }
+
+        if (puedeReabrir) {
+            Clase clase = claseRepository.findByIdForUpdate(
+                            inscripcion.getIdClase().getIdClase())
+                    .orElseThrow(() -> new RecursoNoEncontradoException(
+                            "No se encontró la clase asociada a la inscripción."));
+            long inscritos = inscripcionRepository
+                    .countByIdClase_IdClaseAndEstadoInscripcionIn(
+                            clase.getIdClase(), ESTADOS_QUE_RESERVAN_CUPO);
+
+            if (inscritos >= clase.getCupoMaximo()) {
+                throw new RecursoDuplicadoException(
+                        "No se puede reabrir la inscripción porque la clase alcanzó su cupo máximo.");
+            }
         }
 
         inscripcion.setEstadoInscripcion(nuevoEstado);

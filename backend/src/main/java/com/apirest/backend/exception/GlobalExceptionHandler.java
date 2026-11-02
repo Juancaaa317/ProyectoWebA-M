@@ -15,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.apirest.backend.dto.ApiErrorDTO;
@@ -120,6 +121,18 @@ public class GlobalExceptionHandler {
                 return construirRespuesta(
                                 HttpStatus.CONFLICT,
                                 "La operación no se puede completar porque los datos entran en conflicto con la información registrada.",
+                                request);
+        }
+
+        // Error 400: parámetro de ruta o consulta con tipo o valor no válido
+        @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+        public ResponseEntity<ApiErrorDTO> manejarParametroInvalido(
+                        MethodArgumentTypeMismatchException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.BAD_REQUEST,
+                                "El valor enviado para el parámetro '" + ex.getName() + "' no es válido.",
                                 request);
         }
 

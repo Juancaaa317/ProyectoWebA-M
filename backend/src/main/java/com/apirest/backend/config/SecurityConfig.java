@@ -2,6 +2,7 @@ package com.apirest.backend.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -64,7 +65,7 @@ public class SecurityConfig {
                     ).permitAll()
 
                     // Health check público
-                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/health").permitAll()
 
                     // Consultas de programas públicas
                     .requestMatchers(
@@ -239,12 +240,13 @@ public class SecurityConfig {
 
     // Configuración global de CORS
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource(
+            @Value("${app.cors.allowed-origin:http://localhost:5173}") String frontendOrigin) {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+                List.of(frontendOrigin)
         );
 
         configuration.setAllowedMethods(
