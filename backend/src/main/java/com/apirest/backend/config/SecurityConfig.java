@@ -106,6 +106,85 @@ public class SecurityConfig {
                             "/api/clases/**"
                     ).hasRole("ADMINISTRADOR")
 
+                    // Inscripción y consulta de las clases propias del estudiante
+                    .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/inscripciones"
+                    ).hasRole("ESTUDIANTE")
+
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/inscripciones/mias"
+                    ).hasRole("ESTUDIANTE")
+
+                    // Gestión de inscripciones exclusiva del administrador
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/inscripciones"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PATCH,
+                            "/api/inscripciones/*/estado"
+                    ).hasRole("ADMINISTRADOR")
+
+                    // Consulta pública de horarios semanales
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/horarios",
+                            "/api/horarios/clase/**"
+                    ).permitAll()
+
+                    // Gestión de horarios exclusiva del administrador
+                    .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/horarios"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/horarios/**"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.DELETE,
+                            "/api/horarios/**"
+                    ).hasRole("ADMINISTRADOR")
+
+                    // Consulta de sesiones por clase
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/sesiones/clase/**"
+                    ).permitAll()
+
+                    // Creación y cambio de estado de sesiones por el administrador
+                    .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/sesiones"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PATCH,
+                            "/api/sesiones/*/estado"
+                    ).hasRole("ADMINISTRADOR")
+
+                    // El profesor asignado toma asistencia; administrador puede consultarla
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/sesiones/*/asistencias"
+                    ).hasAnyRole("PROFESOR", "ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/sesiones/*/asistencias/*"
+                    ).hasRole("PROFESOR")
+
+                    // Consulta de asistencia propia por el estudiante
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/asistencias/mias"
+                    ).hasRole("ESTUDIANTE")
+
                     // Administración de usuarios exclusiva del administrador
                     .requestMatchers("/api/usuarios/**")
                     .hasRole("ADMINISTRADOR")

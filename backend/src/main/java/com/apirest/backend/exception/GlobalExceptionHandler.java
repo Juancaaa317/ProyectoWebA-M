@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,18 @@ public class GlobalExceptionHandler {
                         HttpServletRequest request) {
 
                 return construirRespuesta(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+        }
+
+        // Error 403: el usuario autenticado no puede gestionar este recurso
+        @ExceptionHandler(AccessDeniedException.class)
+        public ResponseEntity<ApiErrorDTO> manejarAccesoDenegado(
+                        AccessDeniedException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.FORBIDDEN,
+                                "No tienes permiso para realizar esta operación.",
+                                request);
         }
 
         // Error 404: recurso no encontrado
