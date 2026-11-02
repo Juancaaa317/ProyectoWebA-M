@@ -10,7 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.apirest.backend.Enums.EstadoAsistencia;
+
 import com.apirest.backend.Enums.EstadoInscripcion;
 import com.apirest.backend.Enums.EstadoSesion;
 import com.apirest.backend.dto.AsistenciaEstudianteDTO;
@@ -60,11 +60,14 @@ public class AsistenciaServiceImp implements IAsistenciaService {
                         a -> a.getIdInscripcion().getIdInscripcion(),
                         Function.identity()));
 
-        return inscripcionRepository.findByIdClase_IdClaseAndEstadoInscripcion(
-                        sesion.getIdClase().getIdClase(), EstadoInscripcion.ACTIVA)
+        return inscripcionRepository
+                .findByIdClase_IdClaseAndFechaInscripcionLessThanEqual(
+                        sesion.getIdClase().getIdClase(), sesion.getFecha())
                 .stream()
-                .map(inscripcion -> convertirParaSesion(
-                        inscripcion, asistencias.get(inscripcion.getIdInscripcion())))
+                .filter(inscripcion -> inscripcion.getEstadoInscripcion() == EstadoInscripcion.ACTIVA
+                        || asistencias.containsKey(inscripcion.getIdInscripcion()))
+                .map(inscripcion -> convertirParaSesion(inscripcion,
+                        asistencias.get(inscripcion.getIdInscripcion())))
                 .toList();
     }
 
@@ -94,6 +97,10 @@ public class AsistenciaServiceImp implements IAsistenciaService {
         if (inscripcion.getEstadoInscripcion() != EstadoInscripcion.ACTIVA) {
             throw new IllegalArgumentException(
                     "Solo se puede registrar asistencia para inscripciones activas.");
+        }
+        if (inscripcion.getFechaInscripcion().after(sesion.getFecha())) {
+            throw new IllegalArgumentException(
+                    "No se puede registrar asistencia antes de la fecha de inscripción.");
         }
 
         Asistencia asistencia = asistenciaRepository

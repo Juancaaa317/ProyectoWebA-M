@@ -13,7 +13,6 @@ function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 

@@ -92,6 +92,8 @@ public class UsuarioServiceImp implements IUsuarioService {
         Usuario usuario = new Usuario();
 
         usuario.setCorreo(correo);
+        usuario.setNombre(registro.getNombre().trim());
+        usuario.setTelefono(registro.getTelefono().trim());
 
         // Cifrar contraseña
         usuario.setContrasena(
@@ -142,6 +144,8 @@ public class UsuarioServiceImp implements IUsuarioService {
         String token = jwtService.generarToken(usuario);
         UsuarioSesionDTO sesion = new UsuarioSesionDTO(
                 usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getTelefono(),
                 usuario.getCorreo(),
                 usuario.getRol());
 
@@ -170,6 +174,12 @@ public class UsuarioServiceImp implements IUsuarioService {
 
         Usuario usuario = new Usuario();
         usuario.setCorreo(correo);
+        usuario.setNombre(registro.getNombre().trim());
+        String telefono = registro.getTelefono() == null
+                || registro.getTelefono().isBlank()
+                        ? null
+                        : registro.getTelefono().trim();
+        usuario.setTelefono(telefono);
         usuario.setContrasena(
                 passwordEncoder.encode(registro.getContrasena()));
         usuario.setRol(Rol.PROFESOR);
@@ -178,7 +188,8 @@ public class UsuarioServiceImp implements IUsuarioService {
 
         Profesor profesor = new Profesor();
         profesor.setIdUsuario(usuarioGuardado);
-        profesor.setNombre(registro.getNombre().trim());
+        profesor.setNombre(usuarioGuardado.getNombre());
+        profesor.setTelefono(usuarioGuardado.getTelefono());
         profesor.setAreaDocencia(registro.getAreaDocencia());
 
         Profesor profesorGuardado = profesorRepository.save(profesor);

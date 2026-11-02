@@ -1,8 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import { apiFetch, ApiError } from "../services/api";
+import { apiFetch } from "../services/api";
 import { MENUS } from "../config/roles";
 
-const MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === "true";
 const AuthContext = createContext(null);
 
 // Lee la sesión guardada (así no se pierde al recargar la página).
@@ -10,67 +9,29 @@ const AuthContext = createContext(null);
 const leerSesion = () => {
     try {
         const raw = localStorage.getItem("usuario");
+        const token = localStorage.getItem("token");
         const usuario = raw ? JSON.parse(raw) : null;
-        return usuario && MENUS[usuario.rol] ? usuario : null;
+        if (token && usuario && MENUS[usuario.rol]) return usuario;
     } catch {
-        return null;
+        // Una sesión dañada se elimina para que no deje datos inválidos guardados.
     }
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    return null;
 };
 
-// Usuarios simulados, SOLO mientras el backend no tenga /auth/*
-// Se usa "let" para poder agregar usuarios desde registerMock.
-let usuariosMock = [
-    { nombre: "Carlos", apellido: "Ramírez", correo: "admin@arteymovimiento.com", password: "admin123", rol: "ADMINISTRADOR" },
-    { nombre: "Laura", apellido: "Gómez", correo: "profe@arteymovimiento.com", password: "profe123", rol: "PROFESOR" },
-    { nombre: "María", apellido: "López", correo: "estudiante@arteymovimiento.com", password: "estudiante123", rol: "ESTUDIANTE" },
-];
-
-const loginMock = async (correo, password) => {
-    await new Promise((r) => setTimeout(r, 600));
-    const encontrado = usuariosMock.find(
-        (u) => u.correo === correo && u.password === password
-    );
-    if (!encontrado) throw new ApiError("Correo o contraseña incorrectos", 401);
-    return {
-        token: "mock-token",
-        usuario: {
-            id: usuariosMock.indexOf(encontrado) + 1,
-            nombre: encontrado.nombre,
-            apellido: encontrado.apellido,
-            correo: encontrado.correo,
-            rol: encontrado.rol,
-        },
-    };
-};
-
-const registerMock = async ({ nombre, apellido, correo, telefono, password }) => {
-    await new Promise((r) => setTimeout(r, 600));
-
-    const existe = usuariosMock.some((u) => u.correo === correo);
-    if (existe) throw new ApiError("Ya existe una cuenta con ese correo.", 409);
-
-    const nuevo = { nombre, apellido, correo, telefono, password, rol: "ESTUDIANTE" };
-    usuariosMock = [...usuariosMock, nuevo];
-
-    return {
-        token: "mock-token",
-        usuario: {
-            id: usuariosMock.length,
-            nombre: nuevo.nombre,
-            apellido: nuevo.apellido,
-            correo: nuevo.correo,
-            rol: nuevo.rol,
-        },
-    };
-};
-
-const loginReal = (correo, password) =>
-    apiFetch("/auth/login", {
+const login = async (correo, password) => {
+    const { token, usuario } = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({ correo, password }),
     });
 
-const registerReal = (datos) =>
+    localStorage.setItem("token", token);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    return usuario;
+};
+
+const register = (datos) =>
     apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify(datos),
@@ -79,24 +40,8 @@ const registerReal = (datos) =>
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(leerSesion);
 
-    const login = async (correo, password) => {
-        const { token, usuario } = MOCK_AUTH
-            ? await loginMock(correo, password)
-            : await loginReal(correo, password);
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("usuario", JSON.stringify(usuario));
-        setUser(usuario);
-        return usuario;
-    };
-
-    const register = async (datos) => {
-        const { token, usuario } = MOCK_AUTH
-            ? await registerMock(datos)
-            : await registerReal(datos);
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("usuario", JSON.stringify(usuario));
+    const iniciarSesion = async (correo, password) => {
+        const usuario = await login(correo, password);
         setUser(usuario);
         return usuario;
     };
@@ -107,7 +52,10 @@ export function AuthProvider({ children }) {
         setUser(null);
     };
 
-    const value = useMemo(() => ({ user, login, register, logout }), [user]);
+    const value = useMemo(
+        () => ({ user, login: iniciarSesion, register, logout }),
+        [user]
+    );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

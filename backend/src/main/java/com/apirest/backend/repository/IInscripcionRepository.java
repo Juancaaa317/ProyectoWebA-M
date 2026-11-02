@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.sql.Date;
 
 import com.apirest.backend.Enums.EstadoInscripcion;
 import com.apirest.backend.model.Inscripcion;
@@ -21,4 +22,7 @@ public interface IInscripcionRepository extends JpaRepository<Inscripcion, Integ
 
     List<Inscripcion> findByIdClase_IdClaseAndEstadoInscripcion(
             Integer idClase, EstadoInscripcion estado);
+
+    List<Inscripcion> findByIdClase_IdClaseAndFechaInscripcionLessThanEqual(
+            Integer idClase, Date fechaInscripcion);
 }

@@ -3,6 +3,7 @@ package com.apirest.backend.dto;
 import com.apirest.backend.Enums.AreaDocencia;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,9 @@ public class RegistroProfesorDTO {
     @Email(message = "El correo no tiene un formato válido")
     @Size(max = 150)
     private String correo;
+
+    @Pattern(regexp = "^[0-9]{7,15}$", message = "El teléfono debe tener entre 7 y 15 dígitos")
+    private String telefono;
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, max = 72, message = "La contraseña debe tener entre 8 y 72 caracteres")

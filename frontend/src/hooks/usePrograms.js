@@ -35,7 +35,8 @@ function usePrograms() {
 
     // Carga la lista al abrir la vista
     useEffect(() => {
-        cargar();
+        const timer = window.setTimeout(cargar, 0);
+        return () => window.clearTimeout(timer);
     }, [cargar]);
 
     // Ejecuta una operación de escritura con estado "saving" y manejo de errores.

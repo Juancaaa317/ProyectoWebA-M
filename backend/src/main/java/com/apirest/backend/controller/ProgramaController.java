@@ -71,13 +71,7 @@ public class ProgramaController {
     public ResponseEntity<Programa> obtenerProgramaPorId(
             @PathVariable Integer idPrograma) {
 
-        Programa programa = programaService.obtenerProgramaPorId(idPrograma);
-
-        if (programa == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(programa);
+        return ResponseEntity.ok(programaService.obtenerProgramaPorId(idPrograma));
     }
 
     // Actualizar un programa

@@ -44,7 +44,7 @@ public class InscripcionServiceImp implements IInscripcionService {
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se encontró el perfil de estudiante asociado a la sesión."));
 
-        Clase clase = claseRepository.findById(datos.getIdClase())
+        Clase clase = claseRepository.findByIdForUpdate(datos.getIdClase())
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se encontró una clase con el ID: " + datos.getIdClase()));
 

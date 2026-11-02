@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class UsuarioSesionDTO {
 
     private Integer id;
+    private String nombre;
+    private String telefono;
     private String correo;
     private Rol rol;
 }

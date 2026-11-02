@@ -6,38 +6,36 @@ import "../styles/register.css";
 
 function Register() {
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [confirmarContrasena, setConfirmarContrasena] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { register } = useAuth();
+  const { register, login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (
-      !nombre ||
-      !apellido ||
+      !nombre.trim() ||
       !correo ||
       !telefono ||
-      !password ||
-      !confirmPassword
+      !contrasena ||
+      !confirmarContrasena
     ) {
       setError("Por favor, completa todos los campos.");
       return;
     }
 
-    if (!/^\d+$/.test(telefono)) {
-      setError("El teléfono solo debe contener números.");
+    if (!/^\d{7,15}$/.test(telefono.trim())) {
+      setError("El teléfono debe tener entre 7 y 15 dígitos.");
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (contrasena !== confirmarContrasena) {
       setError("Las contraseñas no coinciden.");
       return;
     }
@@ -46,7 +44,14 @@ function Register() {
     setLoading(true);
 
     try {
-      await register({ nombre, apellido, correo, telefono, password });
+      await register({
+        nombre: nombre.trim(),
+        telefono: telefono.trim(),
+        correo: correo.trim().toLowerCase(),
+        contrasena,
+        confirmarContrasena,
+      });
+      await login(correo.trim().toLowerCase(), contrasena);
       navigate("/panel", { replace: true });
     } catch (err) {
       setError(err.message || "No se pudo crear la cuenta.");
@@ -78,40 +83,19 @@ function Register() {
             className="register-form"
             onSubmit={handleSubmit}
           >
-            <div className="register-row">
-              <div className="form-group">
-                <label htmlFor="nombre">
-                  Nombre
-                </label>
-
-                <input
-                  type="text"
-                  id="nombre"
-                  placeholder="Tu nombre"
-                  value={nombre}
-                  onChange={(event) =>
-                    setNombre(event.target.value)
-                  }
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="apellido">
-                  Apellido
-                </label>
-
-                <input
-                  type="text"
-                  id="apellido"
-                  placeholder="Tu apellido"
-                  value={apellido}
-                  onChange={(event) =>
-                    setApellido(event.target.value)
-                  }
-                  disabled={loading}
-                />
-              </div>
+            <div className="form-group">
+              <label htmlFor="nombre">Nombre completo</label>
+              <input
+                type="text"
+                id="nombre"
+                placeholder="Tu nombre completo"
+                value={nombre}
+                onChange={(event) => setNombre(event.target.value)}
+                maxLength={150}
+                autoComplete="name"
+                required
+                disabled={loading}
+              />
             </div>
 
             <div className="form-group">
@@ -127,6 +111,8 @@ function Register() {
                 onChange={(event) =>
                   setCorreo(event.target.value)
                 }
+                autoComplete="email"
+                required
                 disabled={loading}
               />
             </div>
@@ -144,40 +130,52 @@ function Register() {
                 onChange={(event) =>
                   setTelefono(event.target.value)
                 }
+                inputMode="numeric"
+                maxLength={15}
+                autoComplete="tel"
+                required
                 disabled={loading}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">
+              <label htmlFor="contrasena">
                 Contraseña
               </label>
 
               <input
                 type="password"
-                id="password"
+                id="contrasena"
                 placeholder="Crea una contraseña"
-                value={password}
+                value={contrasena}
                 onChange={(event) =>
-                  setPassword(event.target.value)
+                  setContrasena(event.target.value)
                 }
+                minLength={8}
+                maxLength={72}
+                autoComplete="new-password"
+                required
                 disabled={loading}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">
+              <label htmlFor="confirmarContrasena">
                 Confirmar contraseña
               </label>
 
               <input
                 type="password"
-                id="confirmPassword"
+                id="confirmarContrasena"
                 placeholder="Repite tu contraseña"
-                value={confirmPassword}
+                value={confirmarContrasena}
                 onChange={(event) =>
-                  setConfirmPassword(event.target.value)
+                  setConfirmarContrasena(event.target.value)
                 }
+                minLength={8}
+                maxLength={72}
+                autoComplete="new-password"
+                required
                 disabled={loading}
               />
             </div>

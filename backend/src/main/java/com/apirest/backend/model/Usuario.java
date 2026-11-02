@@ -25,8 +25,15 @@ public class Usuario {
     @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer idUsuario;
+
     @Column(unique = true)
     protected String correo;
+
+    @Column(length = 150)
+    protected String nombre;
+
+    @Column(length = 30)
+    protected String telefono;
 
     @ToString.Exclude
     protected String contrasena;

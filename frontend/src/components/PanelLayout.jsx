@@ -11,6 +11,7 @@ function PanelLayout() {
 
     const menu = MENUS[user.rol] ?? [];
     const titulo = ROL_INFO[user.rol]?.titulo ?? "Panel";
+    const nombreVisible = user.nombre || user.correo || "Usuario";
 
     const cerrarMenu = () => setAbierto(false);
 
@@ -46,9 +47,9 @@ function PanelLayout() {
 
                 <div className="al-perfil">
                     <div className="al-avatar">
-                        {user.nombre?.charAt(0).toUpperCase() ?? "?"}
+                        {nombreVisible.charAt(0).toUpperCase()}
                     </div>
-                    <strong>{user.nombre} {user.apellido}</strong>
+                    <strong>{nombreVisible}</strong>
                     <span className="al-rol">{user.rol}</span>
                 </div>
 
