@@ -13,9 +13,13 @@ import com.apirest.backend.dto.RegistroEstudianteRespuestaDTO;
 import com.apirest.backend.dto.LoginDTO;
 import com.apirest.backend.dto.LoginRespuestaDTO;
 import com.apirest.backend.dto.UsuarioSesionDTO;
+import com.apirest.backend.dto.RegistroProfesorDTO;
+import com.apirest.backend.dto.RegistroProfesorRespuestaDTO;
 import com.apirest.backend.model.Estudiante;
+import com.apirest.backend.model.Profesor;
 import com.apirest.backend.model.Usuario;
 import com.apirest.backend.repository.IEstudianteRepository;
+import com.apirest.backend.repository.IProfesorRepository;
 import com.apirest.backend.repository.IUsuarioRepository;
 import com.apirest.backend.exception.RecursoDuplicadoException;
 import com.apirest.backend.exception.CredencialesInvalidasException;
@@ -29,6 +33,9 @@ public class UsuarioServiceImp implements IUsuarioService {
 
     @Autowired
     IEstudianteRepository estudianteRepository;
+
+    @Autowired
+    IProfesorRepository profesorRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -139,5 +146,49 @@ public class UsuarioServiceImp implements IUsuarioService {
                 usuario.getRol());
 
         return new LoginRespuestaDTO(token, sesion);
+    }
+
+    @Override
+    @Transactional
+    public RegistroProfesorRespuestaDTO registrarProfesor(
+            RegistroProfesorDTO registro) {
+
+        String correo = registro.getCorreo()
+                .trim()
+                .toLowerCase(Locale.ROOT);
+
+        if (usuarioRepository.existsByCorreo(correo)) {
+            throw new RecursoDuplicadoException(
+                    "Ya existe un usuario registrado con ese correo.");
+        }
+
+        if (!registro.getContrasena().equals(
+                registro.getConfirmarContrasena())) {
+            throw new IllegalArgumentException(
+                    "Las contraseñas no coinciden.");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setCorreo(correo);
+        usuario.setContrasena(
+                passwordEncoder.encode(registro.getContrasena()));
+        usuario.setRol(Rol.PROFESOR);
+
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        Profesor profesor = new Profesor();
+        profesor.setIdUsuario(usuarioGuardado);
+        profesor.setNombre(registro.getNombre().trim());
+        profesor.setAreaDocencia(registro.getAreaDocencia());
+
+        Profesor profesorGuardado = profesorRepository.save(profesor);
+
+        return new RegistroProfesorRespuestaDTO(
+                usuarioGuardado.getIdUsuario(),
+                profesorGuardado.getIdProfesor(),
+                profesorGuardado.getNombre(),
+                usuarioGuardado.getCorreo(),
+                profesorGuardado.getAreaDocencia(),
+                usuarioGuardado.getRol());
     }
 }

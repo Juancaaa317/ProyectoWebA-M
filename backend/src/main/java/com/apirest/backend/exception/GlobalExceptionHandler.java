@@ -11,8 +11,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.apirest.backend.dto.ApiErrorDTO;
 
@@ -69,6 +71,30 @@ public class GlobalExceptionHandler {
                 return construirRespuesta(
                                 HttpStatus.BAD_REQUEST,
                                 mensaje,
+                                request);
+        }
+
+        // Error 400: JSON inválido o valor no permitido para un campo
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        public ResponseEntity<ApiErrorDTO> manejarJsonInvalido(
+                        HttpMessageNotReadableException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.BAD_REQUEST,
+                                "El JSON enviado tiene un formato o valor no válido.",
+                                request);
+        }
+
+        // Error 404: ruta sin un endpoint asociado
+        @ExceptionHandler(NoResourceFoundException.class)
+        public ResponseEntity<ApiErrorDTO> manejarRutaNoEncontrada(
+                        NoResourceFoundException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.NOT_FOUND,
+                                "No existe un endpoint para la ruta solicitada.",
                                 request);
         }
 

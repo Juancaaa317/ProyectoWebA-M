@@ -2,6 +2,8 @@ package com.apirest.backend.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.backend.Enums.EstadoPrograma;
+import com.apirest.backend.dto.ProgramaDTO;
 import com.apirest.backend.model.Programa;
 import com.apirest.backend.service.IProgramaService;
 
@@ -30,7 +33,12 @@ public class ProgramaController {
     // Crear un programa
     @PostMapping
     public ResponseEntity<Programa> crearPrograma(
-            @RequestBody Programa programa) {
+            @Valid @RequestBody ProgramaDTO datos) {
+
+        Programa programa = new Programa();
+        programa.setNombrePrograma(datos.getNombrePrograma().trim());
+        programa.setDescripcion(datos.getDescripcion());
+        programa.setEstadoPrograma(datos.getEstadoPrograma());
 
         Programa nuevoPrograma = programaService.guardarPrograma(programa);
 
@@ -76,30 +84,25 @@ public class ProgramaController {
     @PutMapping("/{idPrograma}")
     public ResponseEntity<Programa> actualizarPrograma(
             @PathVariable Integer idPrograma,
-            @RequestBody Programa programa) {
+            @Valid @RequestBody ProgramaDTO datos) {
 
-        Programa programaActualizado = programaService.actualizarPrograma(idPrograma, programa);
+        Programa cambios = new Programa();
+        cambios.setNombrePrograma(datos.getNombrePrograma().trim());
+        cambios.setDescripcion(datos.getDescripcion());
+        cambios.setEstadoPrograma(datos.getEstadoPrograma());
 
-        if (programaActualizado == null) {
-            return ResponseEntity.notFound().build();
-        }
+        Programa programaActualizado =
+                programaService.actualizarPrograma(idPrograma, cambios);
 
         return ResponseEntity.ok(programaActualizado);
     }
 
     // Eliminar un programa
     @DeleteMapping("/{idPrograma}")
-    public ResponseEntity<String> eliminarPrograma(
+    public ResponseEntity<Void> eliminarPrograma(
             @PathVariable Integer idPrograma) {
 
-        String respuesta = programaService.eliminarPrograma(idPrograma);
-
-        if (respuesta.startsWith("No existe")) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(respuesta);
-        }
-
-        return ResponseEntity.ok(respuesta);
+        programaService.eliminarPrograma(idPrograma);
+        return ResponseEntity.noContent().build();
     }
 }

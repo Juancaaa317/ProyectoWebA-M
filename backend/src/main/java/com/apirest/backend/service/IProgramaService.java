@@ -12,5 +12,5 @@ public interface  IProgramaService {
     Programa obtenerProgramaPorId(Integer idPrograma);
     Programa guardarPrograma(Programa programa);
     Programa actualizarPrograma( Integer idPrograma, Programa programa);
-    String eliminarPrograma(Integer idPrograma);
+    void eliminarPrograma(Integer idPrograma);
 }

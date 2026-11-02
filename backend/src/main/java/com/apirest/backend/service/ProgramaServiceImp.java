@@ -105,7 +105,7 @@ public class ProgramaServiceImp implements IProgramaService {
 
     // Eliminar un programa
     @Override
-    public String eliminarPrograma(Integer idPrograma) {
+    public void eliminarPrograma(Integer idPrograma) {
 
         // Buscar el programa antes de eliminarlo
         Programa programaExistente = programaRepository.findById(idPrograma)
@@ -114,7 +114,5 @@ public class ProgramaServiceImp implements IProgramaService {
                 ));
 
         programaRepository.delete(programaExistente);
-
-        return "Programa eliminado correctamente.";
     }
 }

@@ -61,6 +61,13 @@ public class SecurityConfig {
                             "/api/programas/**"
                     ).permitAll()
 
+                    // Consultas de clases públicas
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/clases",
+                            "/api/clases/**"
+                    ).permitAll()
+
                     // Gestión de programas exclusiva del administrador
                     .requestMatchers(
                             HttpMethod.POST,
@@ -78,6 +85,25 @@ public class SecurityConfig {
                             HttpMethod.DELETE,
                             "/api/programas",
                             "/api/programas/**"
+                    ).hasRole("ADMINISTRADOR")
+
+                    // Gestión de clases exclusiva del administrador
+                    .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/clases",
+                            "/api/clases/**"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/clases",
+                            "/api/clases/**"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.DELETE,
+                            "/api/clases",
+                            "/api/clases/**"
                     ).hasRole("ADMINISTRADOR")
 
                     // Administración de usuarios exclusiva del administrador
