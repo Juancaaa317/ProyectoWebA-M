@@ -17,25 +17,49 @@ const leerSesion = () => {
     }
 };
 
-// Login simulado, SOLO mientras el backend no tenga /auth/login
-const USUARIOS_MOCK = [
-    { correo: "admin@arteymovimiento.com", password: "admin123", rol: "ADMINISTRADOR" },
-    { correo: "profe@arteymovimiento.com", password: "profe123", rol: "PROFESOR" },
-    { correo: "estudiante@arteymovimiento.com", password: "estudiante123", rol: "ESTUDIANTE" },
+// Usuarios simulados, SOLO mientras el backend no tenga /auth/*
+// Se usa "let" para poder agregar usuarios desde registerMock.
+let usuariosMock = [
+    { nombre: "Carlos", apellido: "Ramírez", correo: "admin@arteymovimiento.com", password: "admin123", rol: "ADMINISTRADOR" },
+    { nombre: "Laura", apellido: "Gómez", correo: "profe@arteymovimiento.com", password: "profe123", rol: "PROFESOR" },
+    { nombre: "María", apellido: "López", correo: "estudiante@arteymovimiento.com", password: "estudiante123", rol: "ESTUDIANTE" },
 ];
 
 const loginMock = async (correo, password) => {
     await new Promise((r) => setTimeout(r, 600));
-    const encontrado = USUARIOS_MOCK.find(
+    const encontrado = usuariosMock.find(
         (u) => u.correo === correo && u.password === password
     );
     if (!encontrado) throw new ApiError("Correo o contraseña incorrectos", 401);
     return {
         token: "mock-token",
         usuario: {
-            id: USUARIOS_MOCK.indexOf(encontrado) + 1,
+            id: usuariosMock.indexOf(encontrado) + 1,
+            nombre: encontrado.nombre,
+            apellido: encontrado.apellido,
             correo: encontrado.correo,
             rol: encontrado.rol,
+        },
+    };
+};
+
+const registerMock = async ({ nombre, apellido, correo, telefono, password }) => {
+    await new Promise((r) => setTimeout(r, 600));
+
+    const existe = usuariosMock.some((u) => u.correo === correo);
+    if (existe) throw new ApiError("Ya existe una cuenta con ese correo.", 409);
+
+    const nuevo = { nombre, apellido, correo, telefono, password, rol: "ESTUDIANTE" };
+    usuariosMock = [...usuariosMock, nuevo];
+
+    return {
+        token: "mock-token",
+        usuario: {
+            id: usuariosMock.length,
+            nombre: nuevo.nombre,
+            apellido: nuevo.apellido,
+            correo: nuevo.correo,
+            rol: nuevo.rol,
         },
     };
 };
@@ -44,6 +68,12 @@ const loginReal = (correo, password) =>
     apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({ correo, password }),
+    });
+
+const registerReal = (datos) =>
+    apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(datos),
     });
 
 export function AuthProvider({ children }) {
@@ -60,13 +90,24 @@ export function AuthProvider({ children }) {
         return usuario;
     };
 
+    const register = async (datos) => {
+        const { token, usuario } = MOCK_AUTH
+            ? await registerMock(datos)
+            : await registerReal(datos);
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("usuario", JSON.stringify(usuario));
+        setUser(usuario);
+        return usuario;
+    };
+
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
         setUser(null);
     };
 
-    const value = useMemo(() => ({ user, login, logout }), [user]);
+    const value = useMemo(() => ({ user, login, register, logout }), [user]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

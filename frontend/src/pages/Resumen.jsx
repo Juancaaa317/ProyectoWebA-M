@@ -10,7 +10,7 @@ function Resumen() {
     return (
         <div className="pn">
             <p className="pn-sub">{info?.titulo.toUpperCase() ?? "PANEL"}</p>
-            <h1>Hola, {user.correo}</h1>
+            <h1>Hola, {user.nombre}</h1>
             <p className="pn-texto">{info?.bienvenida}</p>
 
             <div className="pn-grid">
