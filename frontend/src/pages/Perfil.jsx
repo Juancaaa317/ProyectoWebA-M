@@ -8,12 +8,15 @@ function Perfil() {
         <div className="perfil">
             <div className="perfil-card">
                 <div className="perfil-avatar">
-                    {user.correo.charAt(0).toUpperCase()}
+                    {user.nombre?.charAt(0).toUpperCase() ?? "?"}
                 </div>
 
                 <h1>Mi perfil</h1>
 
                 <dl>
+                    <dt>Nombre</dt>
+                    <dd>{user.nombre} {user.apellido}</dd>
+
                     <dt>Correo</dt>
                     <dd>{user.correo}</dd>
 

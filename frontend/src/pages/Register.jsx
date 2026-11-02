@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 import "../styles/register.css";
 
 function Register() {
@@ -11,8 +12,12 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (
@@ -38,7 +43,16 @@ function Register() {
     }
 
     setError("");
-    console.log("Formulario de registro listo para enviar");
+    setLoading(true);
+
+    try {
+      await register({ nombre, apellido, correo, telefono, password });
+      navigate("/panel", { replace: true });
+    } catch (err) {
+      setError(err.message || "No se pudo crear la cuenta.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,6 +92,7 @@ function Register() {
                   onChange={(event) =>
                     setNombre(event.target.value)
                   }
+                  disabled={loading}
                 />
               </div>
 
@@ -94,6 +109,7 @@ function Register() {
                   onChange={(event) =>
                     setApellido(event.target.value)
                   }
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -111,6 +127,7 @@ function Register() {
                 onChange={(event) =>
                   setCorreo(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -127,6 +144,7 @@ function Register() {
                 onChange={(event) =>
                   setTelefono(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -143,6 +161,7 @@ function Register() {
                 onChange={(event) =>
                   setPassword(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -159,6 +178,7 @@ function Register() {
                 onChange={(event) =>
                   setConfirmPassword(event.target.value)
                 }
+                disabled={loading}
               />
             </div>
 
@@ -171,8 +191,9 @@ function Register() {
             <button
               type="submit"
               className="register-button"
+              disabled={loading}
             >
-              Crear cuenta
+              {loading ? "Creando cuenta..." : "Crear cuenta"}
             </button>
           </form>
 

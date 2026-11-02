@@ -46,9 +46,9 @@ function PanelLayout() {
 
                 <div className="al-perfil">
                     <div className="al-avatar">
-                        {user.correo?.charAt(0).toUpperCase() ?? "?"}
+                        {user.nombre?.charAt(0).toUpperCase() ?? "?"}
                     </div>
-                    <strong>{user.correo}</strong>
+                    <strong>{user.nombre} {user.apellido}</strong>
                     <span className="al-rol">{user.rol}</span>
                 </div>
 
