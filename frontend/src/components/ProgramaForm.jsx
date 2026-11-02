@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const MAX_NOMBRE = 100;
-const MAX_DESCRIPCION = 255;
+const MAX_DESCRIPCION = 500;
 
 function ProgramaForm({ programa, onGuardar, onCancelar, saving, error }) {
     const editando = Boolean(programa);

@@ -1,23 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { programaService } from "../services/programaService";
-import { useAuth } from "../context/AuthContext";
 
 function usePrograms() {
-    const { logout } = useAuth();
-
     const [programas, setProgramas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [saving, setSaving] = useState(false);
     const [actionError, setActionError] = useState("");
 
-    // Convierte cualquier error en un mensaje; si la sesión expiró, la cierra
     const manejarError = useCallback(
-        (err) => {
-            if (err.status === 401) logout();
-            return err.message || "Ocurrió un error inesperado.";
-        },
-        [logout]
+        (err) => err.message || "Ocurrió un error inesperado.",
+        []
     );
 
     const cargar = useCallback(async () => {
@@ -35,7 +28,8 @@ function usePrograms() {
 
     // Carga la lista al abrir la vista
     useEffect(() => {
-        cargar();
+        const timer = window.setTimeout(cargar, 0);
+        return () => window.clearTimeout(timer);
     }, [cargar]);
 
     // Ejecuta una operación de escritura con estado "saving" y manejo de errores.

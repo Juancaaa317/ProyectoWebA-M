@@ -1,24 +1,24 @@
 .al {
     display: flex;
     min-height: 100vh;
-    color: white;
-    background: #17131f;
+    color: var(--text);
+    background: var(--bg);
 }
 
 /* ===== Barra lateral ===== */
 .al-sidebar {
     position: sticky;
     top: 0;
-    width: 270px;
+    width: 276px;
     height: 100vh;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 24px 16px;
+    gap: 24px;
+    padding: 26px 18px 20px;
     overflow-y: auto;
-    background: var(--bg);
-    border-right: 1px solid #302738;
+    background: #100d16;
+    border-right: 1px solid rgba(195, 75, 255, 0.16);
 }
 
 .al-logo {
@@ -51,29 +51,29 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    padding: 20px 12px;
+    padding: 18px 12px;
     text-align: center;
-    background: #0f0d15;
-    border: 1px solid #302738;
-    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(145, 51, 210, 0.1), rgba(255, 31, 156, 0.035));
+    border: 1px solid rgba(195, 75, 255, 0.2);
+    border-radius: 18px;
 }
 
 .al-perfil strong {
     font-size: 13px;
-    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 
 .al-avatar {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     background: var(--gradient);
     border-radius: 50%;
-    box-shadow: 0 6px 20px rgba(255, 31, 156, 0.35);
+    box-shadow: 0 5px 18px rgba(255, 31, 156, 0.22);
 }
 
 .al-rol {
@@ -95,15 +95,16 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding-top: 16px;
-    border-top: 1px solid #302738;
+    padding-top: 14px;
+    border-top: 1px solid rgba(195, 75, 255, 0.16);
 }
 
 .al-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 13px;
+    min-height: 48px;
+    padding: 11px 13px;
     font-family: inherit;
     font-size: 15px;
     font-weight: 600;
@@ -111,33 +112,49 @@
     text-align: left;
     text-decoration: none;
     background: transparent;
-    border: 2px solid transparent;
-    border-radius: 999px;
+    border: 1px solid transparent;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
+    transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
 }
 
 .al-link:hover {
-    border-color: var(--accent);
-    background: rgba(255, 31, 156, 0.1);
-    transform: translateX(3px);
+    color: #fff;
+    border-color: rgba(195, 75, 255, 0.22);
+    background: rgba(195, 75, 255, 0.08);
 }
 
 .al-link.activo {
     color: white;
-    background: var(--gradient);
-    box-shadow: 0 6px 20px rgba(255, 31, 156, 0.3);
+    border-color: rgba(255, 31, 156, 0.18);
+    background: linear-gradient(90deg, rgba(122, 47, 240, 0.2), rgba(255, 31, 107, 0.12));
+    box-shadow: inset 3px 0 0 #d85bff;
 }
 
 .al-icono {
-    width: 22px;
-    text-align: center;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    color: #cfb6df;
+}
+
+.al-link.activo .al-icono {
+    color: #ff92ce;
+}
+
+.al-link:focus-visible,
+.al-topbar-btn:focus-visible {
+    outline: 2px solid #e39bff;
+    outline-offset: 2px;
 }
 
 /* ===== Contenido ===== */
 .al-contenido {
     flex: 1;
     min-width: 0;
+    background:
+        radial-gradient(ellipse at 78% 4%, rgba(122, 47, 240, 0.075), transparent 34rem),
+        var(--bg);
 }
 
 /* ===== Barra superior móvil ===== */
@@ -159,8 +176,8 @@
         align-items: center;
         gap: 14px;
         padding: 12px 16px;
-        background: var(--bg);
-        border-bottom: 1px solid #302738;
+        background: #100d16;
+        border-bottom: 1px solid rgba(195, 75, 255, 0.16);
     }
 
     .al-topbar-btn {
@@ -169,7 +186,7 @@
         font-size: 22px;
         color: white;
         background: transparent;
-        border: 1px solid #302738;
+        border: 1px solid rgba(195, 75, 255, 0.2);
         border-radius: 12px;
         cursor: pointer;
     }
@@ -180,6 +197,7 @@
 
     .al-sidebar {
         position: fixed;
+        width: min(84vw, 292px);
         top: 0;
         left: 0;
         z-index: 1500;
@@ -200,29 +218,11 @@
     }
 }
 
-/* ===== Insignia "Pronto" ===== */
-.al-pronto {
-    margin-left: auto;
-    padding: 2px 8px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--accent);
-    background: rgba(255, 31, 156, 0.12);
-    border-radius: 999px;
-}
-
-.al-link.activo .al-pronto {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-}
-
 /* ===== Pantallas del panel (Resumen y En construcción) ===== */
 .pn {
-    max-width: 1100px;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 50px 24px;
+    padding: 48px 36px;
     color: white;
 }
 
@@ -237,7 +237,15 @@
 .pn h1 {
     margin: 0 0 12px;
     font-size: clamp(1.6rem, 4vw, 2.4rem);
-    word-break: break-all;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.pn h1 span {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .pn-texto {
@@ -249,49 +257,108 @@
 
 .pn-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: 18px;
 }
 
 .pn-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 22px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 12px;
+    min-height: 154px;
+    padding: 20px;
     color: white;
     text-decoration: none;
-    background: #0f0d15;
-    border: 1px solid #302738;
-    border-radius: 16px;
-    transition: transform 0.3s, border-color 0.3s;
+    background: linear-gradient(145deg, rgba(27, 23, 36, 0.96), rgba(16, 13, 22, 0.98));
+    border: 1px solid rgba(195, 75, 255, 0.16);
+    border-radius: 18px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .pn-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
+    transform: translateY(-2px);
+    border-color: rgba(255, 31, 156, 0.45);
 }
 
 .pn-icono {
-    font-size: 28px;
+    width: 22px;
+    height: 22px;
+    color: #e68cff;
 }
 
-.pn-datos {
+.pn-card-icono {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: #e68cff;
+    background: rgba(145, 51, 210, 0.14);
+    border: 1px solid rgba(195, 75, 255, 0.16);
+    border-radius: 13px;
+}
+
+.pn-card-contenido {
+    display: grid;
+    gap: 7px;
+    padding-top: 2px;
+}
+
+.pn-card-contenido strong {
+    font-size: 16px;
+}
+
+.pn-card-contenido > span {
+    color: #c9bdcf;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.pn-seccion-titulo {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    padding: 16px 18px;
-    font-size: 14px;
-    color: #b8b2c4;
-    background: #0f0d15;
-    border: 1px solid #302738;
-    border-radius: 12px;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+    margin: 38px 0 18px;
 }
 
-.pn-datos code {
-    padding: 3px 10px;
-    color: var(--accent);
-    background: rgba(255, 31, 156, 0.1);
-    border-radius: 999px;
+.pn-seccion-titulo h2 {
+    margin-bottom: 6px;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+}
+
+.pn-seccion-titulo p {
+    color: #c9bdcf;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.pn-titulo-icono {
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+    vertical-align: -5px;
+    color: #e68cff;
+}
+
+.pn-card:focus-visible {
+    outline: 2px solid #e39bff;
+    outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+    .pn {
+        padding: 34px 18px;
+    }
+
+    .pn-seccion-titulo {
+        margin-top: 30px;
+    }
+
+    .pn-card {
+        min-height: 132px;
+        padding: 17px;
+    }
 }

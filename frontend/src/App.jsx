@@ -14,6 +14,12 @@ import Profesores from "./pages/Profesores";
 import Resumen from "./pages/Resumen";
 import Perfil from "./pages/Perfil";
 import AdminProgramas from "./pages/AdminProgramas";
+import AdminClases from "./pages/AdminClases";
+import AdminProfesores from "./pages/AdminProfesores";
+import AdminEstudiantes from "./pages/AdminEstudiantes";
+import Inscripciones from "./pages/Inscripciones";
+import Asistencia from "./pages/Asistencia";
+import HorarioPanel from "./pages/HorarioPanel";
 import SeccionPendiente from "./pages/SeccionPendiente";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
@@ -50,6 +56,54 @@ function App() {
                             element={
                                 <PrivateRoute roles={[ROLES.ADMIN]}>
                                     <AdminProgramas />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="clases"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN, ROLES.PROFESOR]}>
+                                    <AdminClases />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="profesores"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN]}>
+                                    <AdminProfesores />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="estudiantes"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN]}>
+                                    <AdminEstudiantes />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="inscripciones"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN, ROLES.ESTUDIANTE]}>
+                                    <Inscripciones />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="asistencia"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN, ROLES.PROFESOR, ROLES.ESTUDIANTE]}>
+                                    <Asistencia />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="horario"
+                            element={
+                                <PrivateRoute roles={[ROLES.PROFESOR, ROLES.ESTUDIANTE]}>
+                                    <HorarioPanel />
                                 </PrivateRoute>
                             }
                         />

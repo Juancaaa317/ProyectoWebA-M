@@ -1,33 +1,165 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap");
 
-/* ===== Barra principal ===== */
+/* ============================================================
+   BARRA PRINCIPAL
+   ============================================================ */
 .navbar {
-  width: 100%;
-  min-height: 100px;
-  padding: 16px 2.5%;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  --logo-size: 78px;
+
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  min-height: 108px;
+  padding: 14px 2.5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg, #0f0d16);
   border-bottom: 1px solid #302738;
+  transition: min-height 0.3s ease, padding 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-/* ===== Logo ===== */
+/* Línea de degradado inferior */
+.navbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--gradient, linear-gradient(90deg, #8a2be2, #ff1f9c));
+  background-size: 200% auto;
+  opacity: 0.75;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  animation: navbar-line-flow 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes navbar-line-flow {
+  to { background-position: 200% center; }
+}
+
+/* Al bajar: más compacta, translúcida y con sombra */
+.navbar--scrolled {
+  --logo-size: 54px;
+  min-height: 80px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: rgba(15, 13, 22, 0.82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ============================================================
+   LOGO
+   ============================================================ */
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   color: white;
   text-decoration: none;
 }
 
+/* Recuadro del logo con borde degradado animado */
+.navbar-logo-badge {
+  position: relative;
+  flex-shrink: 0;
+  width: calc(var(--logo-size) + 10px);
+  height: calc(var(--logo-size) + 10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 26px;
+  background:
+    linear-gradient(#14101c, #14101c) padding-box,
+    conic-gradient(from var(--badge-angle, 0deg),
+      #8a2be2, #ff1f9c, #b45cff, #ff4fae, #8a2be2) border-box;
+  border: 3px solid transparent;
+  box-shadow:
+    0 0 0 4px rgba(195, 75, 255, 0.1),
+    0 10px 30px rgba(255, 31, 156, 0.35);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+@property --badge-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Anillo degradado que gira continuamente */
+.navbar-logo-ring {
+  position: absolute;
+  inset: -7px;
+  border-radius: 30px;
+  padding: 2px;
+  background: conic-gradient(from var(--badge-angle, 0deg),
+    transparent 0deg,
+    rgba(255, 31, 156, 0.9) 60deg,
+    transparent 120deg,
+    transparent 180deg,
+    rgba(138, 43, 226, 0.9) 240deg,
+    transparent 300deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: badge-spin 5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes badge-spin {
+  to { --badge-angle: 360deg; }
+}
+
+.navbar-logo:hover .navbar-logo-badge {
+  transform: rotate(-4deg) scale(1.06);
+  box-shadow:
+    0 0 0 6px rgba(195, 75, 255, 0.16),
+    0 12px 36px rgba(255, 31, 156, 0.55);
+}
+
+/* Brillo interior que recorre el recuadro */
+.navbar-logo-badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.14) 48%,
+    transparent 62%
+  );
+  background-size: 250% 100%;
+  animation: badge-shine 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes badge-shine {
+  0%, 100% { background-position: 120% 0; }
+  50%      { background-position: -20% 0; }
+}
+
 .navbar-logo-img {
-  height: 72px;
-  width: auto;
+  display: block;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  padding: 6px;
   object-fit: contain;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+/* Texto del logo */
+.navbar-logo-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1;
 }
 
 .navbar-logo-text {
@@ -35,21 +167,70 @@
   font-size: 28px;
   font-weight: 700;
   letter-spacing: 1.5px;
+  color: white;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  transition: font-size 0.3s ease;
 }
 
 .navbar-logo-text span {
-  color: var(--accent);
+  background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-/* ===== Acciones a la derecha ===== */
+.navbar--scrolled .navbar-logo-text {
+  font-size: 24px;
+}
+
+/* ============================================================
+   ACCIONES A LA DERECHA
+   ============================================================ */
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
 }
 
+/* ===== Botón de Inicio ===== */
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  transition: transform 0.3s, background-color 0.3s, border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.nav-home svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-home:hover {
+  border-color: var(--accent, #ff1f9c);
+  background: rgba(255, 31, 156, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 31, 156, 0.25);
+}
+
+.nav-home.active {
+  border-color: var(--accent, #ff1f9c);
+  background: rgba(255, 31, 156, 0.12);
+  box-shadow: 0 4px 16px rgba(255, 31, 156, 0.2);
+}
+
+/* ===== Ingresar / Inscríbete ===== */
 .nav-register {
-  background: var(--gradient);
+  background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+  background-size: 200% auto;
   color: white;
   padding: 15px 34px;
   border-radius: 999px;
@@ -58,138 +239,500 @@
   text-decoration: none;
   white-space: nowrap;
   box-shadow: 0 6px 20px rgba(255, 31, 156, 0.35);
-  transition: transform 0.3s, filter 0.3s;
+  transition: transform 0.3s, filter 0.3s, background-position 0.4s ease,
+    box-shadow 0.3s;
 }
 
 .nav-register:hover {
   transform: translateY(-2px);
-  filter: brightness(1.15);
+  background-position: right center;
+  filter: brightness(1.1);
+  box-shadow: 0 10px 26px rgba(255, 31, 156, 0.5);
 }
 
 .nav-login {
   background: transparent;
   color: white;
   padding: 13px 32px;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--accent, #ff1f9c);
   border-radius: 999px;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 0.3s, background-color 0.3s;
+  transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 
 .nav-login:hover {
   background: rgba(255, 31, 156, 0.1);
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 31, 156, 0.2);
 }
 
-/* ===== Botón de 3 rayas ===== */
+/* ============================================================
+   BOTÓN DE MENÚ
+   ============================================================ */
 .menu-wrapper {
   position: relative;
 }
 
 .menu-btn {
-  width: 56px;
   height: 56px;
+  padding: 0 22px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  line-height: 1;
+  gap: 14px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
   color: white;
   background: transparent;
   border: 1px solid #302738;
-  border-radius: 14px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: border-color 0.3s, background-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s,
+    transform 0.3s;
 }
 
 .menu-btn:hover,
 .menu-btn[aria-expanded="true"] {
-  border-color: var(--accent);
+  border-color: var(--accent, #ff1f9c);
   background: rgba(255, 31, 156, 0.1);
+  box-shadow: 0 6px 18px rgba(255, 31, 156, 0.2);
+  transform: translateY(-2px);
 }
 
-/* ===== Menú desplegable ===== */
+/* Tres rayas que se transforman en X */
+.burger {
+  position: relative;
+  width: 22px;
+  height: 16px;
+}
+
+.burger i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+}
+
+.burger i:nth-child(1) { top: 0; }
+.burger i:nth-child(2) { top: 7px; }
+.burger i:nth-child(3) { top: 14px; }
+
+.menu-btn[aria-expanded="true"] .burger i:nth-child(1) {
+  top: 7px;
+  transform: rotate(45deg);
+}
+
+.menu-btn[aria-expanded="true"] .burger i:nth-child(2) {
+  opacity: 0;
+  transform: translateX(8px);
+}
+
+.menu-btn[aria-expanded="true"] .burger i:nth-child(3) {
+  top: 7px;
+  transform: rotate(-45deg);
+}
+
+/* ============================================================
+   MENÚ DESPLEGABLE
+   ============================================================ */
 .menu-dropdown {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 16px);
   right: 0;
-  min-width: 250px;
-  padding: 8px;
+  min-width: 300px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  background: var(--bg);
-  border: 1px solid #302738;
-  border-radius: 14px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+  background: rgba(22, 17, 32, 0.92);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(211, 138, 255, 0.18);
+  border-radius: 22px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    0 0 50px rgba(195, 75, 255, 0.15);
+  overflow: hidden;
 
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  transform: translateY(-10px) scale(0.96);
+  transform-origin: top right;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.3s;
 }
 
 .menu-dropdown.open {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-.menu-dropdown a {
-  padding: 14px 18px;
+/* Resplandor decorativo superior */
+.menu-dropdown-glow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  width: 220px;
+  height: 120px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(255, 31, 156, 0.22), transparent 70%);
+  pointer-events: none;
+}
+
+/* Barra de degradado animada en la parte superior */
+.menu-dropdown::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #8a2be2, #ff1f9c, #b45cff, #8a2be2);
+  background-size: 300% auto;
+  animation: menu-bar-flow 5s linear infinite;
+}
+
+@keyframes menu-bar-flow {
+  to { background-position: 300% center; }
+}
+
+/* Título del menú */
+.menu-dropdown-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #d38aff;
+}
+
+.menu-dropdown-title-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8a2be2, #ff1f9c);
+  box-shadow: 0 0 8px rgba(255, 31, 156, 0.9);
+  animation: title-dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes title-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.5); opacity: 0.6; }
+}
+
+/* Contenedor de enlaces */
+.menu-dropdown-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ===== Enlace individual con animación escalonada ===== */
+.menu-link {
+  --stagger: 0s;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
   color: white;
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 600;
+  font-family: inherit;
   text-decoration: none;
-  border: 2px solid transparent;
-  border-radius: 999px;
+  text-align: left;
+  border: none;
+  border-radius: 14px;
   background: transparent;
-  transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+
+  /* Entrada escalonada */
+  opacity: 0;
+  transform: translateX(14px);
+  transition: opacity 0.3s ease var(--stagger),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) var(--stagger),
+    background-color 0.25s ease, color 0.25s ease;
 }
 
-.menu-dropdown a:hover {
-  border-color: var(--accent);
-  background: rgba(255, 31, 156, 0.1);
-  transform: translateY(-2px);
+.menu-dropdown.open .menu-link {
+  opacity: 1;
+  transform: translateX(0);
 }
 
-.menu-dropdown a.active {
-  border-color: var(--accent);
-  background: rgba(255, 31, 156, 0.1);
+/* Fondo degradado deslizante al pasar el cursor */
+.menu-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(138, 43, 226, 0.22), rgba(255, 31, 156, 0.14));
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 0.35s ease, opacity 0.3s ease;
+  pointer-events: none;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 1100px) {
+.menu-link:hover::before,
+.menu-link.active::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.menu-link:hover,
+.menu-link.active {
+  color: #fff;
+}
+
+/* Icono de cada enlace */
+.menu-link-icon {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: #d38aff;
+  background: rgba(138, 43, 226, 0.14);
+  border: 1px solid rgba(211, 138, 255, 0.2);
+  transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-link-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.menu-link:hover .menu-link-icon,
+.menu-link.active .menu-link-icon {
+  transform: scale(1.1) rotate(-6deg);
+  color: white;
+  background: linear-gradient(135deg, #8a2be2, #ff1f9c);
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(255, 31, 156, 0.4);
+}
+
+.menu-link-label {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+/* Flecha que aparece al pasar el cursor */
+.menu-link-arrow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  color: #ff4fae;
+}
+
+.menu-link-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.menu-link:hover .menu-link-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Variante "peligro" (cerrar sesión) */
+.menu-link--danger:hover .menu-link-icon {
+  background: linear-gradient(135deg, #d43a5e, #ff5f4f);
+  box-shadow: 0 6px 16px rgba(255, 80, 80, 0.4);
+}
+
+/* Pie decorativo del menú */
+.menu-dropdown-footer {
+  margin-top: 10px;
+  padding: 12px 16px 6px;
+  border-top: 1px solid rgba(211, 138, 255, 0.12);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(211, 138, 255, 0.55);
+}
+
+/* ============================================================
+   BOTÓN CIRCULAR DE USUARIO
+   ============================================================ */
+.user-btn {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+  background-size: 200% auto;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255, 31, 156, 0.35);
+  transition: transform 0.3s, filter 0.3s, background-position 0.4s ease,
+    box-shadow 0.3s;
+}
+
+.user-btn:hover,
+.user-btn[aria-expanded="true"] {
+  transform: translateY(-2px) scale(1.04);
+  background-position: right center;
+  box-shadow: 0 10px 26px rgba(255, 31, 156, 0.5);
+}
+
+/* ============================================================
+   CABECERA DEL MENÚ DE USUARIO
+   ============================================================ */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(211, 138, 255, 0.12);
+  word-break: break-all;
+}
+
+.user-info-avatar {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8a2be2, #ff1f9c);
+  box-shadow: 0 4px 14px rgba(255, 31, 156, 0.35);
+}
+
+.user-info-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.user-info strong {
+  font-size: 13.5px;
+  color: white;
+}
+
+.user-info span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent, #ff1f9c);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
   .navbar-logo-text {
-    font-size: 22px;
+    font-size: 24px;
+  }
+
+  .navbar--scrolled .navbar-logo-text {
+    font-size: 21px;
+  }
+
+  .nav-home {
+    padding: 13px 18px;
   }
 }
 
-@media (max-width: 900px) {
-  .navbar-logo-text {
+@media (max-width: 1000px) {
+  /* Inicio y Menú quedan solo con icono */
+  .nav-home {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .nav-home-label,
+  .menu-btn-label {
     display: none;
   }
 
-  .navbar-logo-img {
-    height: 60px;
+  .menu-btn {
+    width: 56px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    --logo-size: 62px;
+  }
+
+  .navbar-logo-text {
+    display: none;
   }
 }
 
 @media (max-width: 560px) {
   .navbar {
-    min-height: 80px;
+    --logo-size: 50px;
+    min-height: 84px;
     padding: 12px 4%;
   }
 
+  .navbar--scrolled {
+    --logo-size: 44px;
+    min-height: 70px;
+  }
+
+  .navbar-logo-badge {
+    border-radius: 20px;
+  }
+
+  .navbar-logo-ring {
+    border-radius: 24px;
+  }
+
+  .navbar-logo-badge::after {
+    border-radius: 16px;
+  }
+
   .navbar-logo-img {
-    height: 50px;
+    padding: 4px;
   }
 
   .navbar-actions {
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .nav-home {
+    width: 44px;
+    height: 44px;
   }
 
   .nav-register {
@@ -205,87 +748,50 @@
   .menu-btn {
     width: 44px;
     height: 44px;
-    font-size: 24px;
   }
 
   .menu-dropdown {
-    min-width: 210px;
+    min-width: 260px;
+    right: -8px;
   }
-}
 
-/* ===== Botón circular de usuario ===== */
-.user-btn {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  font-size: 22px;
-  font-weight: 700;
-  color: white;
-  background: var(--gradient);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(255, 31, 156, 0.35);
-  transition: transform 0.3s, filter 0.3s;
-}
-
-.user-btn:hover,
-.user-btn[aria-expanded="true"] {
-  transform: translateY(-2px);
-  filter: brightness(1.15);
-}
-
-/* ===== Cabecera del menú de usuario ===== */
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 18px 14px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #302738;
-  word-break: break-all;
-}
-
-.user-info strong {
-  font-size: 14px;
-  color: white;
-}
-
-.user-info span {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--accent);
-}
-
-/* El botón "Cerrar sesión" con el mismo estilo que los enlaces del menú */
-.menu-dropdown button {
-  padding: 14px 18px;
-  text-align: left;
-  color: white;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background: transparent;
-  cursor: pointer;
-  transition: transform 0.3s, background-color 0.3s, border-color 0.3s;
-}
-
-.menu-dropdown button:hover {
-  border-color: var(--accent);
-  background: rgba(255, 31, 156, 0.1);
-  transform: translateY(-2px);
-}
-
-@media (max-width: 560px) {
   .user-btn {
     width: 44px;
     height: 44px;
     font-size: 18px;
+  }
+}
+
+/* ============================================================
+   MOVIMIENTO REDUCIDO
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .navbar-logo-badge,
+  .navbar-logo-ring,
+  .navbar-logo-badge::after,
+  .navbar-logo-img,
+  .navbar-logo-text,
+  .burger i,
+  .menu-dropdown,
+  .menu-link,
+  .navbar::after,
+  .menu-dropdown::before,
+  .menu-dropdown-title-dot {
+    animation: none;
+    transition: none;
+  }
+
+  .navbar-logo:hover .navbar-logo-badge {
+    transform: none;
+  }
+
+  .menu-dropdown {
+    transform: none;
+  }
+
+  .menu-dropdown.open .menu-link {
+    opacity: 1;
+    transform: none;
   }
 }

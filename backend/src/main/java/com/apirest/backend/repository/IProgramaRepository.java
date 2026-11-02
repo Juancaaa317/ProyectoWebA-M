@@ -10,5 +10,7 @@ public interface IProgramaRepository extends JpaRepository<Programa, Integer>{
     
     List<Programa> findByEstadoPrograma(EstadoPrograma estadoPrograma);
 
-   
+    boolean existsByNombrePrograma(String nombrePrograma);
+
+    boolean existsByNombreProgramaAndIdProgramaNot( String nombrePrograma,Integer idPrograma);
 }

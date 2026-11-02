@@ -1,8 +1,7 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { apiFetch, ApiError } from "../services/api";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { apiFetch, SESSION_EXPIRED_EVENT, tokenVigente } from "../services/api";
 import { MENUS } from "../config/roles";
 
-const MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === "true";
 const AuthContext = createContext(null);
 
 // Lee la sesión guardada (así no se pierde al recargar la página).
@@ -10,63 +9,65 @@ const AuthContext = createContext(null);
 const leerSesion = () => {
     try {
         const raw = localStorage.getItem("usuario");
+        const token = localStorage.getItem("token");
         const usuario = raw ? JSON.parse(raw) : null;
-        return usuario && MENUS[usuario.rol] ? usuario : null;
+        if (token && tokenVigente(token) && usuario && MENUS[usuario.rol]) return usuario;
     } catch {
-        return null;
+        // Una sesión dañada se elimina para que no deje datos inválidos guardados.
     }
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    return null;
 };
 
-// Login simulado, SOLO mientras el backend no tenga /auth/login
-const USUARIOS_MOCK = [
-    { correo: "admin@arteymovimiento.com", password: "admin123", rol: "ADMINISTRADOR" },
-    { correo: "profe@arteymovimiento.com", password: "profe123", rol: "PROFESOR" },
-    { correo: "estudiante@arteymovimiento.com", password: "estudiante123", rol: "ESTUDIANTE" },
-];
-
-const loginMock = async (correo, password) => {
-    await new Promise((r) => setTimeout(r, 600));
-    const encontrado = USUARIOS_MOCK.find(
-        (u) => u.correo === correo && u.password === password
-    );
-    if (!encontrado) throw new ApiError("Correo o contraseña incorrectos", 401);
-    return {
-        token: "mock-token",
-        usuario: {
-            id: USUARIOS_MOCK.indexOf(encontrado) + 1,
-            correo: encontrado.correo,
-            rol: encontrado.rol,
-        },
-    };
-};
-
-const loginReal = (correo, password) =>
-    apiFetch("/auth/login", {
+const login = async (correo, password) => {
+    const { token, usuario } = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({ correo, password }),
+    });
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    return usuario;
+};
+
+const register = (datos) =>
+    apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(datos),
     });
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(leerSesion);
 
-    const login = async (correo, password) => {
-        const { token, usuario } = MOCK_AUTH
-            ? await loginMock(correo, password)
-            : await loginReal(correo, password);
+    const logout = useCallback(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        setUser(null);
+    }, []);
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("usuario", JSON.stringify(usuario));
+    useEffect(() => {
+        window.addEventListener(SESSION_EXPIRED_EVENT, logout);
+        const sincronizarCierreEnOtraPestana = (event) => {
+            if (event.key === "token" && event.newValue === null) logout();
+        };
+        window.addEventListener("storage", sincronizarCierreEnOtraPestana);
+        return () => {
+            window.removeEventListener(SESSION_EXPIRED_EVENT, logout);
+            window.removeEventListener("storage", sincronizarCierreEnOtraPestana);
+        };
+    }, [logout]);
+
+    const iniciarSesion = async (correo, password) => {
+        const usuario = await login(correo, password);
         setUser(usuario);
         return usuario;
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        setUser(null);
-    };
-
-    const value = useMemo(() => ({ user, login, logout }), [user]);
+    const value = useMemo(
+        () => ({ user, login: iniciarSesion, register, logout }),
+        [user, logout]
+    );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

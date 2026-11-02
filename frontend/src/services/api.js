@@ -1,4 +1,15 @@
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+export const SESSION_EXPIRED_EVENT = "auth:session-expired";
+
+export function tokenVigente(token) {
+    try {
+        const parte = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        const { exp } = JSON.parse(atob(parte));
+        return Number.isFinite(exp) && exp * 1000 > Date.now();
+    } catch {
+        return false;
+    }
+}
 
 export class ApiError extends Error {
     constructor(message, status) {
@@ -26,7 +37,12 @@ const mensajePorEstado = (status) => {
 };
 
 export async function apiFetch(path, options = {}) {
-    const token = localStorage.getItem("token");
+    const tokenGuardado = localStorage.getItem("token");
+    const token = tokenGuardado && tokenVigente(tokenGuardado) ? tokenGuardado : null;
+
+    if (tokenGuardado && !token) {
+        window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+    }
 
     const headers = {
         "Content-Type": "application/json",
@@ -55,6 +71,10 @@ export async function apiFetch(path, options = {}) {
     }
 
     if (!response.ok) {
+        if (response.status === 401 && token) {
+            window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+        }
+
         throw new ApiError(
             data?.message ?? mensajePorEstado(response.status),
             response.status
