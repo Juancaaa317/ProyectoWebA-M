@@ -1,13 +1,12 @@
-
 import { apiFetch, ApiError } from "./api";
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+const USE_MOCK = import.meta.env.VITE_MOCK_PROGRAMAS === "true";
 
-/* ================= MOCK (temporal) ================= */
+/* ================= MOCK (solo si VITE_MOCK_PROGRAMAS=true) ================= */
 let mockDb = [
-    { idPrograma: 1, nombrePrograma: "Ballet", descripcion: "Técnica clásica", estado: true },
-    { idPrograma: 2, nombrePrograma: "Danza Acrobática", descripcion: "Acrobacia y flexibilidad", estado: true },
-    { idPrograma: 3, nombrePrograma: "Danza Árabe", descripcion: "Ritmo y expresión", estado: false },
+    { idPrograma: 1, nombrePrograma: "Ballet", descripcion: "Técnica clásica", estadoPrograma: "ACTIVO" },
+    { idPrograma: 2, nombrePrograma: "Danza Acrobática", descripcion: "Acrobacia y flexibilidad", estadoPrograma: "ACTIVO" },
+    { idPrograma: 3, nombrePrograma: "Danza Árabe", descripcion: "Ritmo y expresión", estadoPrograma: "INACTIVO" },
 ];
 let nextId = 4;
 const delay = (ms = 600) => new Promise((r) => setTimeout(r, ms));

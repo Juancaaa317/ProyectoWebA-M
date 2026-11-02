@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { apiFetch, ApiError } from "../services/api";
 import { MENUS } from "../config/roles";
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+const MOCK_AUTH = import.meta.env.VITE_MOCK_AUTH === "true";
 const AuthContext = createContext(null);
 
 // Lee la sesión guardada (así no se pierde al recargar la página).
@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(leerSesion);
 
     const login = async (correo, password) => {
-        const { token, usuario } = USE_MOCK
+        const { token, usuario } = MOCK_AUTH
             ? await loginMock(correo, password)
             : await loginReal(correo, password);
 
