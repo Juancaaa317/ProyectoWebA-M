@@ -7,6 +7,8 @@ import com.apirest.backend.Enums.EstadoClase;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -37,6 +39,7 @@ public class Clase {
     protected Date fechaFinalizacion;
     protected String nombre;
     protected Integer cupoMaximo;
+    @Enumerated(EnumType.STRING)
     protected EstadoClase estadoClase;
 
     

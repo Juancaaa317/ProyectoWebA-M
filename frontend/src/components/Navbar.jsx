@@ -153,20 +153,13 @@ function Navbar() {
                 <span>{user.rol}</span>
               </div>
 
-              {user.rol === "ADMIN" ? (
-                <>
-                  <Link to="/admin/perfil" onClick={closeAll}>
-                    Mi perfil
-                  </Link>
-                  <Link to="/admin" onClick={closeAll}>
-                    Panel de administración
-                  </Link>
-                </>
-              ) : (
-                <Link to="/perfil" onClick={closeAll}>
-                  Mi perfil
-                </Link>
-              )}
+              <Link to="/panel/perfil" onClick={closeAll}>
+                Mi perfil
+              </Link>
+
+              <Link to="/panel" onClick={closeAll}>
+                Mi panel
+              </Link>
 
               <button type="button" onClick={handleLogout}>
                 Cerrar sesión

@@ -26,13 +26,11 @@ function Login() {
     setLoading(true);
 
     try {
-      const usuario = await login(correo.trim(), password);
+      await login(correo.trim(), password);
 
       // Si venía de una ruta privada, lo devolvemos ahí.
-      // Si no: el admin va a su panel y los demás al inicio.
-      const destino =
-        location.state?.from?.pathname ??
-        (usuario.rol === "ADMIN" ? "/admin" : "/");
+      // Si no, todos los roles aterrizan en su panel.
+      const destino = location.state?.from?.pathname ?? "/panel";
 
       navigate(destino, { replace: true });
     } catch (err) {

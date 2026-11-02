@@ -20,40 +20,44 @@ function ProgramaTable({ programas, onEditar, onEliminar, disabled }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {programas.map((p) => (
-                        <tr key={p.idPrograma}>
-                            <td>{p.idPrograma}</td>
-                            <td>{p.nombrePrograma}</td>
-                            <td>{p.descripcion || "—"}</td>
-                            <td>
-                                <span
-                                    className={
-                                        p.estado ? "admin-badge activo" : "admin-badge inactivo"
-                                    }
-                                >
-                                    {p.estado ? "Activo" : "Inactivo"}
-                                </span>
-                            </td>
-                            <td className="admin-acciones">
-                                <button
-                                    type="button"
-                                    className="admin-btn-editar"
-                                    onClick={() => onEditar(p)}
-                                    disabled={disabled}
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    type="button"
-                                    className="admin-btn-eliminar"
-                                    onClick={() => onEliminar(p)}
-                                    disabled={disabled}
-                                >
-                                    Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {programas.map((p) => {
+                        const activo = p.estadoPrograma === "ACTIVO";
+
+                        return (
+                            <tr key={p.idPrograma}>
+                                <td>{p.idPrograma}</td>
+                                <td>{p.nombrePrograma}</td>
+                                <td>{p.descripcion || "—"}</td>
+                                <td>
+                                    <span
+                                        className={
+                                            activo ? "admin-badge activo" : "admin-badge inactivo"
+                                        }
+                                    >
+                                        {activo ? "Activo" : "Inactivo"}
+                                    </span>
+                                </td>
+                                <td className="admin-acciones">
+                                    <button
+                                        type="button"
+                                        className="admin-btn-editar"
+                                        onClick={() => onEditar(p)}
+                                        disabled={disabled}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="admin-btn-eliminar"
+                                        onClick={() => onEliminar(p)}
+                                        disabled={disabled}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

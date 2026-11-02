@@ -5,6 +5,8 @@ import java.sql.Date;
 import com.apirest.backend.Enums.EstadoInscripcion;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -32,5 +34,6 @@ public class Inscripcion {
 
     protected Date fechaInscripcion;
     
+    @Enumerated(EnumType.STRING)
     protected EstadoInscripcion estadoInscripcion;
 }
