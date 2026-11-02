@@ -89,4 +89,4 @@ Los errores manejados por `GlobalExceptionHandler` usan el esquema `ApiError` co
 - `GET /health`, Swagger UI, especificación `/docs.json` y preflight CORS del origen `http://localhost:5173`: `200`.
 - Se corrigió el manejo de parámetros de ruta con tipo/valor incorrecto: ahora devuelven `400` con `ApiError`, en vez de caer en el manejador de `500`.
 
-Las operaciones de escritura con profesor, horarios, sesiones, inscripciones y asistencias no se ejecutaron con datos válidos sobre la base personal. Para la demo, pruébalas con registros preparados y elimina solo datos de demostración que hayas creado.
+En la demo local se verificó el flujo integrado con datos de prueba: registrar un profesor, crear una clase y su horario, programar una sesión, solicitar y aprobar una inscripción, y registrar asistencia. La demo complementa las pruebas automatizadas y el barrido de endpoints descritos arriba; no significa que se hayan repetido manualmente las 31 operaciones.
