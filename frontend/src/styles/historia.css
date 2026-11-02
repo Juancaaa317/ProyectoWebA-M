@@ -1,61 +1,751 @@
+/* ============================================================
+   PÁGINA — HISTORIA
+   ============================================================ */
 .historia-page {
-    padding: 120px 8% 60px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 130px 8% 100px;
     min-height: 100vh;
     color: white;
+    background:
+        radial-gradient(ellipse 70% 55% at 15% -5%, rgba(138, 43, 226, 0.1), transparent),
+        radial-gradient(ellipse 70% 55% at 90% 105%, rgba(255, 31, 156, 0.08), transparent);
 }
 
-.historia-header {
-    text-align: center;
-    margin-bottom: 60px;
+.historia-header,
+.historia-content {
+    position: relative;
+    z-index: 1;
 }
 
-.historia-header h1 {
-    font-size: clamp(32px, 5vw, 56px);
-    margin-bottom: 15px;
+/* ============================================================
+   FONDO — más limpio y profesional
+   ============================================================ */
+.hist-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
 
-.historia-header h1 span {
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+/* Viñeta para dar profundidad */
+.hist-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4));
 }
 
-.historia-subtitle {
+/* Resplandores suaves */
+.hist-orb {
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.22;
+    will-change: transform;
+}
+
+.hist-orb--purple {
+    top: -180px;
+    left: -180px;
+    background: #8a2be2;
+    animation: hist-orb-move-a 26s ease-in-out infinite alternate;
+}
+
+.hist-orb--pink {
+    right: -200px;
+    bottom: -140px;
+    background: #ff1f9c;
+    animation: hist-orb-move-b 30s ease-in-out infinite alternate;
+}
+
+@keyframes hist-orb-move-a {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(60px, 50px, 0) scale(1.12); }
+}
+
+@keyframes hist-orb-move-b {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(-70px, -50px, 0) scale(1.1); }
+}
+
+/* Reloj más pequeño y elegante */
+.hist-clock {
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    width: min(560px, 75vw);
+    aspect-ratio: 1;
     color: #d38aff;
-    font-size: 14px;
+    opacity: 0.11;
+    animation: hist-spin 200s linear infinite;
+}
+
+@keyframes hist-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Una sola cinta elegante que se dibuja al entrar */
+.hist-ribbon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: hist-sway 14s ease-in-out infinite alternate;
+}
+
+.hist-ribbon-line {
+    stroke: url(#hist-grad);
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: hist-draw 5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+.hist-ribbon-line--1 {
+    stroke-width: 2.5;
+    opacity: 0.5;
+}
+
+.hist-ribbon-line--2 {
+    stroke-width: 1.5;
+    opacity: 0.22;
+    animation-delay: 0.8s;
+}
+
+@keyframes hist-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes hist-sway {
+    from { transform: translate3d(0, -8px, 0); }
+    to   { transform: translate3d(0, 14px, 0); }
+}
+
+/* Dos zapatillas flotando (más contenidas) */
+.hist-slipper {
+    position: absolute;
+    color: #d38aff;
+    opacity: 0.16;
+    filter: drop-shadow(0 0 12px rgba(195, 75, 255, 0.5));
+    animation: hist-float 10s ease-in-out infinite alternate;
+}
+
+.hist-slipper svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.hist-slipper--a {
+    left: 4%;
+    top: 42%;
+    width: 100px;
+    --tilt: -16deg;
+}
+
+.hist-slipper--b {
+    right: 6%;
+    bottom: 10%;
+    width: 130px;
+    color: #ff4fae;
+    --tilt: 12deg;
+    animation-delay: -5s;
+}
+
+@keyframes hist-float {
+    from { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); }
+    to   { transform: translate3d(0, -22px, 0) rotate(calc(var(--tilt, 0deg) + 8deg)); }
+}
+
+/* Polvo de escenario reducido */
+.hist-dust {
+    position: absolute;
+    left: var(--left);
+    top: 100%;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: hist-dust var(--duration) linear var(--delay) infinite;
+}
+
+.hist-dust--purple {
+    background: #d38aff;
+    box-shadow: 0 0 10px 2px rgba(211, 138, 255, 0.6);
+}
+
+.hist-dust--pink {
+    background: #ff4fae;
+    box-shadow: 0 0 10px 2px rgba(255, 79, 174, 0.6);
+}
+
+@keyframes hist-dust {
+    0%   { transform: translate3d(0, 0, 0); opacity: 0; }
+    10%  { opacity: var(--alpha); }
+    50%  { transform: translate3d(var(--drift), -60vh, 0); }
+    90%  { opacity: var(--alpha); }
+    100% { transform: translate3d(0, -125vh, 0); opacity: 0; }
+}
+
+/* Grano sutil para textura premium */
+.hist-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+.historia-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+/* Año gigante como marca de agua */
+.historia-year {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 0;
+    transform: translate(-50%, -52%);
+    font-size: clamp(140px, 24vw, 330px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 4px;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(211, 138, 255, 0.14);
+    user-select: none;
+    pointer-events: none;
+    animation: hist-year-pulse 8s ease-in-out infinite;
+}
+
+@keyframes hist-year-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.55; }
+}
+
+.historia-header > *:not(.historia-year) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Subtítulo píldora con entrada animada */
+.historia-subtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 9px 22px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
+    color: #e6c9ff;
+    background: rgba(138, 43, 226, 0.14);
+    border: 1px solid rgba(211, 138, 255, 0.32);
+    border-radius: 999px;
+    box-shadow: 0 0 30px rgba(195, 75, 255, 0.16);
+
+    opacity: 0;
+    transform: translateY(16px);
+    animation: hist-fade-up 0.7s ease 0.1s forwards;
 }
 
+.historia-subtitle::before,
+.historia-subtitle::after {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+}
+
+.historia-header h1 {
+    margin: 0;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -1.5px;
+    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+
+    opacity: 0;
+    transform: translateY(24px);
+    animation: hist-fade-up 0.8s ease 0.25s forwards;
+}
+
+.historia-header h1 span {
+    background: linear-gradient(90deg, #8a2be2, #ff1f9c, #b45cff, #8a2be2);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 24px rgba(255, 31, 156, 0.3));
+    animation: hist-gradient-slide 6s linear infinite;
+}
+
+@keyframes hist-gradient-slide {
+    to { background-position: 300% center; }
+}
+
+@keyframes hist-fade-up {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Swoosh debajo del título */
+.historia-swoosh {
+    display: block;
+    width: min(340px, 65%);
+    height: auto;
+    margin: 8px auto 0;
+    opacity: 0;
+    animation: hist-fade-in 0.8s ease 0.5s forwards;
+}
+
+@keyframes hist-fade-in {
+    to { opacity: 1; }
+}
+
+.historia-swoosh path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: hist-draw 1.6s ease-out 0.6s forwards;
+}
+
+/* ============================================================
+   CONTENIDO
+   ============================================================ */
 .historia-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 80px;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* Entrada del bloque de texto */
+.historia-texto {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: hist-fade-up 0.9s ease 0.4s forwards;
+}
+
 .historia-texto p {
-    color: var(--text-soft);
-    line-height: 1.8;
-    margin-bottom: 20px;
+    max-width: 60ch;
+    margin-bottom: 22px;
+    color: var(--text-soft, #cfc8da);
     font-size: 1.1rem;
+    line-height: 1.85;
 }
 
-.historia-imagen img {
+.historia-texto .historia-lead {
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 28px;
+    color: #f4eefc;
+    font-size: clamp(1.12rem, 1.6vw, 1.3rem);
+}
+
+.historia-lead::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 4px;
+    border-radius: 4px;
+    background: var(--gradient, linear-gradient(180deg, #8a2be2, #ff1f9c));
+}
+
+.historia-texto strong {
+    padding: 0 2px;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(transparent 62%, rgba(255, 31, 156, 0.38) 62%);
+}
+
+.historia-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 30px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.historia-genres li {
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #e6c9ff;
+    background: rgba(138, 43, 226, 0.14);
+    border: 1px solid rgba(211, 138, 255, 0.28);
+    border-radius: 999px;
+    transition: transform 0.3s, border-color 0.3s, background-color 0.3s,
+        box-shadow 0.3s;
+}
+
+.historia-genres li:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent, #ff1f9c);
+    background: rgba(255, 31, 156, 0.12);
+    box-shadow: 0 6px 16px rgba(255, 31, 156, 0.25);
+}
+
+/* ============================================================
+   IMAGEN — con vida
+   ============================================================ */
+.historia-imagen {
+    --img-ratio: 5 / 4;
+    position: relative;
+    padding: 22px;
+
+    /* Entrada */
+    opacity: 0;
+    transform: translateY(40px);
+    animation: hist-fade-up 1s ease 0.55s forwards;
+}
+
+/* Levitación suave de todo el conjunto */
+.historia-imagen {
+    animation: hist-img-enter 1s ease 0.55s forwards,
+               hist-levitate 7s ease-in-out 1.6s infinite;
+}
+
+@keyframes hist-img-enter {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hist-levitate {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+/* Bloque inclinado detrás de la foto */
+.hist-frame-back {
+    position: absolute;
+    inset: 22px;
+    border-radius: 28px;
+    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    opacity: 0.45;
+    transform: translate(16px, 16px) rotate(4deg);
+    filter: blur(1px);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.historia-imagen:hover .hist-frame-back {
+    transform: translate(20px, 20px) rotate(5deg);
+    opacity: 0.6;
+}
+
+/* Esquinas de marco antiguo */
+.hist-corner {
+    position: absolute;
+    width: 54px;
+    height: 54px;
+    border: 2px solid #d38aff;
+    opacity: 0.75;
+    pointer-events: none;
+    transition: width 0.35s ease, height 0.35s ease, opacity 0.35s ease;
+}
+
+.hist-corner--tl {
+    top: 0;
+    left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-top-left-radius: 18px;
+}
+
+.hist-corner--br {
+    right: 0;
+    bottom: 0;
+    border-left: 0;
+    border-top: 0;
+    border-bottom-right-radius: 18px;
+}
+
+.historia-imagen:hover .hist-corner {
+    width: 66px;
+    height: 66px;
+    opacity: 1;
+}
+
+/* Marco principal con tilt */
+.hist-frame {
+    position: relative;
+    padding: 3px;
+    border-radius: 28px;
+    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(195, 75, 255, 0.3);
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.2s ease-out, box-shadow 0.4s ease;
+    will-change: transform;
+}
+
+.historia-imagen:hover .hist-frame {
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.55),
+        0 0 80px rgba(195, 75, 255, 0.45);
+}
+
+.hist-frame img {
+    display: block;
     width: 100%;
-    height: auto;
-    max-height: 500px;
-    object-fit: contain;
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(195, 75, 255, 0.35);
+    aspect-ratio: var(--img-ratio);
+    object-fit: cover;
+    border-radius: 25px;
+    background: #14101c;
+    /* Zoom muy sutil tipo Ken Burns en bucle */
+    animation: hist-kenburns 24s ease-in-out infinite alternate;
 }
 
+@keyframes hist-kenburns {
+    from { transform: scale(1); }
+    to   { transform: scale(1.06); }
+}
+
+/* Brillo y sombra sobre la foto */
+.hist-shine {
+    position: absolute;
+    inset: 3px;
+    border-radius: 25px;
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.14), transparent 35%),
+        linear-gradient(to top, rgba(15, 13, 22, 0.5), transparent 40%);
+    pointer-events: none;
+}
+
+/* Destello que recorre el marco al hacer hover */
+.hist-frame-sweep {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.hist-frame-sweep::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -80%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+        100deg,
+        transparent,
+        rgba(255, 255, 255, 0.22),
+        transparent
+    );
+    transform: rotate(12deg);
+    transition: left 0.9s ease;
+}
+
+.historia-imagen:hover .hist-frame-sweep::before {
+    left: 130%;
+}
+
+/* Sello */
+.hist-seal {
+    position: absolute;
+    left: -20px;
+    bottom: -28px;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 124px;
+    height: 124px;
+    border-radius: 50%;
+    background: #14101c;
+    border: 1px solid rgba(211, 138, 255, 0.4);
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.55),
+        0 0 30px rgba(255, 31, 156, 0.35);
+    animation: hist-seal-bob 6s ease-in-out infinite;
+}
+
+@keyframes hist-seal-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+.hist-seal svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: hist-spin 28s linear infinite;
+}
+
+.hist-seal text {
+    fill: #e6c9ff;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.hist-seal-core {
+    display: grid;
+    place-items: center;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: white;
+}
+
+/* Etiqueta de años */
+.hist-years {
+    position: absolute;
+    top: 6px;
+    right: -6px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 18px;
+    background: rgba(20, 16, 28, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(211, 138, 255, 0.35);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.historia-imagen:hover .hist-years {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 31, 156, 0.25);
+}
+
+.hist-years strong {
+    font-size: 1.3rem;
+    line-height: 1.1;
+    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hist-years span {
+    font-size: 0.78rem;
+    color: #d9cbe8;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 900px) {
+    .historia-page {
+        padding: 105px 6% 80px;
+    }
+
+    .historia-header {
+        margin-bottom: 60px;
+    }
+
     .historia-content {
         grid-template-columns: 1fr;
+        gap: 70px;
+    }
+
+    .historia-texto p {
+        max-width: none;
+    }
+
+    .hist-clock {
+        top: 2%;
+        right: -30%;
+    }
+}
+
+@media (max-width: 480px) {
+    .historia-page {
+        padding: 95px 5% 70px;
+    }
+
+    .historia-imagen {
+        padding: 16px;
+    }
+
+    .hist-frame-back {
+        inset: 16px;
+    }
+
+    .hist-seal {
+        left: 0;
+        bottom: -34px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .hist-seal-core {
+        width: 54px;
+        height: 54px;
+        font-size: 0.9rem;
+    }
+
+    .hist-slipper--b,
+    .hist-dust:nth-child(n + 14) {
+        display: none;
+    }
+}
+
+/* ============================================================
+   MOVIMIENTO REDUCIDO
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .hist-orb,
+    .hist-clock,
+    .hist-ribbon,
+    .hist-slipper,
+    .hist-dust,
+    .hist-seal,
+    .hist-seal svg,
+    .hist-frame img,
+    .historia-imagen,
+    .historia-year,
+    .historia-header h1 span {
+        animation: none;
+    }
+
+    .hist-ribbon-line,
+    .historia-swoosh path {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+
+    .historia-subtitle,
+    .historia-header h1,
+    .historia-swoosh,
+    .historia-texto,
+    .historia-imagen {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+
+    .hist-dust {
+        top: auto;
+        opacity: var(--alpha);
+    }
+
+    .hist-frame {
+        transform: none;
+        transition: none;
     }
 }
