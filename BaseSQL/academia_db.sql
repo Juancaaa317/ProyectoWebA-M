@@ -15,16 +15,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+create database academia_db;
+use academia_db;
 --
 -- Table structure for table `acudiente`
 --
 
-CREATE DATABASE academia_db;
-
-USE academia_db;
-
-
-
+DROP TABLE IF EXISTS `acudiente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `acudiente` (
@@ -51,7 +49,7 @@ UNLOCK TABLES;
 -- Table structure for table `archivo`
 --
 
- 
+DROP TABLE IF EXISTS `archivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `archivo` (
@@ -81,7 +79,7 @@ UNLOCK TABLES;
 -- Table structure for table `asistencia`
 --
 
-
+DROP TABLE IF EXISTS `asistencia`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `asistencia` (
@@ -112,7 +110,7 @@ UNLOCK TABLES;
 -- Table structure for table `clase`
 --
 
-
+DROP TABLE IF EXISTS `clase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `clase` (
@@ -138,7 +136,7 @@ CREATE TABLE `clase` (
 
 LOCK TABLES `clase` WRITE;
 /*!40000 ALTER TABLE `clase` DISABLE KEYS */;
-INSERT INTO `clase` VALUES (1,1,2,'2026-11-09','2027-01-31','Ballet principiantes',15,'PROGRAMADA'),(2,1,11,'2026-11-01','2026-11-29','Danza contemporanea principiantes',10,'PROGRAMADA');
+INSERT INTO `clase` VALUES (1,1,2,'2026-11-09','2027-01-31','Ballet principiantes',15,'PROGRAMADA'),(2,3,11,'2026-11-03','2026-11-05','Danza contemporanea principiantes',10,'PROGRAMADA');
 /*!40000 ALTER TABLE `clase` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +144,7 @@ UNLOCK TABLES;
 -- Table structure for table `estudiante`
 --
 
-
+DROP TABLE IF EXISTS `estudiante`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estudiante` (
@@ -176,7 +174,7 @@ UNLOCK TABLES;
 -- Table structure for table `estudiante_acudiente`
 --
 
-
+DROP TABLE IF EXISTS `estudiante_acudiente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estudiante_acudiente` (
@@ -204,7 +202,7 @@ UNLOCK TABLES;
 -- Table structure for table `horario`
 --
 
-
+DROP TABLE IF EXISTS `horario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `horario` (
@@ -233,7 +231,7 @@ UNLOCK TABLES;
 -- Table structure for table `inscripcion`
 --
 
-
+DROP TABLE IF EXISTS `inscripcion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inscripcion` (
@@ -256,7 +254,7 @@ CREATE TABLE `inscripcion` (
 
 LOCK TABLES `inscripcion` WRITE;
 /*!40000 ALTER TABLE `inscripcion` DISABLE KEYS */;
-INSERT INTO `inscripcion` VALUES (1,10,1,'2026-11-01','ACTIVA'),(2,10,2,'2026-11-02','ACTIVA');
+INSERT INTO `inscripcion` VALUES (1,10,1,'2026-11-01','ACTIVA'),(2,10,2,'2026-11-02','CANCELADA');
 /*!40000 ALTER TABLE `inscripcion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,7 +262,7 @@ UNLOCK TABLES;
 -- Table structure for table `pago`
 --
 
-
+DROP TABLE IF EXISTS `pago`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pago` (
@@ -295,7 +293,7 @@ UNLOCK TABLES;
 -- Table structure for table `profesor`
 --
 
-
+DROP TABLE IF EXISTS `profesor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profesor` (
@@ -312,7 +310,7 @@ CREATE TABLE `profesor` (
   UNIQUE KEY `idUsuario` (`idUsuario`),
   UNIQUE KEY `cedulaCiudadana` (`cedulaCiudadana`),
   CONSTRAINT `fk_profesor_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +319,7 @@ CREATE TABLE `profesor` (
 
 LOCK TABLES `profesor` WRITE;
 /*!40000 ALTER TABLE `profesor` DISABLE KEYS */;
-INSERT INTO `profesor` VALUES (1,10,'Profesor de Prueba',NULL,NULL,NULL,NULL,'DOCENTE',NULL),(2,11,'María García',NULL,NULL,NULL,NULL,'PROFESIONAL',NULL);
+INSERT INTO `profesor` VALUES (1,10,'Profesor de Prueba',NULL,NULL,NULL,NULL,'DOCENTE',NULL),(2,11,'María García',NULL,NULL,NULL,NULL,'PROFESIONAL',NULL),(3,17,'Profesor Demo',NULL,NULL,NULL,NULL,'DOCENTE',NULL);
 /*!40000 ALTER TABLE `profesor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -329,7 +327,7 @@ UNLOCK TABLES;
 -- Table structure for table `programa`
 --
 
-
+DROP TABLE IF EXISTS `programa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `programa` (
@@ -356,7 +354,7 @@ UNLOCK TABLES;
 -- Table structure for table `sesion_clase`
 --
 
-
+DROP TABLE IF EXISTS `sesion_clase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sesion_clase` (
@@ -386,7 +384,7 @@ UNLOCK TABLES;
 -- Table structure for table `usuario`
 --
 
-
+DROP TABLE IF EXISTS `usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
@@ -398,7 +396,7 @@ CREATE TABLE `usuario` (
   `nombre` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`idUsuario`),
   UNIQUE KEY `correo` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -407,7 +405,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'prueba.estudiante@ejemplo.com',NULL,'$2a$10$N51R.H1Bm7pru57dmY4lP.ZAgPfBS2yDG30ZM4BfDYw5pDZt0xSzW','ESTUDIANTE','Estudiante Prueba'),(2,'estudiante2@ejemplo.com',NULL,'$2a$10$aN1qpLP8qFtLnDi/77wbYuPAapuD0ZmCDBdYw7HlZGPnPebfyfiim','ESTUDIANTE','Estudiante de Prueba'),(3,'carlos.ramirez2026@gmail.com',NULL,'$2a$10$1eHBUMhTQCH2AaHUZAyN2.0gLnhbsT4cAXcQx4hl1v22rTGjeSjT.','ESTUDIANTE','Carlos Ramirez'),(4,'carlos.a@gmail.com',NULL,'$2a$10$BWjnnILvOVUrq0V3XYoWp.E72KRWKEyQpNZ1uV4S0NoOKl/.eHmHC','ESTUDIANTE','Carlos Ramirez'),(5,'carlos.aaa@gmail.com',NULL,'$2a$10$0oKw80CHsLYQGFdu7trtLuihKDEEbTHwOKIIMVOwQT8qE7NNbf2Sy','ESTUDIANTE','Carlos Ramirez'),(6,'admin@arteymovimiento.com',NULL,'$2a$10$pQXjU64I1JeCKAjc4WomPun1pX0/8TOduSiXiOFzNOOy0rfNaLY/u','ADMINISTRADOR','Carlos asd'),(7,'admin@arteymovimientoa.com',NULL,'$2a$10$NRZQdTUgPBtmpbdV264IyOlsHkOWXt8dMJez34tSDS726cnNFW7Fe','ESTUDIANTE','Administrador Principal'),(8,'estudiante@ejemplo.com',NULL,'$2a$10$0oaiu4eWQgVzMhdk1bJOS.AFB/xYu4HKX5Je4jBlj47fkNuaskIZC','ESTUDIANTE','Estudiante de Prueba'),(9,'admin.prueba@ejemplo.com',NULL,'$2a$10$kM3NaWyKo9PfigClCgIX1u1Qo5njkVEH/jlk5sALjBM0TWIrQxfd2','ADMINISTRADOR','Admin de Prueba'),(10,'profesor.prueba@ejemplo.com',NULL,'$2a$10$ZBqAvAY6pdoHelWy8Gmp6u4dJqmM2guYFA48n.SwDbCYoBaH03icK','PROFESOR','Profesor de Prueba'),(11,'maria.garcia@ejemplo.com',NULL,'$2a$10$pPrbf2fZjW4LyvD8Z49MFe1aHpJL2DLTysnIVA.cjspqqRR.sVMfi','PROFESOR','María García'),(12,'estudiante444@ejemplo.com',NULL,'$2a$10$.i06T5qGnTi1.fvvgYRUYut6j4aKZzRBSyX9hzoyZXA4T3EMtHh.G','ESTUDIANTE','Admin de dea'),(15,'admin.pruebas@arteymovimiento.com','3000000000','$2a$10$MS.1ItX47VfnMf0ve1W/T.f.G73P.HamHbNFW5.KeRUu.gppSxm9u','ADMINISTRADOR','Admin de Pruebas'),(16,'admin.demo.am@ejemplo.com','33020301202','$2a$10$39sFoyluOXXpHqXXCKDTluTBQgDx4P7ixx.Fv2JykCTgbOBgSih5G','ADMINISTRADOR','ADMIN DEMO');
+INSERT INTO `usuario` VALUES (1,'prueba.estudiante@ejemplo.com',NULL,'$2a$10$N51R.H1Bm7pru57dmY4lP.ZAgPfBS2yDG30ZM4BfDYw5pDZt0xSzW','ESTUDIANTE','Estudiante Prueba'),(2,'estudiante2@ejemplo.com',NULL,'$2a$10$aN1qpLP8qFtLnDi/77wbYuPAapuD0ZmCDBdYw7HlZGPnPebfyfiim','ESTUDIANTE','Estudiante de Prueba'),(3,'carlos.ramirez2026@gmail.com',NULL,'$2a$10$1eHBUMhTQCH2AaHUZAyN2.0gLnhbsT4cAXcQx4hl1v22rTGjeSjT.','ESTUDIANTE','Carlos Ramirez'),(4,'carlos.a@gmail.com',NULL,'$2a$10$BWjnnILvOVUrq0V3XYoWp.E72KRWKEyQpNZ1uV4S0NoOKl/.eHmHC','ESTUDIANTE','Carlos Ramirez'),(5,'carlos.aaa@gmail.com',NULL,'$2a$10$0oKw80CHsLYQGFdu7trtLuihKDEEbTHwOKIIMVOwQT8qE7NNbf2Sy','ESTUDIANTE','Carlos Ramirez'),(6,'admin@arteymovimiento.com',NULL,'$2a$10$pQXjU64I1JeCKAjc4WomPun1pX0/8TOduSiXiOFzNOOy0rfNaLY/u','ADMINISTRADOR','Carlos asd'),(7,'admin@arteymovimientoa.com',NULL,'$2a$10$NRZQdTUgPBtmpbdV264IyOlsHkOWXt8dMJez34tSDS726cnNFW7Fe','ESTUDIANTE','Administrador Principal'),(8,'estudiante@ejemplo.com',NULL,'$2a$10$0oaiu4eWQgVzMhdk1bJOS.AFB/xYu4HKX5Je4jBlj47fkNuaskIZC','ESTUDIANTE','Estudiante de Prueba'),(9,'admin.prueba@ejemplo.com',NULL,'$2a$10$kM3NaWyKo9PfigClCgIX1u1Qo5njkVEH/jlk5sALjBM0TWIrQxfd2','ADMINISTRADOR','Admin de Prueba'),(10,'profesor.prueba@ejemplo.com',NULL,'$2a$10$ZBqAvAY6pdoHelWy8Gmp6u4dJqmM2guYFA48n.SwDbCYoBaH03icK','PROFESOR','Profesor de Prueba'),(11,'maria.garcia@ejemplo.com',NULL,'$2a$10$pPrbf2fZjW4LyvD8Z49MFe1aHpJL2DLTysnIVA.cjspqqRR.sVMfi','PROFESOR','María García'),(12,'estudiante444@ejemplo.com',NULL,'$2a$10$.i06T5qGnTi1.fvvgYRUYut6j4aKZzRBSyX9hzoyZXA4T3EMtHh.G','ESTUDIANTE','Admin de dea'),(15,'admin.pruebas@arteymovimiento.com','3000000000','$2a$10$MS.1ItX47VfnMf0ve1W/T.f.G73P.HamHbNFW5.KeRUu.gppSxm9u','ADMINISTRADOR','Admin de Pruebas'),(16,'admin.demo.am@ejemplo.com','33020301202','$2a$10$39sFoyluOXXpHqXXCKDTluTBQgDx4P7ixx.Fv2JykCTgbOBgSih5G','ADMINISTRADOR','ADMIN DEMO'),(17,'profesor.demo.am@ejemplo.com',NULL,'$2a$10$RJXBruzQBqkgTeJhS7sIOeIIcv8oJsTXEm1i3/eAlPZNRnmxBku1y','PROFESOR','Profesor Demo');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -420,4 +418,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-03 18:35:23
+-- Dump completed on 2026-11-03 19:28:30
