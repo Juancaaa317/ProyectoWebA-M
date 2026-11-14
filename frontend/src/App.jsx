@@ -20,6 +20,7 @@ import AdminEstudiantes from "./pages/AdminEstudiantes";
 import Inscripciones from "./pages/Inscripciones";
 import Asistencia from "./pages/Asistencia";
 import HorarioPanel from "./pages/HorarioPanel";
+import PagosPanel from "./pages/PagosPanel";
 import SeccionPendiente from "./pages/SeccionPendiente";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
@@ -104,6 +105,14 @@ function App() {
                             element={
                                 <PrivateRoute roles={[ROLES.PROFESOR, ROLES.ESTUDIANTE]}>
                                     <HorarioPanel />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="pagos"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN, ROLES.ESTUDIANTE]}>
+                                    <PagosPanel />
                                 </PrivateRoute>
                             }
                         />
