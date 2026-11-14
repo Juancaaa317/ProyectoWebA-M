@@ -198,6 +198,34 @@ public class SecurityConfig {
                             "/api/asistencias/mias"
                     ).hasRole("ESTUDIANTE")
 
+                    // Pagos: el estudiante registra y consulta los suyos
+                    .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/pagos"
+                    ).hasRole("ESTUDIANTE")
+
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/pagos/mios"
+                    ).hasRole("ESTUDIANTE")
+
+                    // Pagos: el administrador los consulta todos y los aprueba o rechaza
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/pagos"
+                    ).hasRole("ADMINISTRADOR")
+
+                    .requestMatchers(
+                            HttpMethod.PATCH,
+                            "/api/pagos/*/estado"
+                    ).hasRole("ADMINISTRADOR")
+
+                    // Ver/descargar archivos: autenticado; el servicio comprueba que sea el dueño o administrador
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/archivos/*"
+                    ).authenticated()
+
                     // Administración de usuarios exclusiva del administrador
                     .requestMatchers("/api/usuarios/**")
                     .hasRole("ADMINISTRADOR")
