@@ -16,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.apirest.backend.dto.ApiErrorDTO;
@@ -67,6 +68,45 @@ public class GlobalExceptionHandler {
                                 HttpStatus.CONFLICT,
                                 ex.getMessage(),
                                 request);
+        }
+
+        // Error 400: archivo ausente, vacío o con ruta no válida
+        @ExceptionHandler(ArchivoInvalidoException.class)
+        public ResponseEntity<ApiErrorDTO> manejarArchivoInvalido(
+                        ArchivoInvalidoException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        }
+
+        // Error 413: archivo demasiado grande
+        @ExceptionHandler(ArchivoDemasiadoGrandeException.class)
+        public ResponseEntity<ApiErrorDTO> manejarArchivoDemasiadoGrande(
+                        ArchivoDemasiadoGrandeException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(HttpStatus.CONTENT_TOO_LARGE, ex.getMessage(), request);
+        }
+
+        // Error 413: Spring rechazó la subida por superar el límite multipart configurado
+        @ExceptionHandler(MaxUploadSizeExceededException.class)
+        public ResponseEntity<ApiErrorDTO> manejarLimiteMultipart(
+                        MaxUploadSizeExceededException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.CONTENT_TOO_LARGE,
+                                "El archivo supera el tamaño máximo permitido.",
+                                request);
+        }
+
+        // Error 415: tipo de archivo no permitido
+        @ExceptionHandler(TipoArchivoNoPermitidoException.class)
+        public ResponseEntity<ApiErrorDTO> manejarTipoArchivoNoPermitido(
+                        TipoArchivoNoPermitidoException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage(), request);
         }
 
         // Error 400: datos enviados que no cumplen las validaciones
