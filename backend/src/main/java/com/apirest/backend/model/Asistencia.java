@@ -1,10 +1,14 @@
 package com.apirest.backend.model;
 
-
 import com.apirest.backend.Enums.EstadoAsistencia;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -14,25 +18,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor 
-@NoArgsConstructor 
-@Data 
-@Table (name = "asistencia")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Table(name = "asistencia")
 public class Asistencia {
-    @Id 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer idAsistencia;
-    
-    @ManyToOne
-    @JoinColumn (name = "idInscripcion")
-    @Column(unique = true)
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idInscripcion", nullable = false)
     protected Inscripcion idInscripcion;
 
-    @ManyToOne
-    @JoinColumn (name = "idSesion")
-    @Column(unique = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idSesion", nullable = false)
     protected SesionClase idSesion;
 
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
     protected EstadoAsistencia estado;
+
+    @Column(name = "observacion", length = 500)
     protected String observaciones;
 }

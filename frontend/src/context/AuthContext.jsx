@@ -1,82 +1,44 @@
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
-import { authService } from "../services/authService";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { apiFetch, SESSION_EXPIRED_EVENT, tokenVigente } from "../services/api";
+import { MENUS } from "../config/roles";
 
 const AuthContext = createContext(null);
 
+// Lee la sesión guardada (así no se pierde al recargar la página).
+// Si el rol guardado ya no existe (por ejemplo "ADMIN"), la descarta.
 const leerSesion = () => {
     try {
+        const raw = localStorage.getItem("usuario");
         const token = localStorage.getItem("token");
-        const usuario = JSON.parse(localStorage.getItem("usuario") ?? "null");
-
-        if (
-            !token ||
-            !usuario ||
-            typeof usuario.correo !== "string" ||
-            typeof usuario.rol !== "string"
-        ) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
-            return null;
-        }
-
-        return usuario;
+        const usuario = raw ? JSON.parse(raw) : null;
+        if (token && tokenVigente(token) && usuario && MENUS[usuario.rol]) return usuario;
     } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        return null;
+        // Una sesión dañada se elimina para que no deje datos inválidos guardados.
     }
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    return null;
 };
 
-const guardarSesion = (respuesta) => {
-    if (
-        typeof respuesta?.token !== "string" ||
-        !respuesta.token ||
-        !respuesta.usuario ||
-        typeof respuesta.usuario.correo !== "string" ||
-        typeof respuesta.usuario.rol !== "string"
-    ) {
-        throw new Error("El servidor devolvió una respuesta de autenticación inválida.");
-    }
+const login = async (correo, password) => {
+    const { token, usuario } = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ correo, password }),
+    });
 
-    localStorage.setItem("token", respuesta.token);
-    localStorage.setItem("usuario", JSON.stringify(respuesta.usuario));
-    return respuesta.usuario;
+    localStorage.setItem("token", token);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    return usuario;
 };
+
+const register = (datos) =>
+    apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(datos),
+    });
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(leerSesion);
-
-    useEffect(() => {
-        const sincronizarSesion = (event) => {
-            if (event.key === null || event.key === "token" || event.key === "usuario") {
-                setUser(leerSesion());
-            }
-        };
-
-        window.addEventListener("storage", sincronizarSesion);
-        return () => window.removeEventListener("storage", sincronizarSesion);
-    }, []);
-
-    const login = useCallback(async (correo, password) => {
-        const respuesta = await authService.iniciarSesion(correo, password);
-        const usuario = guardarSesion(respuesta);
-        setUser(usuario);
-        return usuario;
-    }, []);
-
-    const register = useCallback(async (datos) => {
-        const respuesta = await authService.registrarse(datos);
-        const usuario = guardarSesion(respuesta);
-        setUser(usuario);
-        return usuario;
-    }, []);
 
     const logout = useCallback(() => {
         localStorage.removeItem("token");
@@ -84,9 +46,27 @@ export function AuthProvider({ children }) {
         setUser(null);
     }, []);
 
+    useEffect(() => {
+        window.addEventListener(SESSION_EXPIRED_EVENT, logout);
+        const sincronizarCierreEnOtraPestana = (event) => {
+            if (event.key === "token" && event.newValue === null) logout();
+        };
+        window.addEventListener("storage", sincronizarCierreEnOtraPestana);
+        return () => {
+            window.removeEventListener(SESSION_EXPIRED_EVENT, logout);
+            window.removeEventListener("storage", sincronizarCierreEnOtraPestana);
+        };
+    }, [logout]);
+
+    const iniciarSesion = async (correo, password) => {
+        const usuario = await login(correo, password);
+        setUser(usuario);
+        return usuario;
+    };
+
     const value = useMemo(
-        () => ({ user, login, register, logout }),
-        [user, login, register, logout]
+        () => ({ user, login: iniciarSesion, register, logout }),
+        [user, logout]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

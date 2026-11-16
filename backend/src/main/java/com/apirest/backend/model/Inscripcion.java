@@ -4,7 +4,12 @@ import java.sql.Date;
 
 import com.apirest.backend.Enums.EstadoInscripcion;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 @Table (name = "inscripcion")
 public class Inscripcion {
-    @Id 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer idInscripcion;
 
     @ManyToOne
@@ -32,5 +38,7 @@ public class Inscripcion {
 
     protected Date fechaInscripcion;
     
+    @Column(name = "estado")
+    @Enumerated(EnumType.STRING)
     protected EstadoInscripcion estadoInscripcion;
 }

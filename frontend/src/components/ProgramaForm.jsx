@@ -1,14 +1,16 @@
 import { useState } from "react";
 
 const MAX_NOMBRE = 100;
-const MAX_DESCRIPCION = 255;
+const MAX_DESCRIPCION = 500;
 
 function ProgramaForm({ programa, onGuardar, onCancelar, saving, error }) {
     const editando = Boolean(programa);
 
     const [nombre, setNombre] = useState(programa?.nombrePrograma ?? "");
     const [descripcion, setDescripcion] = useState(programa?.descripcion ?? "");
-    const [estado, setEstado] = useState(programa?.estado ?? true);
+    const [activo, setActivo] = useState(
+        programa ? programa.estadoPrograma === "ACTIVO" : true
+    );
     const [errorLocal, setErrorLocal] = useState("");
 
     const handleSubmit = async (event) => {
@@ -35,7 +37,7 @@ function ProgramaForm({ programa, onGuardar, onCancelar, saving, error }) {
         await onGuardar({
             nombrePrograma: nombreLimpio,
             descripcion: descripcion.trim(),
-            estado,
+            estadoPrograma: activo ? "ACTIVO" : "INACTIVO",
         });
     };
 
@@ -73,8 +75,8 @@ function ProgramaForm({ programa, onGuardar, onCancelar, saving, error }) {
             <label className="admin-check">
                 <input
                     type="checkbox"
-                    checked={estado}
-                    onChange={(e) => setEstado(e.target.checked)}
+                    checked={activo}
+                    onChange={(e) => setActivo(e.target.checked)}
                     disabled={saving}
                 />
                 Programa activo

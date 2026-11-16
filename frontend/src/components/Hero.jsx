@@ -22,7 +22,7 @@ function Hero() {
         </p>
 
         <div className="hero-buttons">
-          <a href="#clases" className="hero-primary">
+          <a href="clases" className="hero-primary">
             Explorar clases
           </a>
 

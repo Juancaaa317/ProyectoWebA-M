@@ -1,5 +1,5 @@
 package com.apirest.backend.Enums;
 
 public enum EstadoClase {
-    programada, enCurso, finalizada, cancelada
+    PROGRAMADA, EN_CURSO, FINALIZADA, CANCELADA
 }

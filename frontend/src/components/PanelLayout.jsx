@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { MENUS, ROL_INFO, rutaDe } from "../config/roles";
+import PanelIcon from "./PanelIcon";
 import "../styles/adminLayout.css";
 
-// Para agregar una sección nueva: una línea aquí + su ruta en App.jsx
-const menu = [
-    { to: "/admin", label: "Resumen", icon: "📊", end: true },
-    { to: "/admin/programas", label: "Programas", icon: "🩰" },
-    { to: "/admin/perfil", label: "Mi perfil", icon: "👤" },
-];
-
-function AdminLayout() {
+function PanelLayout() {
     const [abierto, setAbierto] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    const menu = MENUS[user.rol] ?? [];
+    const titulo = ROL_INFO[user.rol]?.titulo ?? "Panel";
+    const nombreVisible = user.nombre || user.correo || "Usuario";
 
     const cerrarMenu = () => setAbierto(false);
 
@@ -32,12 +31,11 @@ function AdminLayout() {
                     onClick={() => setAbierto(true)}
                     aria-label="Abrir menú"
                 >
-                    ☰
+                    <PanelIcon name="menu" className="al-icono" />
                 </button>
-                <span className="al-topbar-titulo">Panel de administración</span>
+                <span className="al-topbar-titulo">{titulo}</span>
             </header>
 
-            {/* Fondo oscuro detrás del menú en móvil */}
             {abierto && <div className="al-overlay" onClick={cerrarMenu} />}
 
             <aside className={abierto ? "al-sidebar abierto" : "al-sidebar"}>
@@ -50,36 +48,36 @@ function AdminLayout() {
 
                 <div className="al-perfil">
                     <div className="al-avatar">
-                        {user?.correo?.charAt(0).toUpperCase() ?? "?"}
+                        {nombreVisible.charAt(0).toUpperCase()}
                     </div>
-                    <strong>{user?.correo}</strong>
-                    <span className="al-rol">{user?.rol}</span>
+                    <strong>{nombreVisible}</strong>
+                    <span className="al-rol">{user.rol}</span>
                 </div>
 
                 <nav className="al-menu">
-                    {menu.map(({ to, label, icon, end }) => (
+                    {menu.map((item) => (
                         <NavLink
-                            key={to}
-                            to={to}
-                            end={end}
+                            key={item.path || "resumen"}
+                            to={rutaDe(item)}
+                            end={item.path === ""}
                             className={({ isActive }) =>
                                 isActive ? "al-link activo" : "al-link"
                             }
                             onClick={cerrarMenu}
                         >
-                            <span className="al-icono">{icon}</span>
-                            {label}
+                            <PanelIcon name={item.icon} className="al-icono" />
+                            {item.label}
                         </NavLink>
                     ))}
                 </nav>
 
                 <div className="al-pie">
                     <Link to="/" className="al-link" onClick={cerrarMenu}>
-                        <span className="al-icono">🌐</span>
+                        <PanelIcon name="sitio" className="al-icono" />
                         Ver sitio
                     </Link>
                     <button type="button" className="al-link" onClick={handleLogout}>
-                        <span className="al-icono">🚪</span>
+                        <PanelIcon name="salir" className="al-icono" />
                         Cerrar sesión
                     </button>
                 </div>
@@ -92,4 +90,4 @@ function AdminLayout() {
     );
 }
 
-export default AdminLayout;
+export default PanelLayout;

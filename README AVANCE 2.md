@@ -1,76 +1,42 @@
-## Cómo probar el manejo de errores (Avance 2)
+# Guía de verificación del Avance 2
 
-### Contrato esperado para autenticación real
+Esta guía corresponde al frontend y backend actuales. El registro, el inicio de sesión y los módulos conectados consumen la API real; no dependen de autenticación simulada ni de datos de prueba locales.
 
-El frontend consume estos endpoints cuando `VITE_USE_MOCK=false`:
+## Iniciar la aplicación
 
-- `POST /api/auth/login` recibe `{ "correo": "...", "password": "..." }`.
-- `POST /api/auth/register` recibe `{ "nombre": "...", "apellido": "...", "correo": "...", "telefono": "...", "password": "..." }`.
-- Ambos deben responder con `{ "token": "...", "usuario": { "id": 1, "correo": "...", "rol": "ESTUDIANTE" } }` (el rol de registro público debe asignarlo el backend).
+1. Configura `backend/.env` usando `backend/.env.example` como referencia.
+2. Inicia MySQL. En una terminal, entra a `backend` y ejecuta `.\mvnw.cmd spring-boot:run`.
+3. En otra terminal, entra a `frontend` y ejecuta `npm run dev`.
+4. Abre la dirección que muestra Vite, normalmente `http://localhost:5173`.
+5. Para consultar o ejecutar las rutas desde Swagger UI, abre `http://localhost:8080/docs`. La guía completa está en [backend/API.md](backend/API.md).
 
-El modo mock conserva las cuentas registradas solo en memoria; no se debe usar para datos reales. La sesión mock sí persiste durante la navegación y recarga mientras exista en el almacenamiento local del navegador.
+## Módulos conectados desde el panel
 
-### 1. Ejecutar el frontend
+- `/register`: registra una cuenta de estudiante contra `/api/auth/register` y luego inicia sesión.
+- `/login`: valida las credenciales contra `/api/auth/login`.
+- `/panel/programas`: el administrador puede listar, crear, editar y eliminar programas.
+- `/panel/clases`: lista clases; el administrador puede crear, editar y eliminar clases, gestionar sus horarios y programar sesiones.
+- `/panel/profesores`: el administrador puede consultar profesores y registrar uno nuevo.
+- `/panel/estudiantes`: el administrador puede consultar y filtrar estudiantes.
+- `/panel/inscripciones`: estudiantes solicitan cupo y consultan sus solicitudes; el administrador las revisa y cambia su estado.
+- `/panel/asistencia`: estudiantes consultan su historial; profesores consultan sesiones y registran asistencia.
+- `/panel/horario`: estudiantes y profesores consultan horarios según su rol.
+- Sin sesión, `/panel` y sus rutas deben redirigir al login.
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+Las rutas y permisos del servidor también se aplican aunque se escriba directamente la dirección en el navegador. Swagger UI está disponible en `http://localhost:8080/docs` cuando el backend está iniciado.
 
-Abrir en el navegador la dirección que muestre la terminal (normalmente `http://localhost:5173`).
+## Pruebas de errores con Postman
 
-> Copia `frontend/.env.example` a `frontend/.env` antes de iniciar. Configura `VITE_USE_MOCK=true` para usar datos simulados.
-> Con `VITE_USE_MOCK=false` se usa el backend real.
-> Usuario de prueba (solo modo mock): `admin@arteymovimiento.com` / `admin123`
+- **400 Validación:** envía a `POST /api/auth/register` un teléfono con letras o contraseñas distintas.
+- **401 Credenciales:** envía credenciales incorrectas a `POST /api/auth/login`.
+- **401 Sin sesión:** llama a una operación protegida, por ejemplo `POST /api/programas`, sin token.
+- **403 Rol insuficiente:** repite `POST /api/programas` con token de estudiante.
+- **404 No encontrado:** consulta `GET /api/programas/999999`.
+- **409 Duplicado:** intenta registrar otra vez un correo existente o crear un programa con nombre repetido.
+- **Error de conexión:** detén el backend y vuelve a cargar `/panel/programas`; debe aparecer la opción de reintentar.
 
-### 2. Pruebas paso a paso
+Para probar operaciones administrativas, inicia sesión con un usuario que tenga rol `ADMINISTRADOR`. Las respuestas de validación y negocio incluyen el formato común de `ApiErrorDTO`; algunos errores de seguridad (`401` y `403`) pueden ser generados por Spring Security con un formato distinto.
 
-**Prueba 1: Credenciales incorrectas**
-1. Ir a **Ingresar**.
-2. Escribir correo `x@x.com` y contraseña `123`.
-3. Resultado: aparece el mensaje rojo "Correo o contraseña incorrectos".
+## Alcance de estas pruebas
 
-**Prueba 2: Ruta privada**
-1. Sin haber iniciado sesión, escribir en la barra `/admin/programas`.
-2. Resultado: el sistema redirige automáticamente al login.
-
-**Prueba 3: Sesión persistente**
-1. Iniciar sesión con el usuario de prueba.
-2. Presionar F5 en `/admin/programas`.
-3. Resultado: la sesión se mantiene y no pide login otra vez.
-
-**Prueba 4: Página 404**
-1. Escribir en la barra una dirección inexistente, por ejemplo `/loquesea`.
-2. Resultado: se muestra la página "404 – Página no encontrada" con el botón "Volver al inicio".
-
-**Prueba 5: Estado de carga**
-1. Entrar a `/admin/programas`.
-2. Resultado: se ve un spinner con "Cargando programas..." y luego la tabla.
-
-**Prueba 6: Validación (400)**
-1. Pulsar **+ Nuevo programa**.
-2. Dejar el nombre vacío y pulsar **Crear programa**.
-3. Resultado: "El nombre es obligatorio."
-
-**Prueba 7: Nombre duplicado (409)**
-1. Pulsar **+ Nuevo programa**.
-2. Escribir el nombre `Ballet` y guardar.
-3. Resultado: "Ya existe un programa con ese nombre".
-
-**Prueba 8: CRUD correcto**
-1. Crear un programa nuevo: aparece el mensaje verde "Programa creado."
-2. Editarlo: aparece "Programa actualizado."
-3. Eliminarlo (con confirmación): aparece "Programa eliminado."
-
-**Prueba 9: Error de conexión**
-1. En `frontend/src/services/programaService.js`, dentro de `mock.listar`, agregar al inicio:
-   `throw new ApiError("No se pudo conectar con el servidor", 0);`
-2. Recargar `/admin/programas`.
-3. Resultado: mensaje rojo con el botón **Reintentar**.
-4. Quitar la línea agregada al terminar.
-
-### 3. Con el backend real
-
-Cambiar `VITE_USE_MOCK=false`, reiniciar `npm run dev` y repetir las pruebas.
-En F12 → pestaña **Red** se verifican los códigos: 201 al crear, 204 al eliminar, 400 por datos inválidos, 404 si no existe y 409 si el nombre está duplicado.
+La guía describe las pantallas conectadas según el código actual. El barrido de endpoints y las comprobaciones locales están detallados en [backend/API.md](backend/API.md). Antes de la entrega, realiza la demo con la base de datos y los dos servidores iniciados, y confirma los flujos principales en ejecución. Esta guía no reemplaza esa presentación.

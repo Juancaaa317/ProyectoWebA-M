@@ -1,11 +1,15 @@
 package com.apirest.backend.model;
 
-import java.sql.Date;
 
 
+
+
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 
@@ -14,6 +18,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Entity 
@@ -24,19 +29,20 @@ import lombok.NoArgsConstructor;
 public class Estudiante {
     
     @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer idEstudiante;
 
     
     @OneToOne 
-    @JoinColumn (name = "idUsuario")
-    @Column(unique = true)
+    @JoinColumn (name = "idUsuario", unique = true)
+    @ToString.Exclude
     protected Usuario idUsuario;
     
 
     protected String nombre;
     
     @Column(unique = true)
-    protected Integer tarjetaIdentidad;
+    protected String tarjetaIdentidad;
 
     protected Date fechaNacimiento;
 }
