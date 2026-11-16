@@ -61,3 +61,6 @@ build/
 
 .env
 !.env.example
+
+# Archivos subidos por los usuarios (comprobantes)
+uploads/

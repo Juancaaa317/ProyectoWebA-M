@@ -1,44 +1,422 @@
-.profesores-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+.profesores {
+    --prof-purple: #a855f7;
+    --prof-pink: #ec4899;
+    position: relative;
+    isolation: isolate;
+    min-height: 760px;
+    padding: clamp(104px, 12vh, 142px) 24px 80px;
+    overflow: hidden;
+    color: #fff;
+    background:
+        radial-gradient(ellipse at 16% 20%, rgba(113, 36, 166, 0.24), transparent 40%),
+        radial-gradient(ellipse at 84% 84%, rgba(160, 27, 101, 0.16), transparent 38%),
+        linear-gradient(135deg, #15111c, #100e15 52%, #17111b);
+}
+
+.prof-bg {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.prof-beam {
+    position: absolute;
+    top: -24%;
+    width: min(34vw, 390px);
+    height: 90%;
+    opacity: 0.42;
+    background: linear-gradient(180deg, rgba(199, 119, 255, 0.09), transparent 78%);
+    clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    transform-origin: top center;
+    animation: prof-beam-sway 22s ease-in-out infinite alternate;
+}
+
+.prof-beam--left { left: 15%; }
+.prof-beam--right {
+    right: 15%;
+    background: linear-gradient(180deg, rgba(255, 105, 190, 0.075), transparent 78%);
+    animation-delay: -11s;
+}
+
+@keyframes prof-beam-sway {
+    from { transform: rotate(-3deg); }
+    to { transform: rotate(3deg); }
+}
+
+.prof-orb {
+    position: absolute;
+    width: 420px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+    will-change: transform;
+}
+
+.prof-orb--purple {
+    top: -230px;
+    left: -170px;
+    background: #9b4bff;
+    animation: prof-orb-drift 32s ease-in-out infinite alternate;
+}
+
+.prof-orb--pink {
+    right: -210px;
+    bottom: -250px;
+    background: #ff329d;
+    animation: prof-orb-drift 36s ease-in-out -12s infinite alternate-reverse;
+}
+
+@keyframes prof-orb-drift {
+    to { transform: translate3d(45px, 35px, 0) scale(1.08); }
+}
+
+.prof-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image:
+        linear-gradient(rgba(211, 138, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(211, 138, 255, 0.035) 1px, transparent 1px);
+    background-size: 76px 76px;
+    -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 42%, #000 10%, transparent 100%);
+    mask-image: radial-gradient(ellipse 72% 70% at 50% 42%, #000 10%, transparent 100%);
+}
+
+.prof-dust {
+    position: absolute;
+    left: var(--left);
+    bottom: -8px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #e9caff;
+    box-shadow: 0 0 8px 2px rgba(211, 138, 255, 0.28);
+    opacity: 0;
+    animation: prof-dust-rise var(--duration) linear var(--delay) infinite;
+}
+
+@keyframes prof-dust-rise {
+    0% { transform: translate3d(0, 0, 0); opacity: 0; }
+    18% { opacity: 0.45; }
+    82% { opacity: 0.25; }
+    100% { transform: translate3d(var(--drift), -100vh, 0); opacity: 0; }
+}
+
+.prof-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(9, 8, 12, 0.12), transparent 30%, rgba(9, 8, 12, 0.18));
+}
+
+.profesores-header {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto clamp(40px, 7vh, 72px);
+    text-align: center;
+}
+
+.profesores-subtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 22px;
+    padding: 9px 20px;
+    border: 1px solid rgba(205, 130, 255, 0.3);
+    border-radius: 999px;
+    color: #e6d1fa;
+    background: rgba(132, 55, 178, 0.12);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    animation: prof-enter 700ms ease both;
+}
+
+.profesores-subtitle-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--prof-pink);
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.75);
+}
+
+.profesores-header h1 {
+    margin: 0 0 16px;
+    font-size: clamp(42px, 6.5vw, 82px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -2.2px;
+    text-wrap: balance;
+    animation: prof-enter 800ms 80ms ease both;
+}
+
+.prof-gradient {
+    color: transparent;
+    background: linear-gradient(95deg, #f32b9c 8%, #bf50dc 55%, #a76bff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 6px 24px rgba(202, 53, 175, 0.2));
+}
+
+.profesores-lead {
+    max-width: 520px;
+    margin: 0 auto;
+    color: #c4bacd;
+    font-size: clamp(0.96rem, 1.3vw, 1.08rem);
+    line-height: 1.7;
+    animation: prof-enter 800ms 150ms ease both;
+}
+
+.profesores-line {
+    display: block;
+    width: 78px;
+    height: 3px;
+    margin: 25px auto 0;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--prof-purple), var(--prof-pink));
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.38);
+}
+
+@keyframes prof-enter {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.prof-carrusel {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    padding: 0 72px;
+    animation: prof-enter 850ms 180ms ease both;
+}
+
+.prof-swiper {
+    width: clamp(300px, 42vw, 560px);
+    margin: 0 auto;
+    padding: 26px 0 46px;
+    overflow: visible;
+}
+
+.prof-swiper .swiper-slide {
+    width: 100%;
+    height: auto;
+    backface-visibility: hidden;
+    transition: opacity 220ms ease;
+}
+
+/* Solo se ven la activa y sus dos vecinas (preview); el resto se oculta */
+.prof-swiper .swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next) {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+.prof-swiper .swiper-slide-prev,
+.prof-swiper .swiper-slide-next {
+    z-index: 1;
+    cursor: pointer;
+}
+.prof-swiper .swiper-slide-active {
+    z-index: 2;
+    opacity: 1 !important;
+}
+
+/* Las vecinas se atenúan; la activa se ilumina con una transición suave */
+.prof-swiper .swiper-slide .profesores-card {
+    filter: brightness(0.6) saturate(0.85);
+    transition: filter 600ms ease, border-color 350ms ease, box-shadow 350ms ease;
+}
+.prof-swiper .swiper-slide-active .profesores-card {
+    filter: none;
+    border-color: rgba(207, 117, 255, 0.4);
+    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.4), 0 0 40px rgba(170, 75, 215, 0.16);
 }
 
 .profesores-card {
-    padding: 28px;
+    position: relative;
+    display: flex;
+    min-height: clamp(400px, 48vh, 500px);
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 56px 36px 50px;
+    border: 1px solid rgba(222, 185, 255, 0.15);
+    border-radius: 24px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid #302738;
-    border-radius: 16px;
-    transition: transform 0.3s, border-color 0.3s;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(165, 78, 209, 0.18), transparent 62%),
+        linear-gradient(155deg, #241b30, #17131f 74%);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.06);
+    transition: border-color 350ms ease, box-shadow 350ms ease, background-color 350ms ease;
+}
+
+.profesores-card::before {
+    position: absolute;
+    inset: 0 18% auto;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, transparent, rgba(223, 154, 255, 0.52), transparent);
 }
 
 .profesores-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
+    border-color: rgba(207, 117, 255, 0.38);
+    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.38), 0 0 34px rgba(170, 75, 215, 0.12);
+}
+
+.profesores-num {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    color: rgba(216, 174, 244, 0.12);
+    font-size: 3.4rem;
+    font-weight: 800;
+    line-height: 1;
+    user-select: none;
+}
+
+.profesores-avatar-wrap {
+    position: relative;
+    display: grid;
+    width: 136px;
+    height: 136px;
+    flex: 0 0 auto;
+    place-items: center;
+    margin-bottom: 30px;
+}
+
+.profesores-avatar-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(224, 152, 255, 0.55);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(196, 71, 220, 0.14);
+    animation: prof-ring-glow 5s ease-in-out infinite alternate;
+}
+
+@keyframes prof-ring-glow {
+    to { border-color: rgba(255, 100, 191, 0.8); box-shadow: 0 0 24px rgba(196, 71, 220, 0.28); }
 }
 
 .profesores-avatar {
-    width: 88px;
-    height: 88px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: 700;
-    color: white;
-    background: var(--gradient);
+    display: grid;
+    width: 112px;
+    height: 112px;
+    place-items: center;
     border-radius: 50%;
+    color: white;
+    background: linear-gradient(135deg, #a43bd0, #ed348f);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 28px rgba(205, 51, 164, 0.25);
+    font-size: 2.75rem;
+    font-weight: 800;
 }
 
 .profesores-card h2 {
-    margin: 0 0 6px;
-    font-size: 1.15rem;
+    max-width: 100%;
+    margin: 0 0 17px;
+    color: #fff;
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    font-weight: 750;
+    line-height: 1.25;
+    text-wrap: balance;
 }
 
-.profesores-card p {
-    margin: 0;
-    color: var(--accent);
-    font-weight: 600;
+.profesores-area {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 17px;
+    border: 1px solid rgba(202, 130, 245, 0.25);
+    border-radius: 999px;
+    color: #e6c8fb;
+    background: rgba(126, 57, 164, 0.2);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+    line-height: 1.35;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.prof-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(203, 155, 234, 0.38);
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(24, 19, 31, 0.88);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: border-color 250ms ease, background-color 250ms ease, box-shadow 250ms ease;
+}
+
+.prof-nav svg { width: 20px; height: 20px; }
+.prof-nav:hover {
+    border-color: rgba(245, 112, 193, 0.75);
+    background: rgba(115, 42, 133, 0.72);
+    box-shadow: 0 0 22px rgba(221, 69, 175, 0.2);
+}
+.prof-nav:focus-visible { outline: 3px solid #f3a3d4; outline-offset: 3px; }
+.prof-nav--prev { left: 0; }
+.prof-nav--next { right: 0; }
+.prof-nav.swiper-button-disabled { opacity: 0.4; cursor: default; }
+
+.prof-hint {
+    position: relative;
+    z-index: 1;
+    margin: 3px auto 0;
+    color: rgba(211, 191, 225, 0.68);
+    font-size: 0.76rem;
+    letter-spacing: 1.7px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+    .profesores { min-height: 700px; padding: 100px 18px 64px; }
+    .profesores-header { margin-bottom: 34px; }
+    .profesores-header h1 { letter-spacing: -1.3px; }
+    .profesores-subtitle { margin-bottom: 18px; font-size: 10px; letter-spacing: 2.5px; }
+    .prof-carrusel { padding: 0 44px; }
+    .prof-swiper { padding: 18px 0 32px; }
+    .prof-swiper { width: 72%; }
+    .profesores-card { min-height: 300px; padding: 34px 20px 30px; }
+    .profesores-avatar-wrap { width: 92px; height: 92px; margin-bottom: 20px; }
+    .profesores-avatar { width: 76px; height: 76px; font-size: 1.9rem; }
+    .profesores-num { font-size: 2.6rem; }
+    .prof-nav { width: 40px; height: 40px; }
+    .prof-nav--prev { left: -2px; }
+    .prof-nav--next { right: -2px; }
+    .prof-beam--left { left: -14%; }
+    .prof-beam--right { right: -14%; }
+    .prof-dust:nth-child(n + 7) { display: none; }
+}
+
+@media (max-width: 380px) {
+    .prof-carrusel { padding: 0 36px; }
+    .profesores-card { min-height: 280px; }
+    .prof-nav { width: 36px; height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .prof-beam, .prof-orb, .prof-dust, .profesores-avatar-ring,
+    .profesores-subtitle, .profesores-header h1, .profesores-lead,
+    .prof-carrusel {
+        animation: none !important;
+    }
+    .profesores-subtitle, .profesores-header h1, .profesores-lead, .prof-carrusel {
+        opacity: 1;
+        transform: none;
+    }
+    .prof-nav, .profesores-card, .prof-swiper .swiper-slide { transition: none; }
 }

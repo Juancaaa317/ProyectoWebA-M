@@ -55,12 +55,13 @@ DROP TABLE IF EXISTS `archivo`;
 CREATE TABLE `archivo` (
   `idArchivo` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
-  `nombre` varchar(255) NOT NULL,
+  `nombreOriginal` varchar(255) NOT NULL,
   `tamanoBytes` bigint NOT NULL,
   `ruta` varchar(500) NOT NULL,
   `fechaSubida` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tipoMime` varchar(150) DEFAULT NULL,
+  `tipoMime` varchar(150) NOT NULL,
   PRIMARY KEY (`idArchivo`),
+  UNIQUE KEY `uq_archivo_ruta` (`ruta`),
   KEY `fk_archivo_usuario` (`idUsuario`),
   CONSTRAINT `fk_archivo_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -270,11 +271,14 @@ CREATE TABLE `pago` (
   `idEstudiante` int NOT NULL,
   `idArchivo` int DEFAULT NULL,
   `monto` decimal(12,2) NOT NULL,
+  `periodo` char(7) NOT NULL,
   `fechaPago` date DEFAULT NULL,
   `estado` enum('PENDIENTE','APROBADO','RECHAZADO') NOT NULL,
+  `observacion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idPago`),
   KEY `fk_pago_estudiante` (`idEstudiante`),
   KEY `fk_pago_archivo` (`idArchivo`),
+  KEY `idx_pago_estudiante_periodo` (`idEstudiante`,`periodo`),
   CONSTRAINT `fk_pago_archivo` FOREIGN KEY (`idArchivo`) REFERENCES `archivo` (`idArchivo`),
   CONSTRAINT `fk_pago_estudiante` FOREIGN KEY (`idEstudiante`) REFERENCES `estudiante` (`idEstudiante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

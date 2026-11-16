@@ -1,73 +1,432 @@
 .horario {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 60px 24px;
+    position: relative;
+    isolation: isolate;
+    min-height: 760px;
+    padding: clamp(104px, 12vh, 142px) 24px 90px;
+    overflow: hidden;
     color: white;
+    background:
+        radial-gradient(ellipse at 16% 18%, rgba(113, 36, 166, 0.24), transparent 40%),
+        radial-gradient(ellipse at 86% 86%, rgba(160, 27, 101, 0.16), transparent 38%),
+        linear-gradient(135deg, #15111c, #100e15 52%, #17111b);
 }
 
+/* ================= Fondo animado ================= */
+.horario-bg {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.horario-orb {
+    position: absolute;
+    width: 440px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.13;
+}
+.horario-orb--purple {
+    top: -230px;
+    left: -170px;
+    background: #9b4bff;
+    animation: horario-drift 30s ease-in-out infinite alternate;
+}
+.horario-orb--pink {
+    right: -210px;
+    bottom: -250px;
+    background: #ff329d;
+    animation: horario-drift 34s ease-in-out -12s infinite alternate-reverse;
+}
+@keyframes horario-drift {
+    to { transform: translate3d(45px, 35px, 0) scale(1.08); }
+}
+
+.horario-bg-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    background-image:
+        linear-gradient(rgba(211, 138, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(211, 138, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 10%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 10%, transparent 100%);
+}
+
+/* Números que suben */
+.horario-num {
+    position: absolute;
+    left: var(--left);
+    bottom: -60px;
+    color: rgba(216, 174, 244, 0.13);
+    font-size: var(--size);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    opacity: 0;
+    animation: horario-rise var(--duration) linear var(--delay) infinite;
+}
+
+/* Mini calendarios que flotan */
+.horario-cal {
+    position: absolute;
+    left: var(--left);
+    bottom: -90px;
+    display: flex;
+    width: var(--size);
+    height: calc(var(--size) * 1.1);
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(214, 150, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(132, 55, 178, 0.08);
+    opacity: 0;
+    animation: horario-float var(--duration) ease-in-out var(--delay) infinite;
+}
+.horario-cal i {
+    display: block;
+    height: 24%;
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5));
+}
+.horario-cal b {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    color: rgba(236, 210, 255, 0.55);
+    font-size: calc(var(--size) * 0.36);
+    font-weight: 800;
+}
+
+@keyframes horario-rise {
+    0% { transform: translate3d(0, 0, 0); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 0.8; }
+    100% { transform: translate3d(0, -115vh, 0); opacity: 0; }
+}
+@keyframes horario-float {
+    0% { transform: translate3d(0, 0, 0) rotate(var(--tilt)); opacity: 0; }
+    12% { opacity: 0.75; }
+    50% { transform: translate3d(18px, -60vh, 0) rotate(calc(var(--tilt) * -1)); }
+    88% { opacity: 0.55; }
+    100% { transform: translate3d(-12px, -120vh, 0) rotate(var(--tilt)); opacity: 0; }
+}
+
+/* ================= Título ================= */
 .horario-header {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto clamp(40px, 6vh, 64px);
     text-align: center;
-    margin-bottom: 40px;
 }
 
 .horario-subtitle {
-    letter-spacing: 3px;
-    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 0 22px;
+    padding: 9px 20px;
+    border: 1px solid rgba(205, 130, 255, 0.3);
+    border-radius: 999px;
+    color: #e6d1fa;
+    background: rgba(132, 55, 178, 0.12);
+    font-size: 12px;
     font-weight: 700;
-    color: var(--accent);
+    letter-spacing: 3.5px;
+    animation: horario-enter 700ms ease both;
+}
+.horario-subtitle-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ec4899;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.75);
 }
 
 .horario-header h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin: 8px 0;
-}
-
-.horario-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
-}
-
-.horario-card {
-    padding: 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid #302738;
-    border-radius: 16px;
-    transition: transform 0.3s, border-color 0.3s;
-}
-
-.horario-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-}
-
-.horario-card h2 {
     margin: 0 0 16px;
-    font-size: 1.2rem;
-    background: var(--gradient);
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -2.5px;
+    text-wrap: balance;
+    animation: horario-enter 800ms 80ms ease both;
+}
+.horario-gradient {
+    color: transparent;
+    background: linear-gradient(95deg, #f32b9c 8%, #bf50dc 55%, #a76bff 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    filter: drop-shadow(0 6px 28px rgba(202, 53, 175, 0.35));
 }
 
-.horario-card ul {
-    list-style: none;
+.horario-lead {
+    max-width: 520px;
+    margin: 0 auto;
+    color: #c4bacd;
+    font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+    line-height: 1.7;
+    animation: horario-enter 800ms 150ms ease both;
+}
+.horario-line {
+    display: block;
+    width: 78px;
+    height: 3px;
+    margin: 25px auto 0;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #a855f7, #ec4899);
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.38);
+}
+@keyframes horario-enter {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= Paneles expandibles ================= */
+.horario-panels {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(100%, 1180px);
+    height: clamp(440px, 56vh, 540px);
+    margin: 0 auto;
+    gap: 12px;
+    animation: horario-enter 850ms 200ms ease both;
+}
+
+.horario-panel {
+    position: relative;
+    display: flex;
+    flex: 0 0 92px;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(222, 185, 255, 0.14);
+    border-radius: 26px;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(165, 78, 209, 0.18), transparent 65%),
+        linear-gradient(160deg, #241b30, #17131f 75%);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.06);
+    transition:
+        flex-grow 600ms cubic-bezier(0.22, 0.8, 0.28, 1),
+        border-color 400ms ease,
+        box-shadow 400ms ease;
+}
+.horario-panel:hover:not(.is-active) {
+    border-color: rgba(207, 117, 255, 0.35);
+}
+.horario-panel.is-active {
+    flex: 1 1 92px;
+    border-color: rgba(207, 117, 255, 0.45);
+    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.4), 0 0 44px rgba(170, 75, 215, 0.18);
+}
+
+/* Pestaña vertical (panel cerrado) */
+.horario-tab {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 26px 0 30px;
+    border: 0;
+    color: #e9d9f7;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    transition: opacity 300ms ease;
+}
+.horario-tab:focus-visible {
+    outline: 3px solid #f3a3d4;
+    outline-offset: -4px;
+    border-radius: 26px;
+}
+.horario-tab-num {
+    color: rgba(216, 174, 244, 0.5);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+.horario-tab-dia {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+.horario-panel.is-active .horario-tab {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Contenido (panel abierto) */
+.horario-body {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    opacity: 0;
+    transition: opacity 250ms ease;
+}
+.horario-panel.is-active .horario-body {
+    opacity: 1;
+    transition: opacity 450ms ease 220ms;
+}
+.horario-body-inner {
+    position: relative;
+    display: flex;
+    min-width: 300px;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px clamp(28px, 4vw, 52px);
+}
+.horario-body-num {
+    position: absolute;
+    top: 8px;
+    right: 22px;
+    color: rgba(216, 174, 244, 0.1);
+    font-size: clamp(5rem, 9vw, 8rem);
+    font-weight: 800;
+    line-height: 1;
+    user-select: none;
+}
+.horario-body h2 {
     margin: 0;
-    padding: 0;
+    font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    color: transparent;
+    background: linear-gradient(95deg, #f32b9c, #bf50dc 60%, #a76bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.horario-count {
+    margin: 8px 0 26px;
+    color: #b9aac7;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+.horario-body ul {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
-
-.horario-card li {
+.horario-body li {
     display: flex;
-    gap: 12px;
-    align-items: baseline;
-    color: #e7e0eb;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border: 1px solid rgba(202, 130, 245, 0.2);
+    border-radius: 16px;
+    background: rgba(126, 57, 164, 0.14);
+    color: #f0e8f6;
+    transform: translateX(-12px);
+    opacity: 0;
+    transition: transform 500ms ease, opacity 500ms ease, border-color 250ms ease;
 }
+.horario-panel.is-active li {
+    transform: none;
+    opacity: 1;
+}
+.horario-panel.is-active li:nth-child(1) { transition-delay: 300ms, 300ms, 0s; }
+.horario-panel.is-active li:nth-child(2) { transition-delay: 400ms, 400ms, 0s; }
+.horario-panel.is-active li:nth-child(3) { transition-delay: 500ms, 500ms, 0s; }
+.horario-body li:hover { border-color: rgba(245, 112, 193, 0.6); }
 
 .horario-hora {
-    min-width: 70px;
-    font-weight: 700;
-    color: var(--accent);
+    min-width: 78px;
+    color: #f08ac4;
+    font-size: 1rem;
+    font-weight: 800;
+}
+.horario-clase {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 600;
+}
+
+/* ================= Tablet / móvil: apilado vertical ================= */
+@media (max-width: 860px) {
+    .horario { padding: 100px 16px 64px; min-height: 0; }
+    .horario-subtitle { font-size: 10px; letter-spacing: 2.5px; }
+    .horario-header h1 { letter-spacing: -1.4px; }
+
+    .horario-panels {
+        height: auto;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .horario-panel {
+        flex: none;
+        flex-direction: column;
+        border-radius: 20px;
+        transition: border-color 400ms ease, box-shadow 400ms ease;
+    }
+    .horario-panel.is-active { flex: none; }
+
+    .horario-tab {
+        position: relative;
+        inset: auto;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 16px;
+        padding: 20px 22px;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    .horario-tab-dia {
+        writing-mode: horizontal-tb;
+        transform: none;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+    .horario-panel.is-active .horario-tab-dia { color: #f08ac4; }
+
+    /* Despliegue vertical con grid 0fr -> 1fr */
+    .horario-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        flex: none;
+        opacity: 1;
+        transition: grid-template-rows 500ms cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+    .horario-panel.is-active .horario-body {
+        grid-template-rows: 1fr;
+        transition: grid-template-rows 500ms cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+    .horario-body-inner {
+        min-width: 0;
+        height: auto;
+        overflow: hidden;
+        padding: 0 20px;
+        opacity: 0;
+        transition: opacity 300ms ease, padding 500ms ease;
+    }
+    .horario-panel.is-active .horario-body-inner {
+        padding: 4px 20px 24px;
+        opacity: 1;
+        transition: opacity 450ms ease 150ms, padding 500ms ease;
+    }
+    /* En móvil el título grande se omite: la pestaña ya muestra el día */
+    .horario-body h2,
+    .horario-body-num { display: none; }
+    .horario-count { margin: 0 0 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .horario-orb, .horario-num, .horario-cal,
+    .horario-subtitle, .horario-header h1, .horario-lead, .horario-panels {
+        animation: none !important;
+    }
+    .horario-num, .horario-cal { opacity: 0.4; }
+    .horario-panel, .horario-body, .horario-body li,
+    .horario-body-inner, .horario-tab { transition: none !important; }
 }
