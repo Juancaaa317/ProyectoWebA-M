@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     padding: 40px 20px;
-    background: #17131f;
+    background: var(--surface);
     box-sizing: border-box;
 }
 
@@ -13,11 +13,11 @@
     max-width: 450px;
     padding: 45px;
 
-    background: #0f0d15;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg);
+    border: 1px solid color-mix(in srgb, var(--overlay) 10%, transparent);
     border-radius: 20px;
 
-    box-shadow: 0 0 40px rgba(139, 55, 255, 0.15);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .login-header {
@@ -32,7 +32,7 @@
     font-weight: 700;
     letter-spacing: 4px;
 
-    color: #a855f7;
+    color: var(--accent);
 }
 
 .login-header h1 {
@@ -41,13 +41,13 @@
     font-size: 36px;
     line-height: 1.1;
 
-    color: white;
+    color: var(--text-strong);
 }
 
 .login-description {
     margin: 0;
 
-    color: #b8b2c4;
+    color: var(--text-muted);
     font-size: 15px;
     line-height: 1.6;
 }
@@ -67,7 +67,7 @@
 .form-group label {
     font-size: 14px;
     font-weight: 600;
-    color: white;
+    color: var(--text-strong);
 }
 
 .form-group input {
@@ -76,11 +76,11 @@
 
     padding: 14px 16px;
 
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid color-mix(in srgb, var(--overlay) 15%, transparent);
     border-radius: 10px;
 
-    background: #191620;
-    color: white;
+    background: var(--surface);
+    color: var(--text-strong);
 
     font-size: 15px;
 
@@ -91,13 +91,13 @@
 }
 
 .form-group input::placeholder {
-    color: #777080;
+    color: var(--text-faint);
 }
 
 .form-group input:focus {
-    border-color: #a855f7;
+    border-color: var(--accent);
 
-    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .login-button {
@@ -109,10 +109,10 @@
     border-radius: 10px;
 
     background: linear-gradient(90deg,
-            #8b3dff,
-            #d21d91);
+            var(--accent),
+            var(--accent));
 
-    color: white;
+    color: var(--on-accent);
 
     font-size: 15px;
     font-weight: 700;
@@ -137,12 +137,12 @@
 
     text-align: center;
 
-    color: #aaa3b5;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
 .login-register a {
-    color: #b45cff;
+    color: var(--accent);
     font-weight: 700;
 
     text-decoration: none;
@@ -187,8 +187,8 @@
     margin: 0;
     padding: 10px 14px;
     font-size: 14px;
-    color: #ff8fb8;
-    background: rgba(255, 31, 156, 0.1);
-    border: 1px solid rgba(255, 31, 156, 0.35);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
     border-radius: 10px;
 }

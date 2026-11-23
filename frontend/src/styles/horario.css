@@ -4,11 +4,11 @@
     min-height: 760px;
     padding: clamp(104px, 12vh, 142px) 24px 90px;
     overflow: hidden;
-    color: white;
+    color: var(--text-strong);
     background:
-        radial-gradient(ellipse at 16% 18%, rgba(113, 36, 166, 0.24), transparent 40%),
-        radial-gradient(ellipse at 86% 86%, rgba(160, 27, 101, 0.16), transparent 38%),
-        linear-gradient(135deg, #15111c, #100e15 52%, #17111b);
+        radial-gradient(ellipse at 16% 18%, color-mix(in srgb, var(--accent-2) 24%, transparent), transparent 40%),
+        radial-gradient(ellipse at 86% 86%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 38%),
+        linear-gradient(135deg, var(--surface), var(--bg) 52%, var(--surface));
 }
 
 /* ================= Fondo animado ================= */
@@ -31,13 +31,13 @@
 .horario-orb--purple {
     top: -230px;
     left: -170px;
-    background: #9b4bff;
+    background: var(--accent);
     animation: horario-drift 30s ease-in-out infinite alternate;
 }
 .horario-orb--pink {
     right: -210px;
     bottom: -250px;
-    background: #ff329d;
+    background: var(--accent);
     animation: horario-drift 34s ease-in-out -12s infinite alternate-reverse;
 }
 @keyframes horario-drift {
@@ -49,8 +49,8 @@
     inset: 0;
     opacity: 0.4;
     background-image:
-        linear-gradient(rgba(211, 138, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(211, 138, 255, 0.04) 1px, transparent 1px);
+        linear-gradient(color-mix(in srgb, var(--accent) 4%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 4%, transparent) 1px, transparent 1px);
     background-size: 64px 64px;
     -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 10%, transparent 100%);
     mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 10%, transparent 100%);
@@ -61,7 +61,7 @@
     position: absolute;
     left: var(--left);
     bottom: -60px;
-    color: rgba(216, 174, 244, 0.13);
+    color: color-mix(in srgb, var(--accent) 13%, transparent);
     font-size: var(--size);
     font-weight: 800;
     font-variant-numeric: tabular-nums;
@@ -79,22 +79,22 @@
     height: calc(var(--size) * 1.1);
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid rgba(214, 150, 255, 0.28);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
     border-radius: 10px;
-    background: rgba(132, 55, 178, 0.08);
+    background: color-mix(in srgb, var(--accent-2) 8%, transparent);
     opacity: 0;
     animation: horario-float var(--duration) ease-in-out var(--delay) infinite;
 }
 .horario-cal i {
     display: block;
     height: 24%;
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 50%, transparent), color-mix(in srgb, var(--accent) 50%, transparent));
 }
 .horario-cal b {
     display: grid;
     flex: 1;
     place-items: center;
-    color: rgba(236, 210, 255, 0.55);
+    color: color-mix(in srgb, var(--accent) 55%, transparent);
     font-size: calc(var(--size) * 0.36);
     font-weight: 800;
 }
@@ -127,10 +127,10 @@
     gap: 11px;
     margin: 0 0 22px;
     padding: 9px 20px;
-    border: 1px solid rgba(205, 130, 255, 0.3);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     border-radius: 999px;
-    color: #e6d1fa;
-    background: rgba(132, 55, 178, 0.12);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 12%, transparent);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 3.5px;
@@ -140,8 +140,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #ec4899;
-    box-shadow: 0 0 12px rgba(236, 72, 153, 0.75);
+    background: var(--accent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 75%, transparent);
 }
 
 .horario-header h1 {
@@ -155,16 +155,16 @@
 }
 .horario-gradient {
     color: transparent;
-    background: linear-gradient(95deg, #f32b9c 8%, #bf50dc 55%, #a76bff 100%);
+    background: linear-gradient(95deg, var(--accent) 8%, var(--accent) 55%, var(--accent) 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    filter: drop-shadow(0 6px 28px rgba(202, 53, 175, 0.35));
+    filter: drop-shadow(0 6px 28px color-mix(in srgb, var(--accent) 35%, transparent));
 }
 
 .horario-lead {
     max-width: 520px;
     margin: 0 auto;
-    color: #c4bacd;
+    color: var(--text-muted);
     font-size: clamp(0.98rem, 1.3vw, 1.1rem);
     line-height: 1.7;
     animation: horario-enter 800ms 150ms ease both;
@@ -175,8 +175,8 @@
     height: 3px;
     margin: 25px auto 0;
     border-radius: 99px;
-    background: linear-gradient(90deg, #a855f7, #ec4899);
-    box-shadow: 0 0 18px rgba(236, 72, 153, 0.38);
+    background: linear-gradient(90deg, var(--accent), var(--accent));
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 38%, transparent);
 }
 @keyframes horario-enter {
     from { opacity: 0; transform: translateY(14px); }
@@ -201,24 +201,24 @@
     flex: 0 0 92px;
     min-width: 0;
     overflow: hidden;
-    border: 1px solid rgba(222, 185, 255, 0.14);
+    border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
     border-radius: 26px;
     background:
-        radial-gradient(ellipse at 50% 0%, rgba(165, 78, 209, 0.18), transparent 65%),
-        linear-gradient(160deg, #241b30, #17131f 75%);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.06);
+        radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 65%),
+        linear-gradient(160deg, var(--surface), var(--surface) 75%);
+    box-shadow: 0 18px 44px color-mix(in srgb, var(--shadow) calc(28% * var(--shadow-k)), transparent), inset 0 1px color-mix(in srgb, var(--overlay) 6%, transparent);
     transition:
         flex-grow 600ms cubic-bezier(0.22, 0.8, 0.28, 1),
         border-color 400ms ease,
         box-shadow 400ms ease;
 }
 .horario-panel:hover:not(.is-active) {
-    border-color: rgba(207, 117, 255, 0.35);
+    border-color: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .horario-panel.is-active {
     flex: 1 1 92px;
-    border-color: rgba(207, 117, 255, 0.45);
-    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.4), 0 0 44px rgba(170, 75, 215, 0.18);
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    box-shadow: 0 28px 62px color-mix(in srgb, var(--shadow) calc(40% * var(--shadow-k)), transparent), 0 0 44px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 /* Pestaña vertical (panel cerrado) */
@@ -232,19 +232,19 @@
     justify-content: space-between;
     padding: 26px 0 30px;
     border: 0;
-    color: #e9d9f7;
+    color: var(--accent-text);
     background: transparent;
     cursor: pointer;
     font: inherit;
     transition: opacity 300ms ease;
 }
 .horario-tab:focus-visible {
-    outline: 3px solid #f3a3d4;
+    outline: 3px solid var(--accent);
     outline-offset: -4px;
     border-radius: 26px;
 }
 .horario-tab-num {
-    color: rgba(216, 174, 244, 0.5);
+    color: color-mix(in srgb, var(--accent) 50%, transparent);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -287,7 +287,7 @@
     position: absolute;
     top: 8px;
     right: 22px;
-    color: rgba(216, 174, 244, 0.1);
+    color: color-mix(in srgb, var(--accent) 10%, transparent);
     font-size: clamp(5rem, 9vw, 8rem);
     font-weight: 800;
     line-height: 1;
@@ -300,13 +300,13 @@
     line-height: 1.05;
     letter-spacing: -1px;
     color: transparent;
-    background: linear-gradient(95deg, #f32b9c, #bf50dc 60%, #a76bff);
+    background: linear-gradient(95deg, var(--accent), var(--accent) 60%, var(--accent));
     -webkit-background-clip: text;
     background-clip: text;
 }
 .horario-count {
     margin: 8px 0 26px;
-    color: #b9aac7;
+    color: var(--text-muted);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 2.5px;
@@ -325,10 +325,10 @@
     align-items: center;
     gap: 16px;
     padding: 14px 18px;
-    border: 1px solid rgba(202, 130, 245, 0.2);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
     border-radius: 16px;
-    background: rgba(126, 57, 164, 0.14);
-    color: #f0e8f6;
+    background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+    color: var(--accent-text);
     transform: translateX(-12px);
     opacity: 0;
     transition: transform 500ms ease, opacity 500ms ease, border-color 250ms ease;
@@ -340,11 +340,11 @@
 .horario-panel.is-active li:nth-child(1) { transition-delay: 300ms, 300ms, 0s; }
 .horario-panel.is-active li:nth-child(2) { transition-delay: 400ms, 400ms, 0s; }
 .horario-panel.is-active li:nth-child(3) { transition-delay: 500ms, 500ms, 0s; }
-.horario-body li:hover { border-color: rgba(245, 112, 193, 0.6); }
+.horario-body li:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
 
 .horario-hora {
     min-width: 78px;
-    color: #f08ac4;
+    color: var(--accent-text);
     font-size: 1rem;
     font-weight: 800;
 }
@@ -388,7 +388,7 @@
         font-size: 1.1rem;
         letter-spacing: 2px;
     }
-    .horario-panel.is-active .horario-tab-dia { color: #f08ac4; }
+    .horario-panel.is-active .horario-tab-dia { color: var(--accent-text); }
 
     /* Despliegue vertical con grid 0fr -> 1fr */
     .horario-body {

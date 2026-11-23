@@ -1,16 +1,16 @@
 .profesores {
-    --prof-purple: #a855f7;
-    --prof-pink: #ec4899;
+    --prof-purple: var(--accent-2);
+    --prof-pink: var(--accent);
     position: relative;
     isolation: isolate;
     min-height: 760px;
     padding: clamp(104px, 12vh, 142px) 24px 80px;
     overflow: hidden;
-    color: #fff;
+    color: var(--text-strong);
     background:
-        radial-gradient(ellipse at 16% 20%, rgba(113, 36, 166, 0.24), transparent 40%),
-        radial-gradient(ellipse at 84% 84%, rgba(160, 27, 101, 0.16), transparent 38%),
-        linear-gradient(135deg, #15111c, #100e15 52%, #17111b);
+        radial-gradient(ellipse at 16% 20%, color-mix(in srgb, var(--accent-2) 24%, transparent), transparent 40%),
+        radial-gradient(ellipse at 84% 84%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 38%),
+        linear-gradient(135deg, var(--surface), var(--bg) 52%, var(--surface));
 }
 
 .prof-bg {
@@ -27,7 +27,7 @@
     width: min(34vw, 390px);
     height: 90%;
     opacity: 0.42;
-    background: linear-gradient(180deg, rgba(199, 119, 255, 0.09), transparent 78%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 78%);
     clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
     transform-origin: top center;
     animation: prof-beam-sway 22s ease-in-out infinite alternate;
@@ -36,7 +36,7 @@
 .prof-beam--left { left: 15%; }
 .prof-beam--right {
     right: 15%;
-    background: linear-gradient(180deg, rgba(255, 105, 190, 0.075), transparent 78%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7.5%, transparent), transparent 78%);
     animation-delay: -11s;
 }
 
@@ -58,14 +58,14 @@
 .prof-orb--purple {
     top: -230px;
     left: -170px;
-    background: #9b4bff;
+    background: var(--accent);
     animation: prof-orb-drift 32s ease-in-out infinite alternate;
 }
 
 .prof-orb--pink {
     right: -210px;
     bottom: -250px;
-    background: #ff329d;
+    background: var(--accent);
     animation: prof-orb-drift 36s ease-in-out -12s infinite alternate-reverse;
 }
 
@@ -78,8 +78,8 @@
     inset: 0;
     opacity: 0.35;
     background-image:
-        linear-gradient(rgba(211, 138, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(211, 138, 255, 0.035) 1px, transparent 1px);
+        linear-gradient(color-mix(in srgb, var(--accent) 3.5%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 3.5%, transparent) 1px, transparent 1px);
     background-size: 76px 76px;
     -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 42%, #000 10%, transparent 100%);
     mask-image: radial-gradient(ellipse 72% 70% at 50% 42%, #000 10%, transparent 100%);
@@ -92,8 +92,8 @@
     width: 3px;
     height: 3px;
     border-radius: 50%;
-    background: #e9caff;
-    box-shadow: 0 0 8px 2px rgba(211, 138, 255, 0.28);
+    background: var(--accent);
+    box-shadow: 0 0 8px 2px color-mix(in srgb, var(--accent) 28%, transparent);
     opacity: 0;
     animation: prof-dust-rise var(--duration) linear var(--delay) infinite;
 }
@@ -108,7 +108,7 @@
 .prof-vignette {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(9, 8, 12, 0.12), transparent 30%, rgba(9, 8, 12, 0.18));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 12%, transparent), transparent 30%, color-mix(in srgb, var(--bg) 18%, transparent));
 }
 
 .profesores-header {
@@ -124,10 +124,10 @@
     gap: 11px;
     margin-bottom: 22px;
     padding: 9px 20px;
-    border: 1px solid rgba(205, 130, 255, 0.3);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     border-radius: 999px;
-    color: #e6d1fa;
-    background: rgba(132, 55, 178, 0.12);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 12%, transparent);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 3.5px;
@@ -140,7 +140,7 @@
     height: 7px;
     border-radius: 50%;
     background: var(--prof-pink);
-    box-shadow: 0 0 12px rgba(236, 72, 153, 0.75);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 75%, transparent);
 }
 
 .profesores-header h1 {
@@ -155,16 +155,16 @@
 
 .prof-gradient {
     color: transparent;
-    background: linear-gradient(95deg, #f32b9c 8%, #bf50dc 55%, #a76bff 100%);
+    background: linear-gradient(95deg, var(--accent) 8%, var(--accent) 55%, var(--accent) 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    filter: drop-shadow(0 6px 24px rgba(202, 53, 175, 0.2));
+    filter: drop-shadow(0 6px 24px color-mix(in srgb, var(--accent) 20%, transparent));
 }
 
 .profesores-lead {
     max-width: 520px;
     margin: 0 auto;
-    color: #c4bacd;
+    color: var(--text-muted);
     font-size: clamp(0.96rem, 1.3vw, 1.08rem);
     line-height: 1.7;
     animation: prof-enter 800ms 150ms ease both;
@@ -177,7 +177,7 @@
     margin: 25px auto 0;
     border-radius: 99px;
     background: linear-gradient(90deg, var(--prof-purple), var(--prof-pink));
-    box-shadow: 0 0 18px rgba(236, 72, 153, 0.38);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 38%, transparent);
 }
 
 @keyframes prof-enter {
@@ -230,8 +230,8 @@
 }
 .prof-swiper .swiper-slide-active .profesores-card {
     filter: none;
-    border-color: rgba(207, 117, 255, 0.4);
-    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.4), 0 0 40px rgba(170, 75, 215, 0.16);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    box-shadow: 0 28px 62px color-mix(in srgb, var(--shadow) calc(40% * var(--shadow-k)), transparent), 0 0 40px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .profesores-card {
@@ -244,13 +244,13 @@
     justify-content: center;
     overflow: hidden;
     padding: 56px 36px 50px;
-    border: 1px solid rgba(222, 185, 255, 0.15);
+    border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
     border-radius: 24px;
     text-align: center;
     background:
-        radial-gradient(ellipse at 50% 0%, rgba(165, 78, 209, 0.18), transparent 62%),
-        linear-gradient(155deg, #241b30, #17131f 74%);
-    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.06);
+        radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 62%),
+        linear-gradient(155deg, var(--surface), var(--surface) 74%);
+    box-shadow: 0 22px 55px color-mix(in srgb, var(--shadow) calc(30% * var(--shadow-k)), transparent), inset 0 1px color-mix(in srgb, var(--overlay) 6%, transparent);
     transition: border-color 350ms ease, box-shadow 350ms ease, background-color 350ms ease;
 }
 
@@ -259,19 +259,19 @@
     inset: 0 18% auto;
     height: 1px;
     content: "";
-    background: linear-gradient(90deg, transparent, rgba(223, 154, 255, 0.52), transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 52%, transparent), transparent);
 }
 
 .profesores-card:hover {
-    border-color: rgba(207, 117, 255, 0.38);
-    box-shadow: 0 28px 62px rgba(0, 0, 0, 0.38), 0 0 34px rgba(170, 75, 215, 0.12);
+    border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+    box-shadow: 0 28px 62px color-mix(in srgb, var(--shadow) calc(38% * var(--shadow-k)), transparent), 0 0 34px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .profesores-num {
     position: absolute;
     top: 14px;
     right: 20px;
-    color: rgba(216, 174, 244, 0.12);
+    color: color-mix(in srgb, var(--accent) 12%, transparent);
     font-size: 3.4rem;
     font-weight: 800;
     line-height: 1;
@@ -291,14 +291,14 @@
 .profesores-avatar-ring {
     position: absolute;
     inset: 0;
-    border: 1px solid rgba(224, 152, 255, 0.55);
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
     border-radius: 50%;
-    box-shadow: 0 0 20px rgba(196, 71, 220, 0.14);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 14%, transparent);
     animation: prof-ring-glow 5s ease-in-out infinite alternate;
 }
 
 @keyframes prof-ring-glow {
-    to { border-color: rgba(255, 100, 191, 0.8); box-shadow: 0 0 24px rgba(196, 71, 220, 0.28); }
+    to { border-color: color-mix(in srgb, var(--accent) 80%, transparent); box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 28%, transparent); }
 }
 
 .profesores-avatar {
@@ -307,9 +307,9 @@
     height: 112px;
     place-items: center;
     border-radius: 50%;
-    color: white;
-    background: linear-gradient(135deg, #a43bd0, #ed348f);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 28px rgba(205, 51, 164, 0.25);
+    color: var(--on-accent);
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--overlay) 28%, transparent), 0 8px 28px color-mix(in srgb, var(--accent) 25%, transparent);
     font-size: 2.75rem;
     font-weight: 800;
 }
@@ -317,7 +317,7 @@
 .profesores-card h2 {
     max-width: 100%;
     margin: 0 0 17px;
-    color: #fff;
+    color: var(--text-strong);
     font-size: clamp(1.25rem, 2vw, 1.8rem);
     font-weight: 750;
     line-height: 1.25;
@@ -330,10 +330,10 @@
     align-items: center;
     justify-content: center;
     padding: 9px 17px;
-    border: 1px solid rgba(202, 130, 245, 0.25);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
     border-radius: 999px;
-    color: #e6c8fb;
-    background: rgba(126, 57, 164, 0.2);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 20%, transparent);
     font-size: 0.76rem;
     font-weight: 700;
     letter-spacing: 1.1px;
@@ -351,10 +351,10 @@
     height: 48px;
     place-items: center;
     padding: 0;
-    border: 1px solid rgba(203, 155, 234, 0.38);
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
     border-radius: 50%;
-    color: #fff;
-    background: rgba(24, 19, 31, 0.88);
+    color: var(--text-strong);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
     cursor: pointer;
     transform: translateY(-50%);
     transition: border-color 250ms ease, background-color 250ms ease, box-shadow 250ms ease;
@@ -362,11 +362,11 @@
 
 .prof-nav svg { width: 20px; height: 20px; }
 .prof-nav:hover {
-    border-color: rgba(245, 112, 193, 0.75);
-    background: rgba(115, 42, 133, 0.72);
-    box-shadow: 0 0 22px rgba(221, 69, 175, 0.2);
+    border-color: color-mix(in srgb, var(--accent) 75%, transparent);
+    background: color-mix(in srgb, var(--accent-2) 72%, transparent);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 20%, transparent);
 }
-.prof-nav:focus-visible { outline: 3px solid #f3a3d4; outline-offset: 3px; }
+.prof-nav:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .prof-nav--prev { left: 0; }
 .prof-nav--next { right: 0; }
 .prof-nav.swiper-button-disabled { opacity: 0.4; cursor: default; }
@@ -375,7 +375,7 @@
     position: relative;
     z-index: 1;
     margin: 3px auto 0;
-    color: rgba(211, 191, 225, 0.68);
+    color: color-mix(in srgb, var(--accent) 68%, transparent);
     font-size: 0.76rem;
     letter-spacing: 1.7px;
     text-align: center;

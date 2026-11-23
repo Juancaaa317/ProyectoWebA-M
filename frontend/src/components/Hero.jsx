@@ -3,7 +3,7 @@ import "../styles/hero.css";
 
 function Hero() {
   return (
-    <section id="inicio" className="hero">
+    <section id="inicio" className="hero force-dark">
       <div className="hero-overlay"></div>
 
       <div className="hero-content">

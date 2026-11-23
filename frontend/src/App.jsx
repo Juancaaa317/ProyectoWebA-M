@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import PrivateRoute from "./components/PrivateRoute";
 import PanelLayout from "./components/PanelLayout";
 import { ROLES } from "./config/roles";
@@ -27,6 +28,7 @@ import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
     return (
+        <ThemeProvider>
         <AuthProvider>
             <BrowserRouter>
                 <ScrollToTop />
@@ -124,6 +126,7 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
+        </ThemeProvider>
     );
 }
 

@@ -1,4 +1,7 @@
+import { MOCK_ACTIVO, mockRequest, mockComprobante } from "./mockApi";
+
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+const TOKEN_MOCK = "mock-token";
 export const SESSION_EXPIRED_EVENT = "auth:session-expired";
 
 export function tokenVigente(token) {
@@ -42,6 +45,9 @@ const mensajePorEstado = (status) => {
 
 function tokenActual() {
     const tokenGuardado = localStorage.getItem("token");
+
+    // MOCK: la sesión de prueba no es un JWT, así que no caduca ni se descarta
+    if (MOCK_ACTIVO && tokenGuardado === TOKEN_MOCK) return TOKEN_MOCK;
     const token = tokenGuardado && tokenVigente(tokenGuardado) ? tokenGuardado : null;
 
     if (tokenGuardado && !token) {
@@ -86,6 +92,9 @@ async function enviar(path, options, headers, token) {
 export async function apiFetch(path, options = {}) {
     const token = tokenActual();
 
+    // MOCK: sin backend, las peticiones se responden con datos locales
+    if (MOCK_ACTIVO && (!token || token === TOKEN_MOCK)) return mockRequest(path, options);
+
     // Con FormData el navegador define Content-Type (multipart + boundary)
     const esFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
 
@@ -110,6 +119,9 @@ export async function apiFetch(path, options = {}) {
 // Descarga un recurso binario autenticado (el JWT va en la cabecera, nunca en la URL)
 export async function apiFetchBlob(path, options = {}) {
     const token = tokenActual();
+
+    // MOCK: comprobante de ejemplo generado en el navegador
+    if (MOCK_ACTIVO && (!token || token === TOKEN_MOCK)) return mockComprobante(path.split("/").pop());
 
     const headers = {
         ...(token && { Authorization: `Bearer ${token}` }),

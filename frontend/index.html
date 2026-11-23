@@ -9,6 +9,18 @@
     <link rel="icon" type="image/png" href="/images/Logo1.png" />
     
     <meta name="description" content="Portal y sistema de gestión de la academia Arte y Movimiento">
+    <!-- Aplica el tema guardado antes de pintar para evitar parpadeos -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("am-theme");
+          if (t !== "light" && t !== "dark") {
+            t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

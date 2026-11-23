@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 import "../styles/navbar.css";
 
 // "Inicio" ya no va aquí: tiene su propio botón en la barra
@@ -222,6 +223,9 @@ function Navbar() {
             </Link>
           </>
         )}
+
+        {/* Cambio de tema claro / oscuro */}
+        <ThemeToggle />
 
         {/* Menú de navegación */}
         <div className="menu-wrapper" ref={menuRef}>
