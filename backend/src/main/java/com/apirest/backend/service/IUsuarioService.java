@@ -1,5 +1,8 @@
 package com.apirest.backend.service;
 
+import com.apirest.backend.dto.ActualizarPerfilDTO;
+import com.apirest.backend.dto.CambiarContrasenaDTO;
+import com.apirest.backend.dto.PerfilDTO;
 import com.apirest.backend.dto.RegistroEstudianteDTO;
 import com.apirest.backend.dto.RegistroEstudianteRespuestaDTO;
 import com.apirest.backend.dto.LoginDTO;
@@ -21,4 +24,10 @@ public interface IUsuarioService {
     List<EstudianteListadoDTO> listarEstudiantes(String busqueda);
 
     List<ProfesorListadoDTO> listarProfesores(String busqueda);
+
+    PerfilDTO obtenerPerfil(String correo);
+
+    PerfilDTO actualizarPerfil(String correo, ActualizarPerfilDTO datos);
+
+    void cambiarContrasena(String correo, CambiarContrasenaDTO datos);
 }

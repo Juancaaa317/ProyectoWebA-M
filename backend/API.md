@@ -53,8 +53,23 @@ No se mantiene un archivo OpenAPI paralelo a mano: la especificación se genera 
 | `GET` | `/api/asistencias/mias` | Estudiante autenticado |
 | `GET` | `/api/sesiones/{idSesion}/asistencias` | Administrador o profesor asignado |
 | `PUT` | `/api/sesiones/{idSesion}/asistencias/{idInscripcion}` | Profesor asignado |
+| `POST` | `/api/pagos` | Estudiante autenticado; multipart con monto, archivo y periodo opcional |
+| `GET` | `/api/pagos/mios` | Estudiante autenticado; consulta sus propios pagos |
+| `GET` | `/api/pagos` | Administrador; filtros por estado y periodo |
+| `PATCH` | `/api/pagos/{idPago}/estado` | Administrador; aprueba o rechaza pagos pendientes |
+| `GET` | `/api/archivos/{id}` | Usuario autenticado; dueño del archivo o administrador; `?descargar=true` fuerza descarga |
 
-La lista generada al iniciar la API en `/docs.json` es la referencia ejecutable de los 31 métodos y rutas publicados.
+La lista generada al iniciar la API en `/docs.json` es la referencia ejecutable de las rutas publicadas.
+
+### Pagos y comprobantes
+
+- Para registrar un pago, el estudiante envía `POST /api/pagos` como `multipart/form-data` con `monto`, `archivo` y `periodo` opcional. Si omite `periodo`, se usa el mes actual. El pago se registra como `PENDIENTE`.
+- Se permiten PDF, PNG y JPG de hasta 5 MB. El servidor valida extensión, firma del contenido y tamaño; no confía en el nombre original para crear la ruta del archivo.
+- Cada estudiante solo puede consultar sus pagos con `GET /api/pagos/mios`. El administrador puede consultar todos con filtros opcionales `estado` y `periodo` (`AAAA-MM`) mediante `GET /api/pagos`.
+- En la pantalla administrativa hay además un selector de estudiante. Actualmente carga la lista existente de `/api/usuarios/estudiantes` y filtra en el frontend los pagos ya consultados. No es un parámetro del endpoint de pagos.
+- El administrador puede cambiar un pago pendiente a `APROBADO` o `RECHAZADO` con `PATCH /api/pagos/{idPago}/estado`. El rechazo requiere una observación.
+- El archivo se sirve desde `GET /api/archivos/{id}`. Por defecto se muestra en el navegador; `?descargar=true` fuerza la descarga. Solo puede acceder el dueño o un administrador.
+- En la configuración actual, el archivo se guarda en el almacenamiento local del servidor y sus metadatos en MySQL. Para desplegar en una plataforma con disco efímero debe configurarse almacenamiento persistente.
 
 ## Respuestas HTTP
 
@@ -67,7 +82,7 @@ La lista generada al iniciar la API en `/docs.json` es la referencia ejecutable 
 - `404 Not Found`: no existe el recurso solicitado.
 - `409 Conflict`: duplicados o conflicto con registros relacionados.
 
-Los errores manejados por `GlobalExceptionHandler` usan el esquema `ApiError` con `timestamp`, `status`, `error`, `message` y `path`. Los rechazos que ocurren en los filtros de Spring Security pueden tener el formato propio del servidor de seguridad.
+Los errores de aplicación y los rechazos de autenticación/autorización usan el esquema común `ApiError` con `timestamp`, `status`, `error`, `message` y `path`.
 
 ### Estados de inscripción
 

@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.apirest.backend.security.SeguridadErrorHandler;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -26,7 +28,8 @@ public class SecurityConfig {
     // Configuración principal de seguridad
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+            HttpSecurity http,
+            SeguridadErrorHandler errores) throws Exception {
 
         http
             // Permitir solicitudes desde nuestro frontend
@@ -226,6 +229,18 @@ public class SecurityConfig {
                             "/api/archivos/*"
                     ).authenticated()
 
+                    // Perfil propio: cualquier usuario autenticado lo ve y lo edita (debe ir antes de la regla de /api/usuarios/**)
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/usuarios/me"
+                    ).authenticated()
+
+                    .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/usuarios/me",
+                            "/api/usuarios/me/contrasena"
+                    ).authenticated()
+
                     // Administración de usuarios exclusiva del administrador
                     .requestMatchers("/api/usuarios/**")
                     .hasRole("ADMINISTRADOR")
@@ -241,6 +256,9 @@ public class SecurityConfig {
                                     jwtAuthenticationConverter()
                             )
                     )
+                    // Errores 401 y 403 con el mismo JSON que el resto de la API
+                    .authenticationEntryPoint(errores)
+                    .accessDeniedHandler(errores)
             );
 
         return http.build();

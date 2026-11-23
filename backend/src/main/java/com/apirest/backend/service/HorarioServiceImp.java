@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.apirest.backend.dto.CrearHorarioDTO;
@@ -15,6 +16,7 @@ import com.apirest.backend.model.Clase;
 import com.apirest.backend.model.Horario;
 import com.apirest.backend.repository.IClaseRepository;
 import com.apirest.backend.repository.IHorarioRepository;
+import com.apirest.backend.repository.IProfesorRepository;
 
 @Service
 public class HorarioServiceImp implements IHorarioService {
@@ -24,6 +26,9 @@ public class HorarioServiceImp implements IHorarioService {
 
     @Autowired
     IClaseRepository claseRepository;
+
+    @Autowired
+    IProfesorRepository profesorRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -42,12 +47,17 @@ public class HorarioServiceImp implements IHorarioService {
                 .toList();
     }
 
+    // Orden de bloqueos (siempre el mismo, para evitar interbloqueos): primero la CLASE y luego su PROFESOR.
+    // Con la clase bloqueada, nadie puede cambiarle el profesor mientras se valida; con el profesor bloqueado,
+    // dos altas o cambios de horario del mismo profesor se ejecutan una tras otra y la segunda ve lo que guardó
+    // la primera (por eso READ_COMMITTED).
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public HorarioRespuestaDTO crearHorario(CrearHorarioDTO datos) {
         validarHoras(datos);
-        Clase clase = buscarClase(datos.getIdClase());
+        Clase clase = buscarClaseBloqueada(datos.getIdClase());
         validarEstadoClase(clase);
+        bloquearProfesor(clase);
         validarConflicto(clase, datos, null);
 
         Horario horario = new Horario();
@@ -56,14 +66,15 @@ public class HorarioServiceImp implements IHorarioService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public HorarioRespuestaDTO actualizarHorario(Integer idHorario, CrearHorarioDTO datos) {
         validarHoras(datos);
         Horario horario = horarioRepository.findById(idHorario)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se encontró un horario con el ID: " + idHorario));
-        Clase clase = buscarClase(datos.getIdClase());
+        Clase clase = buscarClaseBloqueada(datos.getIdClase());
         validarEstadoClase(clase);
+        bloquearProfesor(clase);
         validarConflicto(clase, datos, idHorario);
 
         aplicarDatos(horario, clase, datos);
@@ -85,6 +96,13 @@ public class HorarioServiceImp implements IHorarioService {
                         "No se encontró una clase con el ID: " + idClase));
     }
 
+    // Lee la clase bloqueando su fila: el profesor que se lee aquí ya no puede cambiar hasta el fin de la transacción
+    private Clase buscarClaseBloqueada(Integer idClase) {
+        return claseRepository.findByIdForUpdate(idClase)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró una clase con el ID: " + idClase));
+    }
+
     private void validarEstadoClase(Clase clase) {
         if (clase.getEstadoClase() != EstadoClase.PROGRAMADA
                 && clase.getEstadoClase() != EstadoClase.EN_CURSO) {
@@ -100,14 +118,22 @@ public class HorarioServiceImp implements IHorarioService {
         }
     }
 
+    // Bloquea la fila del profesor de la clase destino hasta el fin de la transacción
+    private void bloquearProfesor(Clase clase) {
+        Integer idProfesor = clase.getIdProfesor().getIdProfesor();
+        profesorRepository.findByIdForUpdate(idProfesor)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró un profesor con el ID: " + idProfesor));
+    }
+
+    // La base de datos decide si hay cruce: una sola consulta filtrada por profesor, día y franja
     private void validarConflicto(Clase clase, CrearHorarioDTO datos, Integer idHorarioActual) {
-        boolean hayCruce = horarioRepository.findAll().stream()
-                .filter(h -> !h.getIdHorario().equals(idHorarioActual))
-                .filter(h -> h.getDiaSemana() == datos.getDiaSemana())
-                .filter(h -> h.getIdClase().getIdProfesor().getIdProfesor()
-                        .equals(clase.getIdProfesor().getIdProfesor()))
-                .anyMatch(h -> datos.getHoraInicio().before(h.getHoraFin())
-                        && datos.getHoraFin().after(h.getHoraInicio()));
+        boolean hayCruce = horarioRepository.existeCruce(
+                clase.getIdProfesor().getIdProfesor(),
+                datos.getDiaSemana(),
+                datos.getHoraInicio(),
+                datos.getHoraFin(),
+                idHorarioActual);
 
         if (hayCruce) {
             throw new RecursoDuplicadoException(

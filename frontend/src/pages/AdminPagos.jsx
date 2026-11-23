@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { pagoService } from "../services/pagoService";
+import { usuarioService } from "../services/panelService";
 import ComprobanteAcciones from "../components/ComprobanteAcciones";
 import { formatearMonto } from "../utils/formatoPago";
 import "../styles/login.css";
@@ -13,6 +14,8 @@ function AdminPagos() {
     const [pagos, setPagos] = useState([]);
     const [estado, setEstado] = useState("");
     const [periodo, setPeriodo] = useState("");
+    const [estudiante, setEstudiante] = useState("");
+    const [estudiantes, setEstudiantes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [mensaje, setMensaje] = useState("");
@@ -33,7 +36,17 @@ function AdminPagos() {
         }
     }, [estado, periodo]);
 
+    useEffect(() => {
+        usuarioService.listarEstudiantes()
+            .then(setEstudiantes)
+            .catch((err) => setError(err.message));
+    }, []);
+
     useEffect(() => { Promise.resolve().then(cargar); }, [cargar]);
+
+    const pagosFiltrados = estudiante
+        ? pagos.filter((pago) => String(pago.idEstudiante) === estudiante)
+        : pagos;
 
     const aprobar = async (pago) => {
         setSavingId(pago.idPago);
@@ -100,23 +113,33 @@ function AdminPagos() {
                 <label>Periodo
                     <input type="month" value={periodo} onChange={(e) => setPeriodo(e.target.value)} />
                 </label>
-                {(estado || periodo) && (
+                <label>Estudiante
+                    <select value={estudiante} onChange={(e) => setEstudiante(e.target.value)}>
+                        <option value="">Todos</option>
+                        {estudiantes.map((item) => (
+                            <option key={item.idEstudiante} value={item.idEstudiante}>
+                                {item.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+                {(estado || periodo || estudiante) && (
                     <button type="button" className="admin-btn-cancelar"
-                        onClick={() => { setEstado(""); setPeriodo(""); }}>
+                        onClick={() => { setEstado(""); setPeriodo(""); setEstudiante(""); }}>
                         Limpiar filtros
                     </button>
                 )}
             </div>
 
             {loading ? <div className="admin-estado">Cargando pagos...</div> : (
-                pagos.length === 0 ? <p className="admin-vacio">No hay pagos para los filtros seleccionados.</p> :
+                    pagosFiltrados.length === 0 ? <p className="admin-vacio">No hay pagos para los filtros seleccionados.</p> :
                     <div className="admin-tabla-wrapper">
                         <table className="admin-tabla">
                             <thead><tr>
                                 <th>Estudiante</th><th>Periodo</th><th>Monto</th><th>Fecha de envío</th>
                                 <th>Estado</th><th>Observación</th><th>Comprobante</th><th>Acción</th>
                             </tr></thead>
-                            <tbody>{pagos.map((pago) => (
+                            <tbody>{pagosFiltrados.map((pago) => (
                                 <tr key={pago.idPago}>
                                     <td>{pago.nombreEstudiante}</td>
                                     <td>{pago.periodo}</td>

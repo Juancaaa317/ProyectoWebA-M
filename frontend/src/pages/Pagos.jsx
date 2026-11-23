@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { pagoService } from "../services/pagoService";
 import ComprobanteAcciones from "../components/ComprobanteAcciones";
-import { formatearMonto } from "../utils/formatoPago";
+import ZonaComprobante from "../components/ZonaComprobante";
+import { formatearMonto, formatearPeriodo, periodoActual } from "../utils/formatoPago";
 import "../styles/login.css";
 import "../styles/adminProgramas.css";
 import "../styles/pagos.css";
@@ -9,16 +10,21 @@ import "../styles/pagos.css";
 const TAMANO_MAXIMO = 5 * 1024 * 1024;
 const TIPOS_PERMITIDOS = ["application/pdf", "image/png", "image/jpeg"];
 
+// Se valida al elegir el archivo, para avisar de inmediato y decir qué hacer
+function validarArchivo(archivo) {
+    if (archivo.size === 0) return "El archivo está vacío. Elige otro comprobante.";
+    if (!TIPOS_PERMITIDOS.includes(archivo.type)) {
+        return "Ese formato no se puede enviar. Elige un PDF, PNG o JPG.";
+    }
+    if (archivo.size > TAMANO_MAXIMO) return "El archivo supera los 5 MB. Elige uno más liviano.";
+    return "";
+}
+
 function validar({ monto, archivo }) {
     if (!/^\d+([.,]\d{1,2})?$/.test(monto.trim()) || Number(monto.replace(",", ".")) <= 0) {
         return "Ingresa un monto mayor que cero con máximo 2 decimales.";
     }
     if (!archivo) return "Adjunta el comprobante de pago.";
-    if (archivo.size === 0) return "El archivo está vacío.";
-    if (!TIPOS_PERMITIDOS.includes(archivo.type)) {
-        return "El comprobante debe ser un PDF, PNG o JPG.";
-    }
-    if (archivo.size > TAMANO_MAXIMO) return "El comprobante supera el máximo de 5 MB.";
     return "";
 }
 
@@ -33,7 +39,7 @@ function Pagos() {
     const [monto, setMonto] = useState("");
     const [periodo, setPeriodo] = useState("");
     const [archivo, setArchivo] = useState(null);
-    const [inputKey, setInputKey] = useState(0);
+    const [errorArchivo, setErrorArchivo] = useState("");
 
     const cargar = useCallback(async () => {
         setLoading(true);
@@ -48,6 +54,18 @@ function Pagos() {
     }, []);
 
     useEffect(() => { Promise.resolve().then(cargar); }, [cargar]);
+
+    // Un archivo inválido muestra el aviso pero no descarta el que ya estaba elegido y era válido
+    const elegirArchivo = (elegido) => {
+        const problema = validarArchivo(elegido);
+        if (!problema) setArchivo(elegido);
+        setErrorArchivo(problema);
+    };
+
+    const quitarArchivo = () => {
+        setArchivo(null);
+        setErrorArchivo("");
+    };
 
     const enviar = async (event) => {
         event.preventDefault();
@@ -67,7 +85,6 @@ function Pagos() {
             setMonto("");
             setPeriodo("");
             setArchivo(null);
-            setInputKey((k) => k + 1);
             await cargar();
         } catch (err) {
             setError(err.message);
@@ -88,22 +105,32 @@ function Pagos() {
             {mensaje && <p className="admin-exito" role="status">{mensaje}</p>}
             {error && <p className="login-error" role="alert">{error}</p>}
 
-            <form className="panel-form-inline pagos-form" onSubmit={enviar} noValidate>
-                <label htmlFor="pago-monto">Monto
-                    <input id="pago-monto" type="text" inputMode="decimal" value={monto}
-                        onChange={(e) => setMonto(e.target.value)} placeholder="0.00" required />
-                </label>
-                <label htmlFor="pago-periodo">Periodo (opcional)
-                    <input id="pago-periodo" type="month" value={periodo}
-                        onChange={(e) => setPeriodo(e.target.value)} />
-                    <span className="pagos-ayuda-campo">Si lo dejas vacío se usa el mes actual.</span>
-                </label>
-                <label htmlFor="pago-archivo">Comprobante
-                    <input key={inputKey} id="pago-archivo" type="file"
-                        accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
-                        onChange={(e) => setArchivo(e.target.files[0] ?? null)} required />
-                    <span className="pagos-ayuda-campo">PDF, PNG o JPG · máximo 5 MB</span>
-                </label>
+            <form className="pagos-form" onSubmit={enviar} noValidate>
+                <h2 className="pagos-form-titulo">Registrar pago</h2>
+
+                <ZonaComprobante archivo={archivo} onElegir={elegirArchivo} onQuitar={quitarArchivo}
+                    onRechazar={setErrorArchivo}
+                    error={errorArchivo} disabled={enviando} />
+
+                <div className="pagos-campos">
+                    <label htmlFor="pago-monto">Monto
+                        <span className="pagos-monto">
+                            <span aria-hidden="true">$</span>
+                            <input id="pago-monto" type="text" inputMode="decimal" value={monto}
+                                onChange={(e) => setMonto(e.target.value)} placeholder="150000" required />
+                        </span>
+                    </label>
+                    <label htmlFor="pago-periodo">Mes que pagas
+                        <input id="pago-periodo" type="month" value={periodo}
+                            onChange={(e) => setPeriodo(e.target.value)} />
+                        <span className="pagos-ayuda-campo">
+                            {periodo
+                                ? `Registraremos el pago de ${formatearPeriodo(periodo)}.`
+                                : `Si lo dejas vacío, se usa ${formatearPeriodo(periodoActual())}.`}
+                        </span>
+                    </label>
+                </div>
+
                 <button className="login-button" disabled={enviando}>
                     {enviando ? "Enviando..." : "Enviar comprobante"}
                 </button>

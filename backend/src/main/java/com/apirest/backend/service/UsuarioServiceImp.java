@@ -1,5 +1,7 @@
 package com.apirest.backend.service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Locale;
 import java.util.List;
 
@@ -8,7 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.apirest.backend.Enums.AreaDocencia;
 import com.apirest.backend.Enums.Rol;
+import com.apirest.backend.dto.ActualizarPerfilDTO;
+import com.apirest.backend.dto.CambiarContrasenaDTO;
+import com.apirest.backend.dto.PerfilDTO;
 import com.apirest.backend.dto.RegistroEstudianteDTO;
 import com.apirest.backend.dto.RegistroEstudianteRespuestaDTO;
 import com.apirest.backend.dto.LoginDTO;
@@ -25,11 +31,15 @@ import com.apirest.backend.repository.IEstudianteRepository;
 import com.apirest.backend.repository.IProfesorRepository;
 import com.apirest.backend.repository.IUsuarioRepository;
 import com.apirest.backend.exception.RecursoDuplicadoException;
+import com.apirest.backend.exception.RecursoNoEncontradoException;
 import com.apirest.backend.exception.CredencialesInvalidasException;
 import com.apirest.backend.security.JwtService;
 
 @Service
 public class UsuarioServiceImp implements IUsuarioService {
+
+    // Límite del algoritmo BCrypt, en bytes
+    private static final int MAX_BYTES_CONTRASENA = 72;
 
     @Autowired
     IUsuarioRepository usuarioRepository;
@@ -232,6 +242,111 @@ public class UsuarioServiceImp implements IUsuarioService {
                         profesor.getTelefono(),
                         profesor.getAreaDocencia()))
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PerfilDTO obtenerPerfil(String correo) {
+        return convertirPerfil(buscarUsuario(correo));
+    }
+
+    // El nombre (y el teléfono del profesor) también están en la tabla del rol: se actualizan juntos
+    // en la misma transacción para que no queden distintos. Si no se envía teléfono, el actual no cambia.
+    @Override
+    @Transactional
+    public PerfilDTO actualizarPerfil(String correo, ActualizarPerfilDTO datos) {
+        Usuario usuario = buscarUsuario(correo);
+        String nombre = datos.getNombre().trim();
+        String telefono = datos.getTelefono() == null ? null : datos.getTelefono().trim();
+
+        usuario.setNombre(nombre);
+        if (telefono != null) {
+            usuario.setTelefono(telefono);
+        }
+        usuarioRepository.save(usuario);
+
+        if (usuario.getRol() == Rol.ESTUDIANTE) {
+            Estudiante estudiante = buscarEstudiante(correo);
+            estudiante.setNombre(nombre);
+            estudianteRepository.save(estudiante);
+        } else if (usuario.getRol() == Rol.PROFESOR) {
+            Profesor profesor = buscarProfesor(correo);
+            profesor.setNombre(nombre);
+            if (telefono != null) {
+                profesor.setTelefono(telefono);
+            }
+            profesorRepository.save(profesor);
+        }
+
+        return convertirPerfil(usuario);
+    }
+
+    @Override
+    @Transactional
+    public void cambiarContrasena(String correo, CambiarContrasenaDTO datos) {
+        Usuario usuario = buscarUsuario(correo);
+
+        if (!datos.getContrasenaNueva().equals(datos.getConfirmarContrasena())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden.");
+        }
+
+        // BCrypt solo admite 72 BYTES (no caracteres): las tildes y la ñ ocupan 2. Sin esta comprobación el
+        // usuario recibiría el mensaje técnico en inglés del encoder.
+        if (datos.getContrasenaNueva().getBytes(StandardCharsets.UTF_8).length > MAX_BYTES_CONTRASENA) {
+            throw new IllegalArgumentException(
+                    "La contraseña no puede superar los 72 bytes (las tildes y la ñ cuentan como 2).");
+        }
+
+        // Es un 400 y no un 401 a propósito: el frontend cierra la sesión ante un 401, y equivocarse
+        // al escribir la contraseña actual no debe desconectar al usuario.
+        if (!passwordEncoder.matches(datos.getContrasenaActual(), usuario.getContrasena())) {
+            throw new IllegalArgumentException("La contraseña actual no es correcta.");
+        }
+
+        usuario.setContrasena(passwordEncoder.encode(datos.getContrasenaNueva()));
+        usuarioRepository.save(usuario);
+    }
+
+    private Usuario buscarUsuario(String correo) {
+        return usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró el usuario asociado a la sesión."));
+    }
+
+    private Estudiante buscarEstudiante(String correo) {
+        return estudianteRepository.findByIdUsuario_Correo(correo)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró el perfil de estudiante asociado a la sesión."));
+    }
+
+    private Profesor buscarProfesor(String correo) {
+        return profesorRepository.findByIdUsuario_Correo(correo)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró el perfil de profesor asociado a la sesión."));
+    }
+
+    private PerfilDTO convertirPerfil(Usuario usuario) {
+        String tarjetaIdentidad = null;
+        Date fechaNacimiento = null;
+        AreaDocencia areaDocencia = null;
+
+        if (usuario.getRol() == Rol.ESTUDIANTE) {
+            Estudiante estudiante = buscarEstudiante(usuario.getCorreo());
+            tarjetaIdentidad = estudiante.getTarjetaIdentidad();
+            fechaNacimiento = estudiante.getFechaNacimiento();
+        } else if (usuario.getRol() == Rol.PROFESOR) {
+            areaDocencia = buscarProfesor(usuario.getCorreo()).getAreaDocencia();
+        }
+
+        return new PerfilDTO(
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getCorreo(),
+                usuario.getTelefono(),
+                usuario.getRol(),
+                tarjetaIdentidad,
+                fechaNacimiento,
+                areaDocencia);
     }
 
     private String normalizarFiltro(String busqueda) {

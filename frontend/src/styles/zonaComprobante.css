@@ -1,0 +1,163 @@
+/* Zona para soltar o elegir el comprobante de pago */
+.zona-comprobante {
+    position: relative;
+    display: grid;
+    gap: 10px;
+}
+
+.zona-comprobante--ocupada {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* El input real sigue en la página (accesible con teclado) pero no se ve: la etiqueta hace de zona */
+.zona-comprobante-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* ===== Sin archivo: zona para soltar ===== */
+.zona-soltar {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 36px 20px;
+    text-align: center;
+    background: rgba(145, 51, 210, 0.04);
+    border: 1.5px dashed rgba(195, 75, 255, 0.55);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.zona-soltar:hover {
+    background: rgba(145, 51, 210, 0.1);
+    border-color: #d85bff;
+}
+
+.zona-comprobante-input:focus-visible + .zona-soltar {
+    outline: 2px solid rgba(216, 91, 255, 0.8);
+    outline-offset: 2px;
+}
+
+/* Mientras se arrastra un archivo encima */
+.zona-soltar--activa {
+    background: rgba(255, 31, 156, 0.08);
+    border-color: #ff1f9c;
+    box-shadow: 0 0 0 4px rgba(255, 31, 156, 0.14);
+}
+
+.zona-titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+.zona-ayuda {
+    font-size: 14px;
+    color: #e7e0eb;
+}
+
+.zona-formatos {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #b8b2c4;
+}
+
+/* En una pantalla táctil no se arrastra: se toca */
+.zona-toca {
+    display: none;
+}
+
+@media (hover: none) {
+    .zona-arrastra {
+        display: none;
+    }
+
+    .zona-toca {
+        display: inline;
+    }
+}
+
+/* ===== Con archivo: vista previa ===== */
+.zona-previa {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: #191620;
+    border: 1px solid rgba(195, 75, 255, 0.4);
+    border-radius: 14px;
+}
+
+.zona-miniatura {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    color: #c34bff;
+    background: #121019;
+    border-radius: 10px;
+}
+
+.zona-miniatura img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.zona-miniatura svg {
+    width: 28px;
+    height: 28px;
+}
+
+.zona-datos {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+    min-width: 0;
+}
+
+.zona-nombre {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.zona-tamano {
+    font-size: 13px;
+    color: #b8b2c4;
+}
+
+.zona-acciones {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+@media (max-width: 520px) {
+    .zona-soltar {
+        padding: 28px 16px;
+    }
+
+    .zona-previa {
+        flex-wrap: wrap;
+    }
+
+    .zona-acciones {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .zona-soltar {
+        transition: none;
+    }
+}
