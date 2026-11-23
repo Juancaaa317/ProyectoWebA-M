@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +33,19 @@ public class GlobalExceptionHandler {
                         HttpServletRequest request) {
 
                 return construirRespuesta(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+        }
+
+        // Error 401: falta el token o no es válido. Lo lanza Spring Security en sus filtros, antes del controlador;
+        // SeguridadErrorHandler lo delega aquí para que salga con el mismo formato que el resto de errores
+        @ExceptionHandler(AuthenticationException.class)
+        public ResponseEntity<ApiErrorDTO> manejarNoAutenticado(
+                        AuthenticationException ex,
+                        HttpServletRequest request) {
+
+                return construirRespuesta(
+                                HttpStatus.UNAUTHORIZED,
+                                "Debes iniciar sesión para acceder a este recurso. Si ya lo hiciste, tu sesión pudo expirar.",
+                                request);
         }
 
         // Error 403: el usuario autenticado no puede gestionar este recurso

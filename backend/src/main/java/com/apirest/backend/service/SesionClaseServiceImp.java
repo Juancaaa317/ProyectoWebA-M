@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,11 @@ import com.apirest.backend.repository.ISesionClaseRepository;
 
 @Service
 public class SesionClaseServiceImp implements ISesionClaseService {
+
+    private static final String MENSAJE_SESION_DUPLICADA = "Ya existe una sesión para esa clase, fecha y hora.";
+
+    // Nombre de la restricción UNIQUE (idClase, fecha, horaInicio) de la tabla sesion_clase
+    private static final String RESTRICCION_SESION_UNICA = "uq_sesion_clase_fecha_hora";
 
     @Autowired
     ISesionClaseRepository sesionRepository;
@@ -80,10 +86,10 @@ public class SesionClaseServiceImp implements ISesionClaseService {
                     "La sesión no puede ser posterior a la fecha final de la clase.");
         }
 
+        // Comprobación previa: da el mensaje claro en el caso normal sin llegar a tocar la restricción de la BD
         if (sesionRepository.existsByIdClase_IdClaseAndFechaAndHoraInicio(
                 clase.getIdClase(), Date.valueOf(fecha), horario.getHoraInicio())) {
-            throw new RecursoDuplicadoException(
-                    "Ya existe una sesión para esa clase, fecha y hora.");
+            throw new RecursoDuplicadoException(MENSAJE_SESION_DUPLICADA);
         }
 
         SesionClase sesion = new SesionClase();
@@ -93,7 +99,23 @@ public class SesionClaseServiceImp implements ISesionClaseService {
         sesion.setHoraFin(horario.getHoraFin());
         sesion.setEstadoSesion(EstadoSesion.PROGRAMADA);
 
-        return convertirRespuesta(sesionRepository.saveAndFlush(sesion));
+        try {
+            return convertirRespuesta(sesionRepository.saveAndFlush(sesion));
+        } catch (DataIntegrityViolationException e) {
+            // Dos peticiones simultáneas pasan la comprobación previa; la restricción UNIQUE de la tabla
+            // (idClase, fecha, horaInicio) deja pasar solo a una y rechaza a la otra con este mismo mensaje.
+            // Cualquier otra violación de integridad (por ejemplo una clave foránea) se propaga sin cambiar su sentido.
+            if (esViolacionDeSesionUnica(e)) {
+                throw new RecursoDuplicadoException(MENSAJE_SESION_DUPLICADA);
+            }
+            throw e;
+        }
+    }
+
+    // MySQL nombra la restricción en el mensaje: "Duplicate entry '...' for key 'sesion_clase.uq_sesion_clase_fecha_hora'"
+    private boolean esViolacionDeSesionUnica(DataIntegrityViolationException e) {
+        String mensaje = e.getMostSpecificCause().getMessage();
+        return mensaje != null && mensaje.contains(RESTRICCION_SESION_UNICA);
     }
 
     @Override

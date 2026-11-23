@@ -4,10 +4,18 @@ import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import "../styles/register.css";
 
+// Fecha local en formato AAAA-MM-DD (el backend exige una fecha de nacimiento anterior a hoy)
+const aTexto = (fecha) =>
+  `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}-${String(fecha.getDate()).padStart(2, "0")}`;
+const hoy = () => aTexto(new Date());
+const ayer = () => aTexto(new Date(Date.now() - 24 * 60 * 60 * 1000));
+
 function Register() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [tarjetaIdentidad, setTarjetaIdentidad] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [confirmarContrasena, setConfirmarContrasena] = useState("");
   const [error, setError] = useState("");
@@ -35,6 +43,11 @@ function Register() {
       return;
     }
 
+    if (fechaNacimiento && fechaNacimiento >= hoy()) {
+      setError("La fecha de nacimiento debe ser anterior a hoy.");
+      return;
+    }
+
     if (contrasena !== confirmarContrasena) {
       setError("Las contraseñas no coinciden.");
       return;
@@ -48,6 +61,9 @@ function Register() {
         nombre: nombre.trim(),
         telefono: telefono.trim(),
         correo: correo.trim().toLowerCase(),
+        // Opcionales: si quedan vacíos no se envían
+        ...(tarjetaIdentidad.trim() && { tarjetaIdentidad: tarjetaIdentidad.trim() }),
+        ...(fechaNacimiento && { fechaNacimiento }),
         contrasena,
         confirmarContrasena,
       });
@@ -134,6 +150,42 @@ function Register() {
                 maxLength={15}
                 autoComplete="tel"
                 required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="tarjetaIdentidad">
+                Tarjeta de identidad (opcional)
+              </label>
+
+              <input
+                type="text"
+                id="tarjetaIdentidad"
+                placeholder="Número de documento"
+                value={tarjetaIdentidad}
+                onChange={(event) =>
+                  setTarjetaIdentidad(event.target.value)
+                }
+                maxLength={30}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="fechaNacimiento">
+                Fecha de nacimiento (opcional)
+              </label>
+
+              <input
+                type="date"
+                id="fechaNacimiento"
+                value={fechaNacimiento}
+                onChange={(event) =>
+                  setFechaNacimiento(event.target.value)
+                }
+                max={ayer()}
+                autoComplete="bday"
                 disabled={loading}
               />
             </div>

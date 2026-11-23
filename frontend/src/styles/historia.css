@@ -7,10 +7,10 @@
     overflow: hidden;
     padding: 130px 8% 100px;
     min-height: 100vh;
-    color: white;
+    color: var(--text-strong);
     background:
-        radial-gradient(ellipse 70% 55% at 15% -5%, rgba(138, 43, 226, 0.1), transparent),
-        radial-gradient(ellipse 70% 55% at 90% 105%, rgba(255, 31, 156, 0.08), transparent);
+        radial-gradient(ellipse 70% 55% at 15% -5%, color-mix(in srgb, var(--accent-2) 10%, transparent), transparent),
+        radial-gradient(ellipse 70% 55% at 90% 105%, color-mix(in srgb, var(--accent) 8%, transparent), transparent);
 }
 
 .historia-header,
@@ -35,7 +35,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4));
+    background: radial-gradient(ellipse at center, transparent 55%, color-mix(in srgb, var(--shadow) calc(40% * var(--shadow-k)), transparent));
 }
 
 /* Resplandores suaves */
@@ -52,14 +52,14 @@
 .hist-orb--purple {
     top: -180px;
     left: -180px;
-    background: #8a2be2;
+    background: var(--accent-2);
     animation: hist-orb-move-a 26s ease-in-out infinite alternate;
 }
 
 .hist-orb--pink {
     right: -200px;
     bottom: -140px;
-    background: #ff1f9c;
+    background: var(--accent);
     animation: hist-orb-move-b 30s ease-in-out infinite alternate;
 }
 
@@ -80,7 +80,7 @@
     right: -10%;
     width: min(560px, 75vw);
     aspect-ratio: 1;
-    color: #d38aff;
+    color: var(--accent-text);
     opacity: 0.11;
     animation: hist-spin 200s linear infinite;
 }
@@ -129,9 +129,9 @@
 /* Dos zapatillas flotando (más contenidas) */
 .hist-slipper {
     position: absolute;
-    color: #d38aff;
+    color: var(--accent-text);
     opacity: 0.16;
-    filter: drop-shadow(0 0 12px rgba(195, 75, 255, 0.5));
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 50%, transparent));
     animation: hist-float 10s ease-in-out infinite alternate;
 }
 
@@ -152,7 +152,7 @@
     right: 6%;
     bottom: 10%;
     width: 130px;
-    color: #ff4fae;
+    color: var(--accent);
     --tilt: 12deg;
     animation-delay: -5s;
 }
@@ -176,13 +176,13 @@
 }
 
 .hist-dust--purple {
-    background: #d38aff;
-    box-shadow: 0 0 10px 2px rgba(211, 138, 255, 0.6);
+    background: var(--accent);
+    box-shadow: 0 0 10px 2px color-mix(in srgb, var(--accent) 60%, transparent);
 }
 
 .hist-dust--pink {
-    background: #ff4fae;
-    box-shadow: 0 0 10px 2px rgba(255, 79, 174, 0.6);
+    background: var(--accent);
+    box-shadow: 0 0 10px 2px color-mix(in srgb, var(--accent) 60%, transparent);
 }
 
 @keyframes hist-dust {
@@ -222,7 +222,7 @@
     line-height: 1;
     letter-spacing: 4px;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(211, 138, 255, 0.14);
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--accent) 14%, transparent);
     user-select: none;
     pointer-events: none;
     animation: hist-year-pulse 8s ease-in-out infinite;
@@ -249,11 +249,11 @@
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: #e6c9ff;
-    background: rgba(138, 43, 226, 0.14);
-    border: 1px solid rgba(211, 138, 255, 0.32);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
     border-radius: 999px;
-    box-shadow: 0 0 30px rgba(195, 75, 255, 0.16);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 16%, transparent);
 
     opacity: 0;
     transform: translateY(16px);
@@ -275,7 +275,7 @@
     font-weight: 800;
     line-height: 1.02;
     letter-spacing: -1.5px;
-    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 6px 30px color-mix(in srgb, var(--shadow) calc(50% * var(--shadow-k)), transparent);
 
     opacity: 0;
     transform: translateY(24px);
@@ -283,17 +283,10 @@
 }
 
 .historia-header h1 span {
-    background: linear-gradient(90deg, #8a2be2, #ff1f9c, #b45cff, #8a2be2);
-    background-size: 300% auto;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 24px rgba(255, 31, 156, 0.3));
-    animation: hist-gradient-slide 6s linear infinite;
-}
-
-@keyframes hist-gradient-slide {
-    to { background-position: 300% center; }
 }
 
 @keyframes hist-fade-up {
@@ -342,7 +335,7 @@
 .historia-texto p {
     max-width: 60ch;
     margin-bottom: 22px;
-    color: var(--text-soft, #cfc8da);
+    color: var(--text-soft, var(--text));
     font-size: 1.1rem;
     line-height: 1.85;
 }
@@ -351,7 +344,7 @@
     position: relative;
     padding-left: 26px;
     margin-bottom: 28px;
-    color: #f4eefc;
+    color: var(--accent-text);
     font-size: clamp(1.12rem, 1.6vw, 1.3rem);
 }
 
@@ -363,14 +356,14 @@
     bottom: 6px;
     width: 4px;
     border-radius: 4px;
-    background: var(--gradient, linear-gradient(180deg, #8a2be2, #ff1f9c));
+    background: var(--gradient, linear-gradient(180deg, var(--accent-2), var(--accent)));
 }
 
 .historia-texto strong {
     padding: 0 2px;
     font-weight: 700;
-    color: white;
-    background: linear-gradient(transparent 62%, rgba(255, 31, 156, 0.38) 62%);
+    color: var(--text-strong);
+    background: linear-gradient(transparent 62%, color-mix(in srgb, var(--accent) 38%, transparent) 62%);
 }
 
 .historia-genres {
@@ -386,9 +379,9 @@
     padding: 8px 16px;
     font-size: 0.88rem;
     font-weight: 600;
-    color: #e6c9ff;
-    background: rgba(138, 43, 226, 0.14);
-    border: 1px solid rgba(211, 138, 255, 0.28);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
     border-radius: 999px;
     transition: transform 0.3s, border-color 0.3s, background-color 0.3s,
         box-shadow 0.3s;
@@ -396,9 +389,9 @@
 
 .historia-genres li:hover {
     transform: translateY(-3px);
-    border-color: var(--accent, #ff1f9c);
-    background: rgba(255, 31, 156, 0.12);
-    box-shadow: 0 6px 16px rgba(255, 31, 156, 0.25);
+    border-color: var(--accent, var(--accent));
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 /* ============================================================
@@ -435,7 +428,7 @@
     position: absolute;
     inset: 22px;
     border-radius: 28px;
-    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    background: var(--gradient, linear-gradient(135deg, var(--accent-2), var(--accent)));
     opacity: 0.45;
     transform: translate(16px, 16px) rotate(4deg);
     filter: blur(1px);
@@ -452,7 +445,7 @@
     position: absolute;
     width: 54px;
     height: 54px;
-    border: 2px solid #d38aff;
+    border: 2px solid var(--accent);
     opacity: 0.75;
     pointer-events: none;
     transition: width 0.35s ease, height 0.35s ease, opacity 0.35s ease;
@@ -485,10 +478,10 @@
     position: relative;
     padding: 3px;
     border-radius: 28px;
-    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    background: var(--gradient, linear-gradient(135deg, var(--accent-2), var(--accent)));
     box-shadow:
-        0 30px 70px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(195, 75, 255, 0.3);
+        0 30px 70px color-mix(in srgb, var(--shadow) calc(50% * var(--shadow-k)), transparent),
+        0 0 60px color-mix(in srgb, var(--accent) 30%, transparent);
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform 0.2s ease-out, box-shadow 0.4s ease;
     will-change: transform;
@@ -496,8 +489,8 @@
 
 .historia-imagen:hover .hist-frame {
     box-shadow:
-        0 40px 80px rgba(0, 0, 0, 0.55),
-        0 0 80px rgba(195, 75, 255, 0.45);
+        0 40px 80px color-mix(in srgb, var(--shadow) calc(55% * var(--shadow-k)), transparent),
+        0 0 80px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 .hist-frame img {
@@ -506,7 +499,7 @@
     aspect-ratio: var(--img-ratio);
     object-fit: cover;
     border-radius: 25px;
-    background: #14101c;
+    background: var(--surface);
     /* Zoom muy sutil tipo Ken Burns en bucle */
     animation: hist-kenburns 24s ease-in-out infinite alternate;
 }
@@ -522,8 +515,8 @@
     inset: 3px;
     border-radius: 25px;
     background:
-        linear-gradient(160deg, rgba(255, 255, 255, 0.14), transparent 35%),
-        linear-gradient(to top, rgba(15, 13, 22, 0.5), transparent 40%);
+        linear-gradient(160deg, color-mix(in srgb, var(--overlay) 14%, transparent), transparent 35%),
+        linear-gradient(to top, color-mix(in srgb, var(--bg) 50%, transparent), transparent 40%);
     pointer-events: none;
 }
 
@@ -546,7 +539,7 @@
     background: linear-gradient(
         100deg,
         transparent,
-        rgba(255, 255, 255, 0.22),
+        color-mix(in srgb, var(--overlay) 22%, transparent),
         transparent
     );
     transform: rotate(12deg);
@@ -568,11 +561,11 @@
     width: 124px;
     height: 124px;
     border-radius: 50%;
-    background: #14101c;
-    border: 1px solid rgba(211, 138, 255, 0.4);
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
     box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.55),
-        0 0 30px rgba(255, 31, 156, 0.35);
+        0 12px 30px color-mix(in srgb, var(--shadow) calc(55% * var(--shadow-k)), transparent),
+        0 0 30px color-mix(in srgb, var(--accent) 35%, transparent);
     animation: hist-seal-bob 6s ease-in-out infinite;
 }
 
@@ -590,7 +583,7 @@
 }
 
 .hist-seal text {
-    fill: #e6c9ff;
+    fill: var(--accent-text);
     font-size: 10px;
     font-weight: 700;
 }
@@ -601,11 +594,11 @@
     width: 66px;
     height: 66px;
     border-radius: 50%;
-    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    background: var(--gradient, linear-gradient(135deg, var(--accent-2), var(--accent)));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--overlay) 25%, transparent);
     font-size: 1.05rem;
     font-weight: 800;
-    color: white;
+    color: var(--on-accent);
 }
 
 /* Etiqueta de años */
@@ -618,24 +611,24 @@
     flex-direction: column;
     gap: 2px;
     padding: 10px 18px;
-    background: rgba(20, 16, 28, 0.85);
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(211, 138, 255, 0.35);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 10px 30px color-mix(in srgb, var(--shadow) calc(45% * var(--shadow-k)), transparent);
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .historia-imagen:hover .hist-years {
     transform: translateY(-4px);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 31, 156, 0.25);
+    box-shadow: 0 16px 36px color-mix(in srgb, var(--shadow) calc(50% * var(--shadow-k)), transparent), 0 0 24px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .hist-years strong {
     font-size: 1.3rem;
     line-height: 1.1;
-    background: var(--gradient, linear-gradient(135deg, #8a2be2, #ff1f9c));
+    background: var(--gradient, linear-gradient(135deg, var(--accent-2), var(--accent)));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -643,7 +636,7 @@
 
 .hist-years span {
     font-size: 0.78rem;
-    color: #d9cbe8;
+    color: var(--accent-text);
 }
 
 /* ============================================================
@@ -748,4 +741,10 @@
         transform: none;
         transition: none;
     }
+}
+
+/* Solo se conservan las dos cintas curvas y el año de fondo */
+.hist-slipper,
+.hist-clock {
+    display: none;
 }

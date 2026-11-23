@@ -1,42 +1,59 @@
-
+/* ============================================================
+   HERO — foto completa de fondo, texto a la izquierda
+   ============================================================ */
 .hero {
-  min-height: 85vh;
   position: relative;
+  isolation: isolate;
+  width: 100%;
+  /* Misma proporción que la foto (1672×941): se ve completa, sin recortes */
+  aspect-ratio: 1672 / 941;
+  min-height: 520px;
   display: flex;
   align-items: center;
-  padding: 100px 8%;
-  color: white;
+  padding: 0 8%;
+  color: var(--text-strong);
+  overflow: hidden;
+  background: var(--bg) url("/images/ImgAnita1.png") center / cover no-repeat;
+}
 
+/* Degradado breve: oscurece suave a la izquierda para leer el texto y se funde abajo */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background:
-    linear-gradient(
-      90deg,
-      rgba(12, 8, 19, 0.95),
-      rgba(12, 8, 19, 0.45)
-    ),
-    url("/images/ImgAnita1.png");
-
-  background-size: cover;
-  background-position: center;
+    linear-gradient(90deg, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 55%, transparent) 38%, transparent 66%),
+    linear-gradient(180deg, transparent 80%, color-mix(in srgb, var(--navbar-bg) 55%, transparent) 100%);
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 700px;
+  max-width: 600px;
 }
 
 .hero-label {
-  display: inline-block;
-  color: #d38aff;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--accent-text);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 3px;
   margin-bottom: 24px;
 }
 
+.hero-label::before {
+  content: "";
+  width: 38px;
+  height: 1px;
+  background: var(--accent);
+}
+
 .hero h1 {
-  font-size: clamp(42px, 6vw, 78px);
-  line-height: 1.1;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.08;
   font-weight: 800;
   margin-bottom: 28px;
 }
@@ -51,8 +68,8 @@
 .hero p {
   font-size: 18px;
   line-height: 1.8;
-  color: #e0d6e6;
-  max-width: 530px;
+  color: var(--text-muted);
+  max-width: 500px;
   margin-bottom: 35px;
 }
 
@@ -65,9 +82,9 @@
 .hero-buttons a {
   display: inline-block;
   padding: 16px 30px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-weight: 600;
-  transition: transform 0.3s, background 0.3s;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
 }
 
 .hero-buttons a:hover {
@@ -76,28 +93,40 @@
 
 .hero-primary {
   background: var(--gradient);
-  color: white;
-  box-shadow: 0 8px 24px rgba(255, 31, 156, 0.35);
+  color: var(--on-accent);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
 .hero-primary:hover {
-  background: var(--gradient);
-  filter: brightness(1.15);
+  filter: brightness(1.1);
 }
 
 .hero-secondary {
-  border: 1px solid #d1b5e4;
-  color: white;
+  border: 1px solid var(--accent);
+  color: var(--text-strong);
 }
 
 .hero-secondary:hover {
-  background: rgba(255,255,255,0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
+  /* En móvil la foto va completa arriba y el texto debajo */
   .hero {
-    min-height: 75vh;
-    padding: 80px 6%;
+    aspect-ratio: auto;
+    min-height: 0;
+    display: block;
+    padding: calc(56.28vw + 36px) 6% 70px;
+    background-size: 100% auto;
+    background-position: top center;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(180deg, transparent calc(56.28vw - 60px), var(--navbar-bg) calc(56.28vw + 10px));
+  }
+
+  .hero-content {
+    max-width: none;
   }
 
   .hero p {

@@ -1,27 +1,23 @@
-.clases,
-.profesores {
+.clases {
     max-width: 1100px;
     margin: 0 auto;
     padding: 60px 24px;
-    color: white;
+    color: var(--text-strong);
 }
 
-.clases-header,
-.profesores-header {
+.clases-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.clases-subtitle,
-.profesores-subtitle {
+.clases-subtitle {
     letter-spacing: 3px;
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--accent);
 }
 
-.clases-header h1,
-.profesores-header h1 {
+.clases-header h1 {
     font-size: clamp(2rem, 5vw, 3rem);
     margin: 8px 0;
 }
@@ -32,17 +28,49 @@
     gap: 20px;
 }
 
+.clases-grid {
+    counter-reset: clase;
+}
+
 .clases-card {
-    padding: 28px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid #302738;
-    border-radius: 16px;
-    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+    counter-increment: clase;
+    padding: 34px 28px 28px;
+    background: linear-gradient(170deg, color-mix(in srgb, var(--surface) 88%, transparent), color-mix(in srgb, var(--bg-soft) 60%, transparent));
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--shadow) calc(22% * var(--shadow-k)), transparent);
+    transition: transform 0.4s ease, border-color 0.3s, box-shadow 0.4s ease;
+}
+
+/* Línea dorada superior y número decorativo */
+.clases-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 22% auto;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.clases-card::after {
+    content: "0" counter(clase);
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: color-mix(in srgb, var(--accent) 14%, transparent);
+    pointer-events: none;
 }
 
 .clases-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     border-color: var(--accent);
+    box-shadow: 0 26px 54px color-mix(in srgb, var(--shadow) calc(30% * var(--shadow-k)), transparent), 0 0 40px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .clases-card h2 {
@@ -57,5 +85,5 @@
 .clases-card p {
     margin: 0;
     line-height: 1.6;
-    color: #e7e0eb;
+    color: var(--text);
 }

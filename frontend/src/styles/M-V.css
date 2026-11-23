@@ -7,11 +7,11 @@
     overflow: hidden;
     padding: 140px 8% 100px;
     min-height: 100vh;
-    color: #fff;
+    color: var(--text-strong);
     /* Fondo base con degradado sutil */
     background:
-        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(138, 43, 226, 0.14), transparent),
-        radial-gradient(ellipse 80% 60% at 85% 110%, rgba(255, 31, 156, 0.1), transparent);
+        radial-gradient(ellipse 80% 60% at 20% -10%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent),
+        radial-gradient(ellipse 80% 60% at 85% 110%, color-mix(in srgb, var(--accent) 10%, transparent), transparent);
 }
 
 /* ============================================================
@@ -30,8 +30,8 @@
     position: absolute;
     inset: -20%;
     background-image:
-        linear-gradient(rgba(211, 138, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(211, 138, 255, 0.05) 1px, transparent 1px);
+        linear-gradient(color-mix(in srgb, var(--accent) 3.5%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 3.5%, transparent) 1px, transparent 1px);
     background-size: 64px 64px;
     transform: perspective(800px) rotateX(28deg) scale(1.4);
     transform-origin: center top;
@@ -51,23 +51,23 @@
     width: 560px;
     height: 560px;
     border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.4;
+    filter: blur(130px);
+    opacity: 0.28;
     will-change: transform;
 }
 
 .mv-orb--purple {
     top: -160px;
     left: -160px;
-    background: radial-gradient(circle, #8a2be2, transparent 70%);
-    animation: mv-orb-float-a 20s ease-in-out infinite alternate;
+    background: radial-gradient(circle, var(--accent-2), transparent 70%);
+    animation: mv-orb-float-a 32s ease-in-out infinite alternate;
 }
 
 .mv-orb--pink {
     right: -180px;
     bottom: -120px;
-    background: radial-gradient(circle, #ff1f9c, transparent 70%);
-    animation: mv-orb-float-b 24s ease-in-out infinite alternate;
+    background: radial-gradient(circle, var(--accent), transparent 70%);
+    animation: mv-orb-float-b 38s ease-in-out infinite alternate;
 }
 
 .mv-orb--violet {
@@ -75,9 +75,9 @@
     height: 380px;
     top: 40%;
     left: 55%;
-    opacity: 0.22;
-    background: radial-gradient(circle, #b45cff, transparent 70%);
-    animation: mv-orb-float-a 28s ease-in-out infinite alternate-reverse;
+    opacity: 0.16;
+    background: radial-gradient(circle, var(--accent), transparent 70%);
+    animation: mv-orb-float-a 44s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes mv-orb-float-a {
@@ -100,8 +100,8 @@
     width: var(--ps);
     height: var(--ps);
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(211, 138, 255, 0.4));
-    box-shadow: 0 0 8px 2px rgba(211, 138, 255, 0.5);
+    background: radial-gradient(circle, color-mix(in srgb, var(--overlay) 90%, transparent), color-mix(in srgb, var(--accent) 40%, transparent));
+    box-shadow: 0 0 8px 2px color-mix(in srgb, var(--accent) 35%, transparent);
     opacity: 0;
     will-change: transform, opacity;
     animation: mv-particle-rise var(--pd) linear var(--pdel) infinite;
@@ -128,6 +128,7 @@
 }
 
 .mv-dancer svg {
+    opacity: 0.55;
     display: block;
     width: 100%;
     height: 100%;
@@ -136,13 +137,13 @@
 }
 
 .mv-dancer--purple {
-    color: #b45cff;
-    filter: blur(var(--blur)) drop-shadow(0 0 10px rgba(180, 92, 255, 0.8));
+    color: var(--accent);
+    filter: blur(var(--blur)) drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 80%, transparent));
 }
 
 .mv-dancer--pink {
-    color: #ff4fae;
-    filter: blur(var(--blur)) drop-shadow(0 0 10px rgba(255, 79, 174, 0.8));
+    color: var(--accent);
+    filter: blur(var(--blur)) drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 80%, transparent));
 }
 
 @keyframes mv-rise {
@@ -184,8 +185,8 @@
     height: 3px;
     margin: 0 auto 22px;
     border-radius: 99px;
-    background: linear-gradient(90deg, transparent, #ff1f9c, transparent);
-    animation: mv-line-pulse 2.6s ease-in-out infinite;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: mv-line-pulse 5s ease-in-out infinite;
 }
 
 @keyframes mv-line-pulse {
@@ -197,7 +198,7 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    color: #d38aff;
+    color: var(--accent-text);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 5px;
@@ -215,8 +216,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #8a2be2, #ff1f9c);
-    box-shadow: 0 0 8px rgba(255, 31, 156, 0.8);
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 80%, transparent);
 }
 
 .mv-section h1 {
@@ -230,25 +231,18 @@
     animation: mv-fade-up 0.8s ease 0.3s forwards;
 }
 
-/* Degradado animado en "Visión" */
+/* Degradado dorado en "Visión" */
 .mv-gradient-text {
-    background: linear-gradient(90deg, #8a2be2, #ff1f9c, #b45cff, #8a2be2);
-    background-size: 300% auto;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: mv-gradient-slide 5s linear infinite;
-    filter: drop-shadow(0 0 24px rgba(255, 31, 156, 0.35));
-}
-
-@keyframes mv-gradient-slide {
-    to { background-position: 300% center; }
 }
 
 .mv-description {
     max-width: 620px;
     margin: 0 auto;
-    color: #b8aec6;
+    color: var(--text-muted);
     font-size: 1.05rem;
     line-height: 1.7;
     opacity: 0;
@@ -283,15 +277,15 @@
     display: flex;
     flex-direction: column;
     padding: 50px 44px 44px;
-    background: linear-gradient(160deg, rgba(38, 30, 56, 0.75), rgba(22, 16, 34, 0.85));
+    background: linear-gradient(160deg, color-mix(in srgb, var(--surface) 75%, transparent), color-mix(in srgb, var(--surface) 85%, transparent));
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
     border-radius: 26px;
     transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(0);
     transform-style: preserve-3d;
     box-shadow:
-        0 24px 60px rgba(0, 0, 0, 0.45),
-        0 0 45px rgba(195, 75, 255, 0.14);
+        0 24px 60px color-mix(in srgb, var(--shadow) calc(45% * var(--shadow-k)), transparent),
+        0 0 45px color-mix(in srgb, var(--accent) 14%, transparent);
     overflow: hidden;
     /* Entrada escalonada */
     opacity: 0;
@@ -308,36 +302,21 @@
     }
 }
 
-/* Borde con degradado animado */
+/* Borde dorado fino */
 .mv-card::before {
     content: "";
     position: absolute;
     inset: 0;
     padding: 1.5px;
     border-radius: inherit;
-    background: conic-gradient(
-        from var(--angle, 0deg),
-        rgba(138, 43, 226, 0.9),
-        rgba(255, 31, 156, 0.15),
-        rgba(180, 92, 255, 0.9),
-        rgba(255, 31, 156, 0.7),
-        rgba(138, 43, 226, 0.9)
-    );
+    background: linear-gradient(160deg,
+        color-mix(in srgb, var(--accent) 70%, transparent),
+        color-mix(in srgb, var(--accent-2) 18%, transparent) 45%,
+        color-mix(in srgb, var(--accent) 55%, transparent));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
     pointer-events: none;
-    animation: mv-border-spin 7s linear infinite;
-}
-
-@property --angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-}
-
-@keyframes mv-border-spin {
-    to { --angle: 360deg; }
 }
 
 /* Luz que sigue al cursor */
@@ -347,7 +326,7 @@
     inset: 0;
     background: radial-gradient(
         420px circle at var(--x) var(--y),
-        rgba(211, 138, 255, 0.18),
+        color-mix(in srgb, var(--accent) 18%, transparent),
         transparent 70%
     );
     opacity: 0;
@@ -357,8 +336,8 @@
 
 .mv-card:hover {
     box-shadow:
-        0 32px 70px rgba(0, 0, 0, 0.55),
-        0 0 65px rgba(195, 75, 255, 0.32);
+        0 32px 70px color-mix(in srgb, var(--shadow) calc(55% * var(--shadow-k)), transparent),
+        0 0 65px color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
 .mv-card:hover::after {
@@ -380,7 +359,7 @@
     font-weight: 800;
     line-height: 1;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(211, 138, 255, 0.16);
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--accent) 16%, transparent);
     user-select: none;
     pointer-events: none;
     transform: translateZ(-30px);
@@ -389,7 +368,7 @@
 
 .mv-card:hover .mv-watermark {
     transform: translateZ(-30px) translateY(-10px) rotate(-4deg);
-    -webkit-text-stroke-color: rgba(255, 79, 174, 0.35);
+    -webkit-text-stroke-color: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 /* Icono con anillo */
@@ -401,12 +380,12 @@
     width: 64px;
     height: 64px;
     margin-bottom: 28px;
-    color: #fff;
+    color: var(--on-accent);
     border-radius: 18px;
-    background: linear-gradient(135deg, #8a2be2, #ff1f9c);
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
     box-shadow:
-        0 10px 28px rgba(255, 31, 156, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        0 10px 28px color-mix(in srgb, var(--accent) 45%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--overlay) 25%, transparent);
     transform: translateZ(40px);
     transition: transform 0.35s ease;
 }
@@ -421,7 +400,7 @@
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    border: 1.5px solid rgba(255, 79, 174, 0.7);
+    border: 1.5px solid color-mix(in srgb, var(--accent) 70%, transparent);
     opacity: 0;
 }
 
@@ -447,7 +426,7 @@
 }
 
 .mv-card-description {
-    color: #cfc8da;
+    color: var(--text);
     font-size: 1.05rem;
     line-height: 1.8;
     max-width: 52ch;
@@ -459,7 +438,7 @@
     height: 3px;
     margin: 0 0 20px;
     border-radius: 99px;
-    background: linear-gradient(90deg, #ff1f9c, #8a2be2);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
     transform: translateZ(30px);
     transition: width 0.4s ease;
 }
@@ -481,17 +460,17 @@
 .mv-tags li {
     padding: 7px 16px;
     font-size: 0.85rem;
-    color: #e6c9ff;
-    background: rgba(138, 43, 226, 0.14);
-    border: 1px solid rgba(211, 138, 255, 0.28);
+    color: var(--accent-text);
+    background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
     border-radius: 999px;
     transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
 
 .mv-tags li:hover {
     transform: translateY(-3px);
-    background: rgba(255, 31, 156, 0.18);
-    border-color: rgba(255, 79, 174, 0.55);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 /* ============================================================
@@ -542,7 +521,6 @@
     .mv-grid,
     .mv-card::before,
     .mv-section::before,
-    .mv-gradient-text,
     .mv-card:hover .mv-icon::after {
         animation: none;
     }

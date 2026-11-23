@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { MENUS, ROL_INFO, rutaDe } from "../config/roles";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import PanelIcon from "./PanelIcon";
+import ThemeToggle from "./ThemeToggle";
 import "../styles/adminLayout.css";
 
 function PanelLayout() {
     const [abierto, setAbierto] = useState(false);
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const menu = MENUS[user.rol] ?? [];
@@ -34,6 +38,9 @@ function PanelLayout() {
                     <PanelIcon name="menu" className="al-icono" />
                 </button>
                 <span className="al-topbar-titulo">{titulo}</span>
+                <span className="al-topbar-tema">
+                    <ThemeToggle />
+                </span>
             </header>
 
             {abierto && <div className="al-overlay" onClick={cerrarMenu} />}
@@ -76,6 +83,14 @@ function PanelLayout() {
                         <PanelIcon name="sitio" className="al-icono" />
                         Ver sitio
                     </Link>
+                    <button type="button" className="al-link" onClick={toggleTheme}>
+                        {theme === "dark" ? (
+                            <Sun className="al-icono" />
+                        ) : (
+                            <Moon className="al-icono" />
+                        )}
+                        {theme === "dark" ? "Modo claro" : "Modo oscuro"}
+                    </button>
                     <button type="button" className="al-link" onClick={handleLogout}>
                         <PanelIcon name="salir" className="al-icono" />
                         Cerrar sesión

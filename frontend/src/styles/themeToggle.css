@@ -1,0 +1,81 @@
+/* Botón de cambio de tema (sol / luna) */
+.theme-toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-strong);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background-color 0.3s ease,
+    transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 22%, transparent);
+  transform: translateY(-2px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.theme-toggle-icons {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.theme-toggle-icons svg {
+  position: absolute;
+  inset: 0;
+  color: var(--accent-text);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease;
+}
+
+/* Modo claro: se ve el sol; la luna espera abajo */
+.theme-toggle-sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle-moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+/* Modo oscuro: gira y aparece la luna */
+.theme-toggle.is-dark .theme-toggle-sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+.theme-toggle.is-dark .theme-toggle-moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+@media (max-width: 560px) {
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle-icons svg {
+    transition: none;
+  }
+}

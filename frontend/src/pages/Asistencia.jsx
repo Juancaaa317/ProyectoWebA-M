@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { ROLES } from "../config/roles";
 import { asistenciaService, claseService, sesionService } from "../services/panelService";
+import { soloFecha } from "../utils/formatoFecha";
 import "../styles/login.css";
 import "../styles/adminProgramas.css";
 
@@ -101,7 +102,7 @@ function Asistencia() {
                         <div className="admin-tabla-wrapper"><table className="admin-tabla">
                             <thead><tr><th>Clase</th><th>Programa</th><th>Fecha</th><th>Horario</th><th>Estado</th><th>Observaciones</th></tr></thead>
                             <tbody>{asistenciasMias.map((item) => <tr key={item.idAsistencia}>
-                                <td>{item.nombreClase}</td><td>{item.nombrePrograma}</td><td>{item.fecha}</td>
+                                <td>{item.nombreClase}</td><td>{item.nombrePrograma}</td><td>{soloFecha(item.fecha)}</td>
                                 <td>{item.horaInicio}–{item.horaFin}</td><td>{item.estado}</td><td>{item.observaciones || "—"}</td>
                             </tr>)}</tbody>
                         </table></div>
@@ -120,7 +121,7 @@ function Asistencia() {
                             <select value={sesionId} onChange={(e) => setSesionId(e.target.value)} disabled={!claseId}>
                                 <option value="">Selecciona una sesión</option>
                                 {sesiones.map((sesion) => <option key={sesion.idSesion} value={sesion.idSesion}>
-                                    {sesion.fecha} · {sesion.horaInicio}–{sesion.horaFin} · {sesion.estadoSesion}
+                                    {soloFecha(sesion.fecha)} · {sesion.horaInicio}–{sesion.horaFin} · {sesion.estadoSesion}
                                 </option>)}
                             </select>
                         </label>

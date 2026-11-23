@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import PrivateRoute from "./components/PrivateRoute";
 import PanelLayout from "./components/PanelLayout";
 import { ROLES } from "./config/roles";
@@ -20,12 +21,14 @@ import AdminEstudiantes from "./pages/AdminEstudiantes";
 import Inscripciones from "./pages/Inscripciones";
 import Asistencia from "./pages/Asistencia";
 import HorarioPanel from "./pages/HorarioPanel";
+import PagosPanel from "./pages/PagosPanel";
 import SeccionPendiente from "./pages/SeccionPendiente";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
     return (
+        <ThemeProvider>
         <AuthProvider>
             <BrowserRouter>
                 <ScrollToTop />
@@ -107,6 +110,14 @@ function App() {
                                 </PrivateRoute>
                             }
                         />
+                        <Route
+                            path="pagos"
+                            element={
+                                <PrivateRoute roles={[ROLES.ADMIN, ROLES.ESTUDIANTE]}>
+                                    <PagosPanel />
+                                </PrivateRoute>
+                            }
+                        />
                         {/* Cualquier otra sección del menú del rol */}
                         <Route path=":seccion" element={<SeccionPendiente />} />
                     </Route>
@@ -115,6 +126,7 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
+        </ThemeProvider>
     );
 }
 

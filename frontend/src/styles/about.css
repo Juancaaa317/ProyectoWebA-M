@@ -4,7 +4,8 @@
   align-items: center;
   gap: 60px;
   padding: 100px 8%;
-  background: var(--bg-soft);
+  background: var(--navbar-bg);
+  border-top: 1px solid var(--border);
 }
 
 .nosotros-imagen img {
@@ -13,12 +14,28 @@
   max-height: 480px;
   object-fit: contain;
   border-radius: 20px;
-  box-shadow: 0 0 40px rgba(195, 75, 255, 0.35);
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--shadow) calc(40% * var(--shadow-k)), transparent);
+}
+
+/* Marco dorado desplazado detrás de la foto */
+.nosotros-imagen {
+  position: relative;
+  isolation: isolate;
+}
+
+.nosotros-imagen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(-16px, 16px);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 20px;
+  z-index: -1;
 }
 
 .section-label {
   display: inline-block;
-  color: #d38aff;
+  color: var(--accent-text);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -53,9 +70,9 @@
 
 .stat {
   padding: 20px;
-  border: 1px solid #302738;
+  border: 1px solid var(--border);
   border-radius: 14px;
-  background: var(--bg);
+  background: var(--surface);
 }
 
 .stat strong {

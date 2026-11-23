@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { ROLES } from "../config/roles";
-import { claseService, inscripcionService } from "../services/panelService";
+import { catalogoService, claseService, inscripcionService } from "../services/panelService";
+import { soloFecha } from "../utils/formatoFecha";
 import "../styles/login.css";
 import "../styles/adminProgramas.css";
 
@@ -29,13 +30,19 @@ function Inscripciones() {
         setLoading(true);
         setError("");
         try {
-            const [lista, disponibles] = await Promise.all([
+            const [lista, disponibles, programas] = await Promise.all([
                 esAdmin ? inscripcionService.listarTodas() : inscripcionService.listarMias(),
                 esAdmin ? Promise.resolve([]) : claseService.listar(),
+                esAdmin ? Promise.resolve([]) : catalogoService.programas(),
             ]);
+            // El servidor no admite inscripciones en programas inactivos: no se ofrecen en la lista
+            const programasActivos = new Set(
+                programas.filter((programa) => programa.estadoPrograma === "ACTIVO").map((programa) => programa.idPrograma)
+            );
             setInscripciones(lista);
             setClases(disponibles.filter((clase) =>
                 clase.estadoClase === "PROGRAMADA" &&
+                programasActivos.has(clase.idPrograma) &&
                 !lista.some((item) => item.idClase === clase.idClase && item.estadoInscripcion !== "CANCELADA")
             ));
         } catch (err) {
@@ -120,7 +127,7 @@ function Inscripciones() {
                                 <tr key={item.idInscripcion}>
                                     {esAdmin && <td>{item.nombreEstudiante}</td>}
                                     <td>{item.nombreClase}</td><td>{item.nombrePrograma}</td>
-                                    <td>{item.fechaInscripcion}</td>
+                                    <td>{soloFecha(item.fechaInscripcion)}</td>
                                     <td><span className={`admin-badge ${item.estadoInscripcion.toLowerCase()}`}>{item.estadoInscripcion}</span></td>
                                     {esAdmin && <td>
                                         <select aria-label={`Cambiar estado de inscripción ${item.idInscripcion}`} value={item.estadoInscripcion}

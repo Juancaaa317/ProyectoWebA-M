@@ -4,16 +4,20 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.apirest.backend.Enums.EstadoClase;
 import com.apirest.backend.dto.ClaseDTO;
 import com.apirest.backend.dto.ClaseRespuestaDTO;
+import com.apirest.backend.exception.RecursoDuplicadoException;
 import com.apirest.backend.exception.RecursoNoEncontradoException;
 import com.apirest.backend.model.Clase;
+import com.apirest.backend.model.Horario;
 import com.apirest.backend.model.Programa;
 import com.apirest.backend.model.Profesor;
 import com.apirest.backend.repository.IClaseRepository;
+import com.apirest.backend.repository.IHorarioRepository;
 import com.apirest.backend.repository.IProgramaRepository;
 import com.apirest.backend.repository.IProfesorRepository;
 
@@ -28,6 +32,9 @@ public class ClaseServiceImp implements IClaseService {
 
     @Autowired
     IProgramaRepository programaRepository;
+
+    @Autowired
+    IHorarioRepository horarioRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,12 +64,22 @@ public class ClaseServiceImp implements IClaseService {
         return convertirRespuesta(claseRepository.save(clase));
     }
 
+    // Orden de bloqueos (igual que en HorarioServiceImp): primero la CLASE y luego el PROFESOR nuevo.
+    // Así, crear un horario de esta clase y cambiarle el profesor se ejecutan uno tras otro, y siempre
+    // se valida contra el profesor definitivo (por eso READ_COMMITTED, para ver lo ya confirmado).
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ClaseRespuestaDTO actualizarClase(Integer idClase, ClaseDTO datos) {
         validarFechas(datos);
 
-        Clase clase = buscarClase(idClase);
+        Clase clase = claseRepository.findByIdForUpdate(idClase)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró una clase con el ID: " + idClase));
+
+        if (!clase.getIdProfesor().getIdProfesor().equals(datos.getIdProfesor())) {
+            validarHorariosConNuevoProfesor(clase, datos.getIdProfesor());
+        }
+
         aplicarDatos(clase, datos);
         if (datos.getEstadoClase() != null) {
             clase.setEstadoClase(datos.getEstadoClase());
@@ -81,6 +98,29 @@ public class ClaseServiceImp implements IClaseService {
         return claseRepository.findById(idClase)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No se encontró una clase con el ID: " + idClase));
+    }
+
+    // Al pasar la clase a otro profesor, ninguno de sus horarios puede solaparse con los que ese profesor ya tiene.
+    // Los horarios de esta clase aún pertenecen al profesor anterior, así que no cuentan como cruce contra sí mismos.
+    private void validarHorariosConNuevoProfesor(Clase clase, Integer idProfesorNuevo) {
+        profesorRepository.findByIdForUpdate(idProfesorNuevo)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró un profesor con el ID: " + idProfesorNuevo));
+
+        for (Horario horario : horarioRepository.findByIdClase_IdClase(clase.getIdClase())) {
+            boolean hayCruce = horarioRepository.existeCruce(
+                    idProfesorNuevo,
+                    horario.getDiaSemana(),
+                    horario.getHoraInicio(),
+                    horario.getHoraFin(),
+                    horario.getIdHorario());
+
+            if (hayCruce) {
+                throw new RecursoDuplicadoException(
+                        "El profesor ya tiene una clase programada el " + horario.getDiaSemana()
+                                + " de " + horario.getHoraInicio() + " a " + horario.getHoraFin() + ".");
+            }
+        }
     }
 
     private void aplicarDatos(Clase clase, ClaseDTO datos) {

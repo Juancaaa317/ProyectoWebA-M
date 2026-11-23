@@ -1,12 +1,87 @@
+/* ============================================================
+   TOKENS DE COLOR — Arte & Movimiento
+   Modo claro (por defecto) y modo oscuro ([data-theme="dark"])
+   ============================================================ */
 :root {
-  --bg: #121019;
-  --bg-soft: #1b1724;
-  --purple: #9133d2;
-  --magenta: #ff1f9c;
-  --accent: #c34bff;
-  --text: #ffffff;
-  --text-soft: #e0d6e6;
-  --gradient: linear-gradient(90deg, #7a2ff0, #ff1f6b);
+  color-scheme: light;
+
+  /* Modo claro armónico */
+  --bg: #f2efe9;          /* Marfil piedra */
+  --bg-soft: #e3ddd3;     /* Arena brumosa */
+  --navbar-bg: #e3ddd3;   /* Barra superior y secciones destacadas */
+  --surface: #f8f6f1;     /* Tarjetas */
+  --surface-2: #ebe6dd;   /* Superficies elevadas */
+  --border: #cfc9be;
+
+  --text-strong: #26292e; /* Pizarra escénica */
+  --text: #343840;
+  --text-soft: #343840;
+  --text-muted: #565c66;
+  --text-faint: #8c929b;  /* Gris niebla */
+
+  --accent: #b39659;      /* Oro marca */
+  --accent-2: #c48b96;    /* Rosa escena */
+  --accent-text: #85692f; /* Oro legible sobre fondo claro */
+  --on-accent: #1f2226;   /* Texto sobre botones dorados */
+  --jade: #8c929b;
+  --sage: #8c929b;
+  --rose: #c48b96;
+
+  --ok: #3f7f5c;
+  --danger: #b24a3c;
+
+  --overlay: #26292e;     /* Tinte para bordes/hover translúcidos */
+  --shadow: #3a3a40;
+  --shadow-k: 0.3;        /* Sombras más suaves en modo claro */
+}
+
+/* Valores derivados: se recalculan en cada ámbito de tema */
+:root,
+[data-theme="dark"],
+.force-dark {
+  --purple: var(--accent-2);
+  --magenta: var(--accent);
+  --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --gradient-soft: linear-gradient(135deg, var(--bg-soft), var(--surface));
+}
+
+/* Tono de barra y secciones: solo sigue el tema de la página (no .force-dark) */
+[data-theme="dark"] {
+  --navbar-bg: #0b0a09;
+}
+
+/* .force-dark: zonas que mantienen la paleta oscura en ambos modos */
+[data-theme="dark"],
+.force-dark {
+  color-scheme: dark;
+
+  /* Modo oscuro formal */
+  --bg: #0b0a09;          /* Obsidiana profunda */
+  --bg-soft: #171513;     /* Ébano cálido */
+  --surface: #131110;
+  --surface-2: #1c1916;
+  --border: #2d2924;      /* Grafito oscuro */
+
+  --text-strong: #faf7f1;
+  --text: #f0ede6;        /* Blanco alabastro */
+  --text-soft: #f0ede6;
+  --text-muted: #b5ad9f;
+  --text-faint: #867d6f;
+
+  --accent: #c5a869;      /* Oro champagne */
+  --accent-2: #8a795d;    /* Bronce satinado */
+  --accent-text: #d3b97d;
+  --on-accent: #14110e;
+  --jade: #4fb3a5;
+  --sage: #2d2924;
+  --rose: #8a795d;
+
+  --ok: #7ee2a8;
+  --danger: #ff8f84;
+
+  --overlay: #f0ede6;
+  --shadow: #000000;
+  --shadow-k: 1;
 }
 
 * {
@@ -21,9 +96,52 @@ html {
 }
 
 body {
+  position: relative;
   font-family: "Poppins", Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);
+}
+
+/* ============================================================
+   FONDO AMBIENTAL — luz difuminada y lenta detrás de todo el sitio
+   ============================================================ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 12% 8%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 92% 92%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 78% 22%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%);
+  animation: ambient-drift 40s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(2.5%, 3%, 0) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
+/* Transición elegante al cambiar de tema (solo mientras dura el cambio) */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.55s ease, color 0.55s ease,
+    border-color 0.55s ease, fill 0.55s ease, stroke 0.55s ease,
+    box-shadow 0.55s ease, opacity 0.4s ease !important;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-strong);
 }
 
 a {
@@ -57,7 +175,7 @@ img {
   gap: 12px;
   padding: 80px 24px;
   text-align: center;
-  color: white;
+  color: var(--text);
 }
 
 .notfound-code {
@@ -68,4 +186,56 @@ img {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ============================================================
+   ARCOS DORADOS — líneas finas y lentas, como en la paleta de marca
+   ============================================================ */
+.mv-bg::before,
+.mv-bg::after,
+.prof-bg::before,
+.prof-bg::after,
+.horario-bg::before,
+.horario-bg::after,
+.hist-bg::before {
+  content: "";
+  position: absolute;
+  width: min(1000px, 90vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  box-shadow:
+    inset 0 0 0 38px transparent,
+    0 0 90px color-mix(in srgb, var(--accent) 6%, transparent);
+  pointer-events: none;
+  animation: arc-turn 160s linear infinite;
+}
+
+.mv-bg::before,
+.prof-bg::before,
+.horario-bg::before,
+.hist-bg::before {
+  top: -48%;
+  right: -22%;
+}
+
+.mv-bg::after,
+.prof-bg::after,
+.horario-bg::after {
+  bottom: -55%;
+  left: -26%;
+  border-color: color-mix(in srgb, var(--accent-2) 24%, transparent);
+  animation-direction: reverse;
+  animation-duration: 220s;
+}
+
+@keyframes arc-turn {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-bg::before, .mv-bg::after,
+  .prof-bg::before, .prof-bg::after,
+  .horario-bg::before, .horario-bg::after,
+  .hist-bg::before { animation: none; }
 }

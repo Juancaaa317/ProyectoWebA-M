@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { ROLES } from "../config/roles";
 import { claseService, horarioService, catalogoService, sesionService, usuarioService } from "../services/panelService";
+import { soloFecha } from "../utils/formatoFecha";
 import "../styles/login.css";
 import "../styles/adminProgramas.css";
 
@@ -233,7 +234,7 @@ function AdminClases() {
                 {!fueraDelRangoDeClase && diaNoCoincide && <p className="panel-ayuda">La fecha debe ser {horarioDeSesion.diaSemana.toLowerCase()} para el horario seleccionado.</p>}
             </form>}
             {sesiones.length > 0 && <div className="admin-tabla-wrapper"><table className="admin-tabla"><thead><tr><th>Fecha</th><th>Clase</th><th>Horario</th><th>Estado</th></tr></thead><tbody>{sesiones.map((s) => <tr key={s.idSesion}>
-                <td>{s.fecha}</td><td>{s.nombreClase}</td><td>{s.horaInicio}–{s.horaFin}</td><td><select value={s.estadoSesion} onChange={(e) => cambiarEstadoSesion(s.idSesion, e.target.value)}>{estadosSesionPermitidos(s.estadoSesion).map((estado) => <option key={estado}>{estado}</option>)}</select></td>
+                <td>{soloFecha(s.fecha)}</td><td>{s.nombreClase}</td><td>{s.horaInicio}–{s.horaFin}</td><td><select value={s.estadoSesion} onChange={(e) => cambiarEstadoSesion(s.idSesion, e.target.value)}>{estadosSesionPermitidos(s.estadoSesion).map((estado) => <option key={estado}>{estado}</option>)}</select></td>
             </tr>)}</tbody></table></div>}
             {claseSeleccionada && sesiones.length === 0 && <p className="admin-vacio">No hay sesiones programadas.</p>}
         </section>}

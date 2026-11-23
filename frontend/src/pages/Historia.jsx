@@ -126,8 +126,8 @@ function Historia() {
             >
               <defs>
                 <linearGradient id="hist-grad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#8a2be2" />
-                  <stop offset="100%" stopColor="#ff1f9c" />
+                  <stop offset="0%" style={{ stopColor: "var(--accent-2)" }} />
+                  <stop offset="100%" style={{ stopColor: "var(--accent)" }} />
                 </linearGradient>
               </defs>
               <path
@@ -185,8 +185,8 @@ function Historia() {
             >
               <defs>
                 <linearGradient id="hist-grad-2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#8a2be2" />
-                  <stop offset="100%" stopColor="#ff1f9c" />
+                  <stop offset="0%" style={{ stopColor: "var(--accent-2)" }} />
+                  <stop offset="100%" style={{ stopColor: "var(--accent)" }} />
                 </linearGradient>
               </defs>
               <path
