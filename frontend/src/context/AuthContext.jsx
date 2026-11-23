@@ -64,9 +64,18 @@ export function AuthProvider({ children }) {
         return usuario;
     };
 
+    // Refleja en la sesión los datos que el usuario cambia en su perfil (el nombre se ve en el menú y el saludo)
+    const actualizarUsuario = useCallback((cambios) => {
+        setUser((actual) => {
+            const siguiente = { ...actual, ...cambios };
+            localStorage.setItem("usuario", JSON.stringify(siguiente));
+            return siguiente;
+        });
+    }, []);
+
     const value = useMemo(
-        () => ({ user, login: iniciarSesion, register, logout }),
-        [user, logout]
+        () => ({ user, login: iniciarSesion, register, logout, actualizarUsuario }),
+        [user, logout, actualizarUsuario]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

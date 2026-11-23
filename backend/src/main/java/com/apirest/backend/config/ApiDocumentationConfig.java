@@ -24,7 +24,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                 @Tag(name = "Horarios", description = "Horarios semanales de las clases."),
                 @Tag(name = "Sesiones", description = "Sesiones programadas para una clase."),
                 @Tag(name = "Inscripciones", description = "Solicitudes y estados de inscripción."),
-                @Tag(name = "Asistencias", description = "Consulta y registro de asistencia.")
+                @Tag(name = "Asistencias", description = "Consulta y registro de asistencia."),
+                @Tag(name = "Pagos", description = "Registro, consulta y revisión de pagos mensuales."),
+                @Tag(name = "Archivos", description = "Visualización y descarga protegida de comprobantes.")
         })
 @SecurityScheme(
         name = "bearerAuth",

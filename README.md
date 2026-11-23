@@ -39,3 +39,41 @@ Arquitectura y Tecnologias
 *Base de Datos:* MySQL, utilizada para almacenar la información de usuarios, clases, horarios, inscripciones, asistencia y comprobantes de pago.
 
 *Persistencia de Archivos:* Se utilizará MySQL para la persistencia de la información del sistema y almacenamiento local para los archivos asociados.
+
+## Ejecución local
+
+Requisitos: Java 21, MySQL 8 y Node.js con npm.
+
+1. Crea la base `academia_db` e importa el esquema de `BaseSQL/academia_db.sql`.
+2. Copia `backend/.env.example` a `backend/.env` y completa las credenciales MySQL y una clave JWT Base64 segura de al menos 32 bytes.
+3. En una terminal, desde `backend`, ejecuta `./mvnw spring-boot:run` (Windows: `./mvnw.cmd spring-boot:run`).
+4. Copia `frontend/.env.example` a `frontend/.env`; ajusta `VITE_API_URL` solo si el backend usa otra dirección.
+5. En otra terminal, desde `frontend`, ejecuta `npm install` y `npm run dev`.
+
+No subas los archivos `.env` reales ni credenciales al repositorio. Para ver y probar la API con autenticación abre [Swagger UI](http://localhost:8080/docs); la [guía completa](backend/API.md) incluye los roles, rutas y payloads. El módulo de pagos y archivos se describe en la sección «Pagos y archivos» de esa guía.
+
+### Datos de demostración
+
+El script `BaseSQL/academia_db.sql` ya incluye datos de ejemplo (usuarios, programas, clases, horarios, inscripciones, una sesión y una asistencia).
+
+- **Administrador de demostración:** `admin.prueba@ejemplo.com` con la contraseña `ClavePrueba123`. Solo para entornos locales; cámbiala desde `/panel/perfil` si el sistema se publica.
+- **Estudiante:** crea una cuenta en `/register`. Los campos de tarjeta de identidad y fecha de nacimiento son opcionales.
+- **Profesor:** lo registra el administrador en `/panel/profesores`.
+- **Otro administrador:** el registro público siempre crea estudiantes. Para promover una cuenta ejecuta en MySQL: `UPDATE usuario SET rol = 'ADMINISTRADOR' WHERE correo = 'tu@correo.com';`
+
+### Archivos subidos (comprobantes de pago)
+
+Los comprobantes se guardan con un nombre UUID en la carpeta definida por `STORAGE_PATH` (opcional en `backend/.env`); por defecto es `./uploads`, relativa a **la carpeta desde la que se arranca el backend**. Sus metadatos (nombre original, tipo, tamaño, autor, fecha y ruta) quedan en la tabla `archivo` de MySQL. Arranca siempre el backend desde la misma carpeta, o fija `STORAGE_PATH` con una ruta absoluta, para que los archivos ya subidos sigan encontrándose después de reiniciar. La carpeta se crea sola al subir el primer archivo y está excluida de Git.
+
+### Limitaciones conocidas
+
+- **Sin límite de intentos de inicio de sesión:** BCrypt frena la fuerza bruta pero no la impide. En producción conviene limitarlo en el proxy inverso o con un filtro de tasa.
+- **Sin revocación de tokens JWT:** un token sigue válido hasta vencer (60 minutos), aunque se cambie la contraseña o se cierre la sesión; el cierre de sesión solo borra el token del navegador.
+- **Almacenamiento local de archivos:** en servicios con disco efímero los comprobantes se pierden en cada despliegue; habría que migrar a un almacenamiento externo (S3, Supabase Storage o Cloudinary).
+- **La landing pública usa datos de ejemplo** para la oferta de clases, el horario y los profesores; el panel privado sí consume la API real.
+
+## Verificación antes de entregar
+
+- Backend, desde `backend`: `./mvnw test` (Windows: `./mvnw.cmd test`).
+- Frontend, desde `frontend`: `npm run lint` y `npm run build`.
+- Ejecuta además el recorrido integrado de administrador, estudiante y profesor descrito en la guía de verificación.

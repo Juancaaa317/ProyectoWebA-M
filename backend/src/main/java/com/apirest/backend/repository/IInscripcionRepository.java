@@ -27,9 +27,6 @@ public interface IInscripcionRepository extends JpaRepository<Inscripcion, Integ
     long countByIdClase_IdClaseAndEstadoInscripcionIn(
             Integer idClase, List<EstadoInscripcion> estados);
 
-    List<Inscripcion> findByIdClase_IdClaseAndEstadoInscripcion(
-            Integer idClase, EstadoInscripcion estado);
-
     @EntityGraph(attributePaths = { "idEstudiante" })
     List<Inscripcion> findByIdClase_IdClaseAndFechaInscripcionLessThanEqual(
             Integer idClase, Date fechaInscripcion);
