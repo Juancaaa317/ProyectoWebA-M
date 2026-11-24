@@ -83,6 +83,12 @@ public class SecurityConfig {
                             "/api/clases/mias"
                     ).hasRole("PROFESOR")
 
+                    // Equipo docente para la landing (sin datos de contacto; ver ProfesorPublicoDTO)
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/profesores"
+                    ).permitAll()
+
                     // Consultas de clases públicas
                     .requestMatchers(
                             HttpMethod.GET,

@@ -23,6 +23,7 @@ import com.apirest.backend.service.IClaseService;
 import com.apirest.backend.service.IHorarioService;
 import com.apirest.backend.service.IInscripcionService;
 import com.apirest.backend.service.IPagoService;
+import com.apirest.backend.service.IProfesorService;
 import com.apirest.backend.service.IProgramaService;
 import com.apirest.backend.service.ISesionClaseService;
 import com.apirest.backend.service.IUsuarioService;
@@ -48,6 +49,7 @@ public abstract class PruebaWebSegura {
     @MockitoBean protected IHorarioService horarioService;
     @MockitoBean protected IInscripcionService inscripcionService;
     @MockitoBean protected IPagoService pagoService;
+    @MockitoBean protected IProfesorService profesorService;
     @MockitoBean protected IProgramaService programaService;
     @MockitoBean protected ISesionClaseService sesionService;
     @MockitoBean protected IUsuarioService usuarioService;

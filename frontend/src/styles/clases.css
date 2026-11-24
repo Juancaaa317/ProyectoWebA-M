@@ -322,6 +322,74 @@
 .clases-card:hover .clases-card-link { gap: 14px; border-color: var(--accent); }
 .clases-card-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
 
+/* Profesores que dictan el programa */
+.clases-card .clases-card-profes {
+    flex: 0 0 auto;
+    margin: -10px 0 22px;
+    color: var(--text-muted, var(--text));
+    font-size: 0.88rem;
+    font-style: italic;
+}
+
+/* ================= Estados de carga, error y vacío ================= */
+.clases-card--cargando {
+    min-height: 330px;
+    overflow: hidden;
+}
+
+/* Brillo que recorre la tarjeta mientras llega la información */
+.clases-card--cargando::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--accent) 10%, transparent) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: clases-brillo 1.4s ease-in-out infinite;
+}
+
+@keyframes clases-brillo {
+    to { transform: translateX(100%); }
+}
+
+.clases-estado {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: min(100%, 640px);
+    margin: 0 auto;
+    padding: 26px 28px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    border-radius: 20px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.clases-estado p { margin: 0; }
+
+.clases-reintentar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--on-accent);
+    background: var(--gradient);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.clases-reintentar:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.clases-reintentar:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
 @media (max-width: 700px) {
     .clases { padding: 100px 16px 70px; min-height: 0; }
     .clases-subtitle { font-size: 10px; letter-spacing: 2.5px; }
@@ -335,7 +403,8 @@
 
 @media (prefers-reduced-motion: reduce) {
     .clases-light, .clases-floor, .clases-barre span::after, .clases-mirror,
-    .clases-count, .clases-subtitle, .clases-header h1, .clases-lead, .clases-card {
+    .clases-count, .clases-subtitle, .clases-header h1, .clases-lead, .clases-card,
+    .clases-card--cargando::after {
         animation: none !important;
     }
     .clases-count { opacity: 0.4; }

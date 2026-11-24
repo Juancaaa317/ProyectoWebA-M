@@ -1,38 +1,29 @@
 import { useRef } from "react";
+import { RotateCw } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCreative, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-creative";
+import useCarga from "../hooks/useCarga";
+import { ofertaService } from "../services/ofertaService";
 import "../styles/profesores.css";
 
 // Carrusel creativo adaptado de Carousel_004 / Skiper UI (versión gratuita).
 
-// EJEMPLO: reemplazar por los profesores reales de la academia
-const profesores = [
-  {
-    nombre: "Nombre del profesor 1",
-    area: "Ballet",
-  },
-  {
-    nombre: "Nombre del profesor 2",
-    area: "Danza acrobática",
-  },
-  {
-    nombre: "Nombre del profesor 3",
-    area: "Danza árabe",
-  },
-  {
-    nombre: "Nombre del profesor 4",
-    area: "Contemporánea",
-  },
-  {
-    nombre: "Nombre del profesor 5",
-    area: "Ritmos latinos",
-  },
-];
+const AREAS = { DOCENTE: "Docente", PROFESIONAL: "Profesional", ESPECIALIZADO: "Especializado" };
+
+// Lo que muestra la etiqueta de la tarjeta: las disciplinas que dicta o, si aún no tiene clases, su área
+const etiquetaDe = ({ disciplinas, areaDocencia }) =>
+  disciplinas.length > 0 ? disciplinas.join(" · ") : AREAS[areaDocencia] ?? "Equipo docente";
+
+const cargarProfesores = () => ofertaService.profesores();
 
 function Teachers() {
   const swiperRef = useRef(null);
+  const { datos: profesores, cargando, error, reintentar } = useCarga(cargarProfesores);
+  // El loop de Swiper necesita al menos 3 tarjetas; con menos, las flechas vuelven al inicio (rewind)
+  const enBucle = (profesores?.length ?? 0) >= 3;
+  const variosProfesores = (profesores?.length ?? 0) > 1;
 
   return (
     <section className="profesores">
@@ -82,17 +73,42 @@ function Teachers() {
         <span className="profesores-line" aria-hidden="true"></span>
       </div>
 
-      {/* ===== Carrusel ===== */}
+      {/* ===== Estados de carga, error y vacío ===== */}
+      {cargando && (
+        <p className="prof-estado" role="status" aria-busy="true">
+          <span className="prof-estado-punto" aria-hidden="true"></span>
+          Cargando el equipo…
+        </p>
+      )}
+
+      {error && (
+        <div className="prof-estado" role="alert">
+          <p>No pudimos cargar a los profesores. {error}</p>
+          <button type="button" className="prof-reintentar" onClick={reintentar}>
+            <RotateCw size={16} aria-hidden="true" /> Reintentar
+          </button>
+        </div>
+      )}
+
+      {profesores && profesores.length === 0 && (
+        <p className="prof-estado" role="status">
+          Muy pronto presentaremos a nuestro equipo docente.
+        </p>
+      )}
+
+      {/* ===== Carrusel (datos reales de la API) ===== */}
+      {profesores && profesores.length > 0 && <>
       <div className="prof-carrusel">
         <Swiper
           modules={[EffectCreative, Autoplay]}
           effect="creative"
           grabCursor
           centeredSlides
-          loop
+          loop={enBucle}
+          rewind={!enBucle}
           speed={750}
           slideToClickedSlide
-          autoplay={{ delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true }}
+          autoplay={variosProfesores && { delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true }}
           slidesPerView={1}
           creativeEffect={{
             limitProgress: 1,
@@ -115,7 +131,7 @@ function Teachers() {
           className="prof-swiper"
         >
           {profesores.map((prof, i) => (
-            <SwiperSlide key={prof.nombre}>
+            <SwiperSlide key={prof.idProfesor}>
               <article className="profesores-card">
                 {/* Número decorativo */}
                 <span className="profesores-num" aria-hidden="true">
@@ -132,13 +148,14 @@ function Teachers() {
 
                 {/* Información simple */}
                 <h2>{prof.nombre}</h2>
-                <span className="profesores-area">{prof.area}</span>
+                <span className="profesores-area">{etiquetaDe(prof)}</span>
               </article>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* Navegación personalizada */}
+        {/* Navegación personalizada (solo si hay a dónde moverse) */}
+        {variosProfesores && <>
         <button type="button" className="prof-nav prof-nav--prev" aria-label="Profesor anterior" onClick={() => swiperRef.current?.slidePrev()}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="m15 6-6 6 6 6" />
@@ -149,12 +166,14 @@ function Teachers() {
             <path d="m9 6 6 6-6 6" />
           </svg>
         </button>
+        </>}
       </div>
 
       {/* Indicador de arrastre */}
       <p className="prof-hint" aria-hidden="true">
         Desliza para conocer al equipo
       </p>
+      </>}
     </section>
   );
 }

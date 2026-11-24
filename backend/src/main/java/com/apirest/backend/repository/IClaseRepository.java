@@ -1,5 +1,6 @@
 package com.apirest.backend.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import jakarta.persistence.LockModeType;
 
+import com.apirest.backend.Enums.EstadoClase;
 import com.apirest.backend.model.Clase;
 
 public interface IClaseRepository extends JpaRepository<Clase, Integer> {
@@ -17,6 +19,10 @@ public interface IClaseRepository extends JpaRepository<Clase, Integer> {
     @Override
     @EntityGraph(attributePaths = { "idProfesor", "idPrograma" })
     List<Clase> findAll();
+
+    // Clases en ciertos estados, con profesor y programa en la misma consulta (vista pública de profesores)
+    @EntityGraph(attributePaths = { "idProfesor", "idPrograma" })
+    List<Clase> findByEstadoClaseIn(Collection<EstadoClase> estados);
 
     // Clases asignadas a un profesor (vista "Mis clases")
     @EntityGraph(attributePaths = { "idProfesor", "idPrograma" })

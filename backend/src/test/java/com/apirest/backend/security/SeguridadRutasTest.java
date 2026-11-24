@@ -81,6 +81,9 @@ class SeguridadRutasTest extends PruebaWebSegura {
                 ruta(HttpMethod.PUT, "/api/clases/1", Set.of(ADMIN)),
                 ruta(HttpMethod.DELETE, "/api/clases/1", Set.of(ADMIN)),
 
+                // Profesores (vista pública, sin datos de contacto)
+                ruta(HttpMethod.GET, "/api/profesores", PUBLICO),
+
                 // Horarios
                 ruta(HttpMethod.GET, "/api/horarios", PUBLICO),
                 ruta(HttpMethod.GET, "/api/horarios/clase/1", PUBLICO),
