@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import com.apirest.backend.dto.ClaseDTO;
 import com.apirest.backend.dto.ClaseRespuestaDTO;
@@ -42,6 +44,18 @@ public class ClaseController {
     @ApiResponse(responseCode = "200", description = "Lista de clases; puede estar vacía.")
     public ResponseEntity<List<ClaseRespuestaDTO>> listarClases() {
         return ResponseEntity.ok(claseService.listarClases());
+    }
+
+    @GetMapping("/mias")
+    @Operation(summary = "Listar mis clases", description = "Devuelve solo las clases asignadas al profesor autenticado, ordenadas por nombre. Requiere rol PROFESOR.", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Clases asignadas; puede estar vacía."),
+            @ApiResponse(responseCode = "401", description = "Token ausente o inválido."),
+            @ApiResponse(responseCode = "403", description = "Se requiere rol PROFESOR."),
+            @ApiResponse(responseCode = "404", description = "No se encontró el perfil de profesor.", content = @Content(schema = @Schema(implementation = ApiErrorDTO.class)))
+    })
+    public ResponseEntity<List<ClaseRespuestaDTO>> listarMisClases(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(claseService.listarMisClases(jwt.getSubject()));
     }
 
     @GetMapping("/{idClase}")

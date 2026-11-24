@@ -201,6 +201,12 @@ const RUTAS = [
 
     // Clases
     ["GET", /^\/clases$/, (d) => d.clases.map((c) => clase(d, c))],
+    ["GET", /^\/clases\/mias$/, (d, _p, _b, _q, u) => {
+        const prof = profesorDe(d, u);
+        return d.clases.filter((c) => c.idProfesor === prof?.idProfesor)
+            .sort((a, b) => a.nombre.localeCompare(b.nombre))
+            .map((c) => clase(d, c));
+    }],
     ["GET", /^\/clases\/(\d+)$/, (d, [id]) => {
         const c = d.clases.find((x) => x.idClase === +id);
         exigir(c, "No se encontró la clase.", 404);

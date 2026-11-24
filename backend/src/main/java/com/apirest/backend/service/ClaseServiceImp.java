@@ -46,6 +46,19 @@ public class ClaseServiceImp implements IClaseService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ClaseRespuestaDTO> listarMisClases(String correoProfesor) {
+        Profesor profesor = profesorRepository.findByIdUsuario_Correo(correoProfesor)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No se encontró el perfil de profesor asociado a la sesión."));
+
+        return claseRepository.findByIdProfesor_IdProfesorOrderByNombreAsc(profesor.getIdProfesor())
+                .stream()
+                .map(this::convertirRespuesta)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ClaseRespuestaDTO obtenerClasePorId(Integer idClase) {
         return convertirRespuesta(buscarClase(idClase));
     }

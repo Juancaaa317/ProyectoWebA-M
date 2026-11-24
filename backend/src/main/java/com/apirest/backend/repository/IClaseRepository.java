@@ -18,6 +18,10 @@ public interface IClaseRepository extends JpaRepository<Clase, Integer> {
     @EntityGraph(attributePaths = { "idProfesor", "idPrograma" })
     List<Clase> findAll();
 
+    // Clases asignadas a un profesor (vista "Mis clases")
+    @EntityGraph(attributePaths = { "idProfesor", "idPrograma" })
+    List<Clase> findByIdProfesor_IdProfesorOrderByNombreAsc(Integer idProfesor);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT c FROM Clase c WHERE c.idClase = :idClase")
     java.util.Optional<Clase> findByIdForUpdate(@Param("idClase") Integer idClase);

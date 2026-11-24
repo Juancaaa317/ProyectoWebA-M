@@ -44,6 +44,7 @@ Swagger no eleva permisos. El backend verifica el JWT y el rol en cada operació
 | `GET` | `/api/programas/estado/{estadoPrograma}` | Público; `ACTIVO` o `INACTIVO` |
 | `POST`, `PUT`, `DELETE` | `/api/programas`, `/api/programas/{idPrograma}` | Administrador |
 | `GET` | `/api/clases`, `/api/clases/{idClase}` | Público |
+| `GET` | `/api/clases/mias` (clases asignadas al profesor del token) | Profesor |
 | `POST`, `PUT`, `DELETE` | `/api/clases`, `/api/clases/{idClase}` | Administrador |
 | `GET` | `/api/horarios`, `/api/horarios/clase/{idClase}` | Público |
 | `POST`, `PUT`, `DELETE` | `/api/horarios`, `/api/horarios/{idHorario}` | Administrador |

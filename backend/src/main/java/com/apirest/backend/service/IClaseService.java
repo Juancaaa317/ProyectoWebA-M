@@ -8,6 +8,8 @@ import com.apirest.backend.dto.ClaseRespuestaDTO;
 public interface IClaseService {
 
     List<ClaseRespuestaDTO> listarClases();
+    List<ClaseRespuestaDTO> listarMisClases(String correoProfesor);
+
     ClaseRespuestaDTO obtenerClasePorId(Integer idClase);
     ClaseRespuestaDTO crearClase(ClaseDTO datos);
     ClaseRespuestaDTO actualizarClase(Integer idClase, ClaseDTO datos);
