@@ -2,7 +2,6 @@ package com.apirest.backend.service;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,20 +18,19 @@ import com.apirest.backend.model.Archivo;
 import com.apirest.backend.model.Usuario;
 import com.apirest.backend.repository.IArchivoRepository;
 import com.apirest.backend.repository.IUsuarioRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ArchivoServiceImp implements IArchivoService {
 
     private static final int LARGO_MAXIMO_NOMBRE = 255;
 
-    @Autowired
-    IArchivoRepository archivoRepository;
+    private final IArchivoRepository archivoRepository;
 
-    @Autowired
-    IUsuarioRepository usuarioRepository;
+    private final IUsuarioRepository usuarioRepository;
 
-    @Autowired
-    IAlmacenamientoService almacenamiento;
+    private final IAlmacenamientoService almacenamiento;
 
     @Override
     @Transactional

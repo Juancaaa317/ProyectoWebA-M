@@ -2,6 +2,8 @@ import { apiFetch } from "./api";
 
 export const claseService = {
     listar: () => apiFetch("/clases"),
+    // Solo las clases asignadas al profesor autenticado
+    listarMias: () => apiFetch("/clases/mias"),
     crear: (datos) => apiFetch("/clases", { method: "POST", body: JSON.stringify(datos) }),
     actualizar: (id, datos) => apiFetch(`/clases/${id}`, { method: "PUT", body: JSON.stringify(datos) }),
     eliminar: (id) => apiFetch(`/clases/${id}`, { method: "DELETE" }),

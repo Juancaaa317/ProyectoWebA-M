@@ -97,6 +97,9 @@ html {
 
 body {
   position: relative;
+  /* Red de seguridad: nada puede ensanchar la página en el móvil.
+     "clip" (y no "hidden") para no romper la barra sticky. */
+  overflow-x: clip;
   font-family: "Poppins", Arial, Helvetica, sans-serif;
   background: var(--bg);
   color: var(--text);

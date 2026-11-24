@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -28,14 +27,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.apirest.backend.dto.ApiErrorDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Asistencias")
+@RequiredArgsConstructor
 public class AsistenciaController {
 
-    @Autowired
-    IAsistenciaService asistenciaService;
+    private final IAsistenciaService asistenciaService;
 
     @GetMapping("/sesiones/{idSesion}/asistencias")
     @Operation(summary = "Consultar asistencia de una sesión", description = "Accesible para ADMINISTRADOR y el PROFESOR asignado a la clase.", security = @SecurityRequirement(name = "bearerAuth"))

@@ -27,8 +27,8 @@ function HorarioPanel() {
                     const propias = todasLasClases.filter((c) => idClases.has(c.idClase));
                     if (activa) { setClases(propias); setClaseId(propias.length === 1 ? String(propias[0].idClase) : ""); }
                 } else {
-                    const todas = await claseService.listar();
-                    if (activa) setClases(todas);
+                    const mias = await claseService.listarMias();
+                    if (activa) setClases(mias);
                 }
             } catch (err) { if (activa) setError(err.message); }
             finally { if (activa) setLoading(false); }

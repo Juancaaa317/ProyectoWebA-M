@@ -44,7 +44,7 @@ Arquitectura y Tecnologias
 
 Requisitos: Java 21, MySQL 8 y Node.js con npm.
 
-1. Crea la base `academia_db` e importa el esquema de `BaseSQL/academia_db.sql`.
+1. Importa `BaseSQL/academia_db.sql` (crea la base `academia_db`, sus tablas y los datos de demostración): `mysql -u root -p < BaseSQL/academia_db.sql`, o ábrelo y ejecútalo completo en MySQL Workbench. **Ojo:** borra y vuelve a crear las tablas; si ya tienes datos que quieras conservar, respáldalos antes con `mysqldump -u root -p academia_db > respaldo.sql`.
 2. Copia `backend/.env.example` a `backend/.env` y completa las credenciales MySQL y una clave JWT Base64 segura de al menos 32 bytes.
 3. En una terminal, desde `backend`, ejecuta `./mvnw spring-boot:run` (Windows: `./mvnw.cmd spring-boot:run`).
 4. Copia `frontend/.env.example` a `frontend/.env`; ajusta `VITE_API_URL` solo si el backend usa otra dirección.
@@ -54,11 +54,23 @@ No subas los archivos `.env` reales ni credenciales al repositorio. Para ver y p
 
 ### Datos de demostración
 
-El script `BaseSQL/academia_db.sql` ya incluye datos de ejemplo (usuarios, programas, clases, horarios, inscripciones, una sesión y una asistencia).
+El script `BaseSQL/academia_db.sql` incluye un escenario listo para recorrer los tres roles: 5 programas (uno inactivo), 4 clases con sus horarios, inscripciones activas y pendientes, sesiones ya dictadas con asistencia y una sesión próxima.
 
-- **Administrador de demostración:** `admin.prueba@ejemplo.com` con la contraseña `ClavePrueba123`. Solo para entornos locales; cámbiala desde `/panel/perfil` si el sistema se publica.
-- **Estudiante:** crea una cuenta en `/register`. Los campos de tarjeta de identidad y fecha de nacimiento son opcionales.
-- **Profesor:** lo registra el administrador en `/panel/profesores`.
+Todas las cuentas usan la contraseña `ClavePrueba123` (solo para entornos locales; cámbiala desde `/panel/perfil` si el sistema se publica):
+
+| Rol | Correo | Qué permite probar |
+|---|---|---|
+| Administrador | `admin.prueba@ejemplo.com` | Gestión de programas, clases, horarios, sesiones, usuarios, inscripciones y pagos |
+| Profesora | `profesor.prueba@ejemplo.com` | Laura Gómez: ve solo Ballet infantil y Danza árabe; toma asistencia de la sesión próxima |
+| Profesor | `profesor2.prueba@ejemplo.com` | Andrés Restrepo: ve solo Danza acrobática y Contemporánea |
+| Estudiante | `estudiante.prueba@ejemplo.com` | Sofía Martínez: inscripciones activas, horario e historial de asistencia |
+| Estudiante | `estudiante2.prueba@ejemplo.com` | Valentina Ríos: asistencias con ausencia y justificación |
+| Estudiante | `estudiante3.prueba@ejemplo.com` | Camila Torres: inscripciones pendientes de aprobar |
+
+No hay pagos de ejemplo, porque cada pago necesita un comprobante real en disco: entra como estudiante y sube uno desde «Mis pagos»; luego apruébalo o recházalo como administrador.
+
+- **Nuevo estudiante:** crea una cuenta en `/register`. Los campos de tarjeta de identidad y fecha de nacimiento son opcionales.
+- **Nuevo profesor:** lo registra el administrador en `/panel/profesores`.
 - **Otro administrador:** el registro público siempre crea estudiantes. Para promover una cuenta ejecuta en MySQL: `UPDATE usuario SET rol = 'ADMINISTRADOR' WHERE correo = 'tu@correo.com';`
 
 ### Archivos subidos (comprobantes de pago)

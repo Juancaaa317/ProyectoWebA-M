@@ -16,14 +16,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 
 @AllArgsConstructor 
 @NoArgsConstructor 
 @Entity 
-@Data 
+@Getter
+@Setter
 @Table (name = "horario")
 public class Horario {
     

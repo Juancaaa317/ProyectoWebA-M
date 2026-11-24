@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { ROLES } from "../config/roles";
 import { claseService, horarioService, catalogoService, sesionService, usuarioService } from "../services/panelService";
 import { soloFecha } from "../utils/formatoFecha";
+import SelectorFecha from "../components/SelectorFecha";
 import "../styles/login.css";
 import "../styles/adminProgramas.css";
 
@@ -59,7 +60,7 @@ function AdminClases() {
         setError("");
         try {
             const [listaClases, listaProgramas, listaProfesores] = await Promise.all([
-                claseService.listar(), catalogoService.programas(), esAdmin ? usuarioService.listarProfesores() : Promise.resolve([]),
+                esAdmin ? claseService.listar() : claseService.listarMias(), catalogoService.programas(), esAdmin ? usuarioService.listarProfesores() : Promise.resolve([]),
             ]);
             setClases(listaClases);
             setProgramas(listaProgramas);
@@ -185,10 +186,9 @@ function AdminClases() {
         <header className="admin-header"><div><p className="admin-subtitle">{esAdmin ? "PANEL DE ADMINISTRACIÓN" : "CLASES DE LA ACADEMIA"}</p><h1>{esAdmin ? "Clases y horarios" : "Mis clases"}</h1></div>
             {esAdmin && <button className="login-button" onClick={() => setClaseForm({ ...claseVacia })}>Nueva clase</button>}
         </header>
-        {!esAdmin && <p className="panel-ayuda">El servicio actual no ofrece un listado de clases asignadas al profesor. Aquí puedes consultar clases y horarios; la API valida que seas el profesor asignado antes de permitir registrar asistencia.</p>}
         {mensaje && <p className="admin-exito" role="status">{mensaje}</p>}
         {error && <p className="login-error" role="alert">{error}</p>}
-        {loading ? <div className="admin-estado">Cargando clases...</div> : clases.length === 0 ? <p className="admin-vacio">No hay clases registradas.</p> :
+        {loading ? <div className="admin-estado">Cargando clases...</div> : clases.length === 0 ? <p className="admin-vacio">{esAdmin ? "No hay clases registradas." : "Todavía no tienes clases asignadas."}</p> :
             <div className="admin-tabla-wrapper"><table className="admin-tabla"><thead><tr><th>Clase</th><th>Programa</th><th>Profesor</th><th>Cupo</th><th>Estado</th><th>Acciones</th></tr></thead>
                 <tbody>{clases.map((clase) => <tr key={clase.idClase}>
                     <td>{clase.nombre}</td><td>{clase.nombrePrograma}</td><td>{clase.nombreProfesor}</td><td>{clase.cupoMaximo}</td><td>{clase.estadoClase}</td>
@@ -228,7 +228,15 @@ function AdminClases() {
             </header>
             {claseSeleccionada && horarios.length > 0 && <form className="panel-form-inline" onSubmit={crearSesion}>
                 <label>Horario<select name="horarioId" required value={horarioSesionId} onChange={(e) => { setHorarioSesionId(e.target.value); setError(""); }}>{horarios.map((h) => <option key={h.idHorario} value={h.idHorario}>{h.diaSemana} · {String(h.horaInicio).slice(0, 5)}–{String(h.horaFin).slice(0, 5)}</option>)}</select></label>
-                <label>Fecha<input type="date" required min={fechaMinimaSesion || undefined} max={fechaMaximaSesion || undefined} value={sesionFecha} onChange={(e) => { setSesionFecha(e.target.value); setError(""); }} /></label>
+                <div className="panel-campo"><span id="sesion-fecha-label">Fecha</span>
+                    <SelectorFecha
+                        etiquetaId="sesion-fecha-label"
+                        value={sesionFecha}
+                        onChange={(fecha) => { setSesionFecha(fecha); setError(""); }}
+                        min={fechaMinimaSesion || undefined}
+                        max={fechaMaximaSesion || undefined}
+                        diaSemana={horarioDeSesion?.diaSemana}
+                    /></div>
                 <button className="login-button" disabled={saving || !sesionFecha || fueraDelRangoDeClase || diaNoCoincide}>{saving ? "Guardando..." : "Programar sesión"}</button>
                 {fueraDelRangoDeClase && <p className="panel-ayuda">La fecha debe estar dentro del periodo de la clase: {fechaMinimaSesion || "sin fecha inicial"} a {fechaMaximaSesion || "sin fecha final"}.</p>}
                 {!fueraDelRangoDeClase && diaNoCoincide && <p className="panel-ayuda">La fecha debe ser {horarioDeSesion.diaSemana.toLowerCase()} para el horario seleccionado.</p>}

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,27 +33,24 @@ import com.apirest.backend.exception.RecursoDuplicadoException;
 import com.apirest.backend.exception.RecursoNoEncontradoException;
 import com.apirest.backend.exception.CredencialesInvalidasException;
 import com.apirest.backend.security.JwtService;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioServiceImp implements IUsuarioService {
 
     // Límite del algoritmo BCrypt, en bytes
     private static final int MAX_BYTES_CONTRASENA = 72;
 
-    @Autowired
-    IUsuarioRepository usuarioRepository;
+    private final IUsuarioRepository usuarioRepository;
 
-    @Autowired
-    IEstudianteRepository estudianteRepository;
+    private final IEstudianteRepository estudianteRepository;
 
-    @Autowired
-    IProfesorRepository profesorRepository;
+    private final IProfesorRepository profesorRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    JwtService jwtService;
+    private final JwtService jwtService;
 
     // Registrar estudiante
     @Override
@@ -80,6 +76,8 @@ public class UsuarioServiceImp implements IUsuarioService {
             throw new IllegalArgumentException(
                     "Las contraseñas no coinciden.");
         }
+
+        validarLargoContrasena(registro.getContrasena());
 
         // Normalizar tarjeta de identidad
         String tarjetaIdentidad = registro.getTarjetaIdentidad();
@@ -184,6 +182,8 @@ public class UsuarioServiceImp implements IUsuarioService {
             throw new IllegalArgumentException(
                     "Las contraseñas no coinciden.");
         }
+
+        validarLargoContrasena(registro.getContrasena());
 
         Usuario usuario = new Usuario();
         usuario.setCorreo(correo);
@@ -290,12 +290,7 @@ public class UsuarioServiceImp implements IUsuarioService {
             throw new IllegalArgumentException("Las contraseñas no coinciden.");
         }
 
-        // BCrypt solo admite 72 BYTES (no caracteres): las tildes y la ñ ocupan 2. Sin esta comprobación el
-        // usuario recibiría el mensaje técnico en inglés del encoder.
-        if (datos.getContrasenaNueva().getBytes(StandardCharsets.UTF_8).length > MAX_BYTES_CONTRASENA) {
-            throw new IllegalArgumentException(
-                    "La contraseña no puede superar los 72 bytes (las tildes y la ñ cuentan como 2).");
-        }
+        validarLargoContrasena(datos.getContrasenaNueva());
 
         // Es un 400 y no un 401 a propósito: el frontend cierra la sesión ante un 401, y equivocarse
         // al escribir la contraseña actual no debe desconectar al usuario.
@@ -305,6 +300,15 @@ public class UsuarioServiceImp implements IUsuarioService {
 
         usuario.setContrasena(passwordEncoder.encode(datos.getContrasenaNueva()));
         usuarioRepository.save(usuario);
+    }
+
+    // BCrypt solo admite 72 BYTES (no caracteres): las tildes y la ñ ocupan 2. Sin esta comprobación el
+    // usuario recibiría el mensaje técnico en inglés del encoder ("password cannot be more than 72 bytes").
+    private void validarLargoContrasena(String contrasena) {
+        if (contrasena.getBytes(StandardCharsets.UTF_8).length > MAX_BYTES_CONTRASENA) {
+            throw new IllegalArgumentException(
+                    "La contraseña no puede superar los 72 bytes (las tildes y la ñ cuentan como 2).");
+        }
     }
 
     private Usuario buscarUsuario(String correo) {

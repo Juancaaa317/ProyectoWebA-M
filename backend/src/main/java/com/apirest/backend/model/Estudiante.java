@@ -16,13 +16,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 
 @Entity 
-@Data 
+@Getter
+@Setter
 @AllArgsConstructor 
 @NoArgsConstructor 
 @Table (name = "estudiante")
@@ -35,7 +36,6 @@ public class Estudiante {
     
     @OneToOne 
     @JoinColumn (name = "idUsuario", unique = true)
-    @ToString.Exclude
     protected Usuario idUsuario;
     
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +27,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.apirest.backend.dto.ApiErrorDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/sesiones")
 @Tag(name = "Sesiones")
+@RequiredArgsConstructor
 public class SesionClaseController {
 
-    @Autowired
-    ISesionClaseService sesionService;
+    private final ISesionClaseService sesionService;
 
     @GetMapping("/clase/{idClase}")
     @Operation(summary = "Listar sesiones de una clase", description = "Consulta las sesiones ordenadas por fecha y hora. Es público.")
