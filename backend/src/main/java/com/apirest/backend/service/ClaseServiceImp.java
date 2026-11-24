@@ -2,7 +2,6 @@ package com.apirest.backend.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,21 +19,19 @@ import com.apirest.backend.repository.IClaseRepository;
 import com.apirest.backend.repository.IHorarioRepository;
 import com.apirest.backend.repository.IProgramaRepository;
 import com.apirest.backend.repository.IProfesorRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ClaseServiceImp implements IClaseService {
 
-    @Autowired
-    IClaseRepository claseRepository;
+    private final IClaseRepository claseRepository;
 
-    @Autowired
-    IProfesorRepository profesorRepository;
+    private final IProfesorRepository profesorRepository;
 
-    @Autowired
-    IProgramaRepository programaRepository;
+    private final IProgramaRepository programaRepository;
 
-    @Autowired
-    IHorarioRepository horarioRepository;
+    private final IHorarioRepository horarioRepository;
 
     @Override
     @Transactional(readOnly = true)

@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +34,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/pagos")
 @Tag(name = "Pagos")
+@RequiredArgsConstructor
 public class PagoController {
 
-    @Autowired
-    IPagoService pagoService;
+    private final IPagoService pagoService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Registrar un pago mensual", description = "El estudiante (o su acudiente desde su cuenta) sube el comprobante y el monto. El pago nace en estado PENDIENTE. Campos multipart: monto, archivo (pdf, png o jpg, máx. 5 MB) y periodo opcional AAAA-MM (por defecto, el mes actual). Requiere rol ESTUDIANTE.", security = @SecurityRequirement(name = "bearerAuth"))

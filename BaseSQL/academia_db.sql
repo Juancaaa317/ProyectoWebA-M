@@ -1,30 +1,39 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
+-- ============================================================
+-- Academia Arte y Movimiento: estructura de la base y datos de demostración
+-- ============================================================
+-- Uso (MySQL 8):
+--   mysql -u root -p < BaseSQL/academia_db.sql
+-- o abrirlo en MySQL Workbench y ejecutarlo completo.
 --
--- Host: localhost    Database: academia_db
--- ------------------------------------------------------
--- Server version	8.0.44
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
-create database academia_db;
-use academia_db;
+-- ATENCIÓN: borra y vuelve a crear todas las tablas de `academia_db`.
+-- Si ya tienes datos que quieras conservar, haz antes un respaldo:
+--   mysqldump -u root -p academia_db > respaldo.sql
 --
--- Table structure for table `acudiente`
+-- Cuentas de demostración (todas con la contraseña ClavePrueba123):
+--   Administrador: admin.prueba@ejemplo.com
+--   Profesora:     profesor.prueba@ejemplo.com    (Laura Gómez: Ballet infantil y Danza árabe)
+--   Profesor:      profesor2.prueba@ejemplo.com   (Andrés Restrepo: Danza acrobática y Contemporánea)
+--   Estudiante:    estudiante.prueba@ejemplo.com  (Sofía Martínez: inscripciones y asistencia)
+--   Estudiante:    estudiante2.prueba@ejemplo.com (Valentina Ríos)
+--   Estudiante:    estudiante3.prueba@ejemplo.com (Camila Torres: inscripciones pendientes)
+-- Solo para entornos locales: cambia las contraseñas si publicas el sistema.
 --
+-- No incluye pagos: cada pago necesita un comprobante real en disco. Para probar
+-- ese flujo, entra como estudiante y sube uno desde "Mis pagos".
+-- ============================================================
+
+CREATE DATABASE IF NOT EXISTS `academia_db`
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `academia_db`;
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ------------------------------------------------------------
+-- Estructura
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `acudiente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `acudiente` (
   `idAcudiente` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(150) NOT NULL,
@@ -34,24 +43,8 @@ CREATE TABLE `acudiente` (
   PRIMARY KEY (`idAcudiente`),
   UNIQUE KEY `cedulaCiudadana` (`cedulaCiudadana`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `acudiente`
---
-
-LOCK TABLES `acudiente` WRITE;
-/*!40000 ALTER TABLE `acudiente` DISABLE KEYS */;
-/*!40000 ALTER TABLE `acudiente` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `archivo`
---
 
 DROP TABLE IF EXISTS `archivo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `archivo` (
   `idArchivo` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
@@ -65,24 +58,8 @@ CREATE TABLE `archivo` (
   KEY `fk_archivo_usuario` (`idUsuario`),
   CONSTRAINT `fk_archivo_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `archivo`
---
-
-LOCK TABLES `archivo` WRITE;
-/*!40000 ALTER TABLE `archivo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `archivo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `asistencia`
---
 
 DROP TABLE IF EXISTS `asistencia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `asistencia` (
   `idAsistencia` int NOT NULL AUTO_INCREMENT,
   `idInscripcion` int NOT NULL,
@@ -94,26 +71,9 @@ CREATE TABLE `asistencia` (
   KEY `fk_asistencia_sesion` (`idSesion`),
   CONSTRAINT `fk_asistencia_inscripcion` FOREIGN KEY (`idInscripcion`) REFERENCES `inscripcion` (`idInscripcion`),
   CONSTRAINT `fk_asistencia_sesion` FOREIGN KEY (`idSesion`) REFERENCES `sesion_clase` (`idSesion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `asistencia`
---
-
-LOCK TABLES `asistencia` WRITE;
-/*!40000 ALTER TABLE `asistencia` DISABLE KEYS */;
-INSERT INTO `asistencia` VALUES (1,1,2,'PRESENTE',NULL);
-/*!40000 ALTER TABLE `asistencia` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `clase`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `clase`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `clase` (
   `idClase` int NOT NULL AUTO_INCREMENT,
   `idProfesor` int NOT NULL,
@@ -128,26 +88,9 @@ CREATE TABLE `clase` (
   KEY `fk_clase_programa` (`idPrograma`),
   CONSTRAINT `fk_clase_profesor` FOREIGN KEY (`idProfesor`) REFERENCES `profesor` (`idProfesor`),
   CONSTRAINT `fk_clase_programa` FOREIGN KEY (`idPrograma`) REFERENCES `programa` (`idPrograma`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `clase`
---
-
-LOCK TABLES `clase` WRITE;
-/*!40000 ALTER TABLE `clase` DISABLE KEYS */;
-INSERT INTO `clase` VALUES (1,1,2,'2026-11-09','2027-01-31','Ballet principiantes',15,'PROGRAMADA'),(2,3,11,'2026-11-03','2026-11-05','Danza contemporanea principiantes',10,'PROGRAMADA');
-/*!40000 ALTER TABLE `clase` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `estudiante`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `estudiante`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estudiante` (
   `idEstudiante` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
@@ -158,26 +101,9 @@ CREATE TABLE `estudiante` (
   UNIQUE KEY `idUsuario` (`idUsuario`),
   UNIQUE KEY `tarjetaIdentidad` (`tarjetaIdentidad`),
   CONSTRAINT `fk_estudiante_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estudiante`
---
-
-LOCK TABLES `estudiante` WRITE;
-/*!40000 ALTER TABLE `estudiante` DISABLE KEYS */;
-INSERT INTO `estudiante` VALUES (1,1,'Estudiante Prueba','2005-06-15','1098765432'),(2,2,'Estudiante de Prueba','2005-06-15','1098765433'),(3,3,'Carlos Ramirez','2005-08-20','1098765434'),(4,4,'Carlos Ramirez','2005-08-20','10987654357'),(5,5,'Carlos Ramirez','2005-08-20','109876543579'),(6,6,'Carlos asd','2005-08-20','1098765432333'),(7,7,'Administrador Principal','1990-05-15','1000000001'),(8,8,'Estudiante de Prueba','2005-06-15','123456789'),(9,9,'Admin de Prueba','1990-05-15','10987654321'),(10,12,'Admin de dea','1990-05-15','10987654321444');
-/*!40000 ALTER TABLE `estudiante` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `estudiante_acudiente`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `estudiante_acudiente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estudiante_acudiente` (
   `idEstudiante` int NOT NULL,
   `idAcudiente` int NOT NULL,
@@ -188,24 +114,8 @@ CREATE TABLE `estudiante_acudiente` (
   CONSTRAINT `fk_estudiante_acudiente_acudiente` FOREIGN KEY (`idAcudiente`) REFERENCES `acudiente` (`idAcudiente`),
   CONSTRAINT `fk_estudiante_acudiente_estudiante` FOREIGN KEY (`idEstudiante`) REFERENCES `estudiante` (`idEstudiante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estudiante_acudiente`
---
-
-LOCK TABLES `estudiante_acudiente` WRITE;
-/*!40000 ALTER TABLE `estudiante_acudiente` DISABLE KEYS */;
-/*!40000 ALTER TABLE `estudiante_acudiente` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `horario`
---
 
 DROP TABLE IF EXISTS `horario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `horario` (
   `idHorario` int NOT NULL AUTO_INCREMENT,
   `idClase` int NOT NULL,
@@ -215,26 +125,9 @@ CREATE TABLE `horario` (
   PRIMARY KEY (`idHorario`),
   KEY `fk_horario_clase` (`idClase`),
   CONSTRAINT `fk_horario_clase` FOREIGN KEY (`idClase`) REFERENCES `clase` (`idClase`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `horario`
---
-
-LOCK TABLES `horario` WRITE;
-/*!40000 ALTER TABLE `horario` DISABLE KEYS */;
-INSERT INTO `horario` VALUES (1,1,'MARTES','12:52:00','14:52:00'),(2,1,'MIERCOLES','10:00:00','16:00:00'),(3,1,'VIERNES','02:13:00','14:15:00'),(4,2,'JUEVES','04:14:00','17:17:00');
-/*!40000 ALTER TABLE `horario` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `inscripcion`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `inscripcion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inscripcion` (
   `idInscripcion` int NOT NULL AUTO_INCREMENT,
   `idEstudiante` int NOT NULL,
@@ -246,26 +139,9 @@ CREATE TABLE `inscripcion` (
   KEY `fk_inscripcion_clase` (`idClase`),
   CONSTRAINT `fk_inscripcion_clase` FOREIGN KEY (`idClase`) REFERENCES `clase` (`idClase`),
   CONSTRAINT `fk_inscripcion_estudiante` FOREIGN KEY (`idEstudiante`) REFERENCES `estudiante` (`idEstudiante`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `inscripcion`
---
-
-LOCK TABLES `inscripcion` WRITE;
-/*!40000 ALTER TABLE `inscripcion` DISABLE KEYS */;
-INSERT INTO `inscripcion` VALUES (1,10,1,'2026-11-01','ACTIVA'),(2,10,2,'2026-11-02','CANCELADA');
-/*!40000 ALTER TABLE `inscripcion` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `pago`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `pago`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pago` (
   `idPago` int NOT NULL AUTO_INCREMENT,
   `idEstudiante` int NOT NULL,
@@ -282,24 +158,8 @@ CREATE TABLE `pago` (
   CONSTRAINT `fk_pago_archivo` FOREIGN KEY (`idArchivo`) REFERENCES `archivo` (`idArchivo`),
   CONSTRAINT `fk_pago_estudiante` FOREIGN KEY (`idEstudiante`) REFERENCES `estudiante` (`idEstudiante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pago`
---
-
-LOCK TABLES `pago` WRITE;
-/*!40000 ALTER TABLE `pago` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pago` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `profesor`
---
 
 DROP TABLE IF EXISTS `profesor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `profesor` (
   `idProfesor` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
@@ -314,26 +174,9 @@ CREATE TABLE `profesor` (
   UNIQUE KEY `idUsuario` (`idUsuario`),
   UNIQUE KEY `cedulaCiudadana` (`cedulaCiudadana`),
   CONSTRAINT `fk_profesor_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `profesor`
---
-
-LOCK TABLES `profesor` WRITE;
-/*!40000 ALTER TABLE `profesor` DISABLE KEYS */;
-INSERT INTO `profesor` VALUES (1,10,'Profesor de Prueba',NULL,NULL,NULL,NULL,'DOCENTE',NULL),(2,11,'María García',NULL,NULL,NULL,NULL,'PROFESIONAL',NULL),(3,17,'Profesor Demo',NULL,NULL,NULL,NULL,'DOCENTE',NULL);
-/*!40000 ALTER TABLE `profesor` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `programa`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `programa`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `programa` (
   `idPrograma` int NOT NULL AUTO_INCREMENT,
   `nombrePrograma` varchar(100) NOT NULL,
@@ -341,26 +184,9 @@ CREATE TABLE `programa` (
   `estadoPrograma` enum('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
   PRIMARY KEY (`idPrograma`),
   UNIQUE KEY `nombrePrograma` (`nombrePrograma`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `programa`
---
-
-LOCK TABLES `programa` WRITE;
-/*!40000 ALTER TABLE `programa` DISABLE KEYS */;
-INSERT INTO `programa` VALUES (2,'Bachata','Programa de formacion en bachata','INACTIVO'),(4,'Ballet actualizado','Descripción actualizada para la prueba','ACTIVO'),(7,'Programa de prueba','Creado para comprobar la validación','ACTIVO'),(11,'Danza contemporanea','','ACTIVO');
-/*!40000 ALTER TABLE `programa` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sesion_clase`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `sesion_clase`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sesion_clase` (
   `idSesion` int NOT NULL AUTO_INCREMENT,
   `idClase` int NOT NULL,
@@ -369,57 +195,98 @@ CREATE TABLE `sesion_clase` (
   `horaFin` time NOT NULL,
   `estado` enum('PROGRAMADA','REALIZADA','CANCELADA') NOT NULL,
   PRIMARY KEY (`idSesion`),
+  UNIQUE KEY `uq_sesion_clase_fecha_hora` (`idClase`,`fecha`,`horaInicio`),
   KEY `fk_sesion_clase_clase` (`idClase`),
   CONSTRAINT `fk_sesion_clase_clase` FOREIGN KEY (`idClase`) REFERENCES `clase` (`idClase`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sesion_clase`
---
-
-LOCK TABLES `sesion_clase` WRITE;
-/*!40000 ALTER TABLE `sesion_clase` DISABLE KEYS */;
-INSERT INTO `sesion_clase` VALUES (1,1,'2026-11-10','12:52:00','14:52:00','CANCELADA'),(2,1,'2026-11-11','10:00:00','16:00:00','REALIZADA');
-/*!40000 ALTER TABLE `sesion_clase` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `usuario`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `usuario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
   `idUsuario` int NOT NULL AUTO_INCREMENT,
   `correo` varchar(150) NOT NULL,
   `telefono` varchar(30) DEFAULT NULL,
   `contrasena` varchar(255) NOT NULL,
   `rol` enum('ADMINISTRADOR','PROFESOR','ESTUDIANTE') NOT NULL,
-  `nombre` varchar(30) DEFAULT NULL,
+  `nombre` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`idUsuario`),
   UNIQUE KEY `correo` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `usuario`
---
+-- ------------------------------------------------------------
+-- Datos de demostración
+-- ------------------------------------------------------------
 
-LOCK TABLES `usuario` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'prueba.estudiante@ejemplo.com',NULL,'$2a$10$N51R.H1Bm7pru57dmY4lP.ZAgPfBS2yDG30ZM4BfDYw5pDZt0xSzW','ESTUDIANTE','Estudiante Prueba'),(2,'estudiante2@ejemplo.com',NULL,'$2a$10$aN1qpLP8qFtLnDi/77wbYuPAapuD0ZmCDBdYw7HlZGPnPebfyfiim','ESTUDIANTE','Estudiante de Prueba'),(3,'carlos.ramirez2026@gmail.com',NULL,'$2a$10$1eHBUMhTQCH2AaHUZAyN2.0gLnhbsT4cAXcQx4hl1v22rTGjeSjT.','ESTUDIANTE','Carlos Ramirez'),(4,'carlos.a@gmail.com',NULL,'$2a$10$BWjnnILvOVUrq0V3XYoWp.E72KRWKEyQpNZ1uV4S0NoOKl/.eHmHC','ESTUDIANTE','Carlos Ramirez'),(5,'carlos.aaa@gmail.com',NULL,'$2a$10$0oKw80CHsLYQGFdu7trtLuihKDEEbTHwOKIIMVOwQT8qE7NNbf2Sy','ESTUDIANTE','Carlos Ramirez'),(6,'admin@arteymovimiento.com',NULL,'$2a$10$pQXjU64I1JeCKAjc4WomPun1pX0/8TOduSiXiOFzNOOy0rfNaLY/u','ADMINISTRADOR','Carlos asd'),(7,'admin@arteymovimientoa.com',NULL,'$2a$10$NRZQdTUgPBtmpbdV264IyOlsHkOWXt8dMJez34tSDS726cnNFW7Fe','ESTUDIANTE','Administrador Principal'),(8,'estudiante@ejemplo.com',NULL,'$2a$10$0oaiu4eWQgVzMhdk1bJOS.AFB/xYu4HKX5Je4jBlj47fkNuaskIZC','ESTUDIANTE','Estudiante de Prueba'),(9,'admin.prueba@ejemplo.com',NULL,'$2a$10$kM3NaWyKo9PfigClCgIX1u1Qo5njkVEH/jlk5sALjBM0TWIrQxfd2','ADMINISTRADOR','Admin de Prueba'),(10,'profesor.prueba@ejemplo.com',NULL,'$2a$10$ZBqAvAY6pdoHelWy8Gmp6u4dJqmM2guYFA48n.SwDbCYoBaH03icK','PROFESOR','Profesor de Prueba'),(11,'maria.garcia@ejemplo.com',NULL,'$2a$10$pPrbf2fZjW4LyvD8Z49MFe1aHpJL2DLTysnIVA.cjspqqRR.sVMfi','PROFESOR','María García'),(12,'estudiante444@ejemplo.com',NULL,'$2a$10$.i06T5qGnTi1.fvvgYRUYut6j4aKZzRBSyX9hzoyZXA4T3EMtHh.G','ESTUDIANTE','Admin de dea'),(15,'admin.pruebas@arteymovimiento.com','3000000000','$2a$10$MS.1ItX47VfnMf0ve1W/T.f.G73P.HamHbNFW5.KeRUu.gppSxm9u','ADMINISTRADOR','Admin de Pruebas'),(16,'admin.demo.am@ejemplo.com','33020301202','$2a$10$39sFoyluOXXpHqXXCKDTluTBQgDx4P7ixx.Fv2JykCTgbOBgSih5G','ADMINISTRADOR','ADMIN DEMO'),(17,'profesor.demo.am@ejemplo.com',NULL,'$2a$10$RJXBruzQBqkgTeJhS7sIOeIIcv8oJsTXEm1i3/eAlPZNRnmxBku1y','PROFESOR','Profesor Demo');
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+-- Usuarios (contrasena = BCrypt de "ClavePrueba123")
+INSERT INTO `usuario` (`idUsuario`, `correo`, `telefono`, `contrasena`, `rol`, `nombre`) VALUES
+  (1, 'admin.prueba@ejemplo.com',       '3000000001', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'ADMINISTRADOR', 'Administración A&M'),
+  (2, 'profesor.prueba@ejemplo.com',    '3000000002', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'PROFESOR',      'Laura Gómez'),
+  (3, 'profesor2.prueba@ejemplo.com',   '3000000003', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'PROFESOR',      'Andrés Restrepo'),
+  (4, 'estudiante.prueba@ejemplo.com',  '3000000004', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'ESTUDIANTE',    'Sofía Martínez'),
+  (5, 'estudiante2.prueba@ejemplo.com', '3000000005', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'ESTUDIANTE',    'Valentina Ríos'),
+  (6, 'estudiante3.prueba@ejemplo.com', '3000000006', '$2a$10$H6U2iPxaO3ktzNxNC2VLx.7ddMS6VwC84PCnsEs4gb7LqH6El3vNS', 'ESTUDIANTE',    'Camila Torres');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+INSERT INTO `profesor` (`idProfesor`, `idUsuario`, `nombre`, `direccionRes`, `fechaNacimiento`, `cedulaCiudadana`, `telefono`, `areaDocencia`, `observaciones`) VALUES
+  (1, 2, 'Laura Gómez',     NULL, NULL, NULL, '3000000002', 'PROFESIONAL',   NULL),
+  (2, 3, 'Andrés Restrepo', NULL, NULL, NULL, '3000000003', 'ESPECIALIZADO', NULL);
 
--- Dump completed on 2026-11-03 19:28:30
+INSERT INTO `estudiante` (`idEstudiante`, `idUsuario`, `nombre`, `fechaNacimiento`, `tarjetaIdentidad`) VALUES
+  (1, 4, 'Sofía Martínez', '2012-03-14', '1000000001'),
+  (2, 5, 'Valentina Ríos', '2010-08-02', '1000000002'),
+  (3, 6, 'Camila Torres',  '2008-11-20', NULL);
+
+INSERT INTO `acudiente` (`idAcudiente`, `nombre`, `direccionRes`, `telefono`, `cedulaCiudadana`) VALUES
+  (1, 'María Martínez', 'Cali, Valle del Cauca', '3000000011', '1000000011');
+
+INSERT INTO `estudiante_acudiente` (`idEstudiante`, `idAcudiente`, `parentesco`, `contactoPrincipal`) VALUES
+  (1, 1, 'Madre', 1);
+
+INSERT INTO `programa` (`idPrograma`, `nombrePrograma`, `descripcion`, `estadoPrograma`) VALUES
+  (1, 'Ballet',           'Técnica clásica, postura y elegancia para todas las edades.',           'ACTIVO'),
+  (2, 'Danza acrobática', 'Flexibilidad, fuerza y acrobacia combinadas con danza.',                'ACTIVO'),
+  (3, 'Danza árabe',      'Ritmo, expresión y movimiento fluido.',                                 'ACTIVO'),
+  (4, 'Contemporánea',    'Exploración del movimiento, improvisación y composición coreográfica.', 'ACTIVO'),
+  (5, 'Ritmos latinos',   'Salsa, bachata y merengue. Programa en pausa este periodo.',            'INACTIVO');
+
+-- Clases del periodo 2026-2027. Los horarios de cada profesor no se cruzan.
+INSERT INTO `clase` (`idClase`, `idProfesor`, `idPrograma`, `fechaInicio`, `fechaFinalizacion`, `nombre`, `cupoMaximo`, `estadoClase`) VALUES
+  (1, 1, 1, '2026-11-02', '2027-02-26', 'Ballet infantil',          15, 'EN_CURSO'),
+  (2, 2, 2, '2026-11-02', '2027-02-26', 'Danza acrobática juvenil', 12, 'EN_CURSO'),
+  (3, 1, 3, '2026-11-02', '2027-02-26', 'Danza árabe',              10, 'EN_CURSO'),
+  (4, 2, 4, '2027-01-11', '2027-04-30', 'Contemporánea adultos',    12, 'PROGRAMADA');
+
+INSERT INTO `horario` (`idHorario`, `idClase`, `diaSemana`, `horaInicio`, `horaFin`) VALUES
+  (1, 1, 'LUNES',     '16:00:00', '17:30:00'),
+  (2, 1, 'MIERCOLES', '16:00:00', '17:30:00'),
+  (3, 1, 'SABADO',    '09:00:00', '10:30:00'),
+  (4, 2, 'LUNES',     '17:30:00', '19:00:00'),
+  (5, 2, 'MIERCOLES', '17:30:00', '19:00:00'),
+  (6, 2, 'SABADO',    '11:00:00', '12:30:00'),
+  (7, 3, 'MARTES',    '16:00:00', '17:30:00'),
+  (8, 3, 'JUEVES',    '16:00:00', '17:30:00'),
+  (9, 4, 'VIERNES',   '18:00:00', '19:30:00');
+
+INSERT INTO `inscripcion` (`idInscripcion`, `idEstudiante`, `idClase`, `fechaInscripcion`, `estado`) VALUES
+  (1, 1, 1, '2026-10-28', 'ACTIVA'),
+  (2, 1, 3, '2026-10-28', 'ACTIVA'),
+  (3, 2, 1, '2026-10-29', 'ACTIVA'),
+  (4, 2, 2, '2026-10-29', 'ACTIVA'),
+  (5, 3, 2, '2026-11-20', 'PENDIENTE'),
+  (6, 3, 4, '2026-11-20', 'PENDIENTE');
+
+-- Sesiones ya dictadas (con asistencia) y una próxima. Cada fecha cae en un día de su horario.
+INSERT INTO `sesion_clase` (`idSesion`, `idClase`, `fecha`, `horaInicio`, `horaFin`, `estado`) VALUES
+  (1, 1, '2026-11-16', '16:00:00', '17:30:00', 'REALIZADA'),
+  (2, 1, '2026-11-18', '16:00:00', '17:30:00', 'REALIZADA'),
+  (3, 2, '2026-11-16', '17:30:00', '19:00:00', 'REALIZADA'),
+  (4, 3, '2026-11-17', '16:00:00', '17:30:00', 'REALIZADA'),
+  (5, 1, '2026-11-30', '16:00:00', '17:30:00', 'PROGRAMADA');
+
+INSERT INTO `asistencia` (`idAsistencia`, `idInscripcion`, `idSesion`, `estado`, `observacion`) VALUES
+  (1, 1, 1, 'PRESENTE',    NULL),
+  (2, 3, 1, 'AUSENTE',     NULL),
+  (3, 1, 2, 'PRESENTE',    NULL),
+  (4, 3, 2, 'JUSTIFICADO', 'Cita médica'),
+  (5, 4, 3, 'PRESENTE',    NULL),
+  (6, 2, 4, 'PRESENTE',    NULL);
+
+SET FOREIGN_KEY_CHECKS = 1;

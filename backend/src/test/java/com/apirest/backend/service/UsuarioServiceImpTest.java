@@ -26,6 +26,7 @@ import com.apirest.backend.dto.CambiarContrasenaDTO;
 import com.apirest.backend.dto.LoginDTO;
 import com.apirest.backend.dto.LoginRespuestaDTO;
 import com.apirest.backend.dto.RegistroEstudianteDTO;
+import com.apirest.backend.dto.RegistroProfesorDTO;
 import com.apirest.backend.exception.CredencialesInvalidasException;
 import com.apirest.backend.exception.RecursoDuplicadoException;
 import com.apirest.backend.model.Estudiante;
@@ -130,6 +131,34 @@ class UsuarioServiceImpTest {
 
         verify(usuarioRepository, never()).save(any());
         verify(estudianteRepository, never()).save(any());
+    }
+
+    @Test
+    void noRegistraUnEstudianteConContrasenaDeMasDe72Bytes() {
+        // 40 "ñ" = 80 bytes: pasa el @Size(max = 72) del DTO, pero BCrypt la rechazaría con un mensaje en inglés
+        String larga = "ñ".repeat(40);
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> servicio.registrarEstudiante(registro("ana@correo.com", larga, larga)));
+
+        assertEquals("La contraseña no puede superar los 72 bytes (las tildes y la ñ cuentan como 2).", error.getMessage());
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test
+    void noRegistraUnProfesorConContrasenaDeMasDe72Bytes() {
+        String larga = "ñ".repeat(40);
+        RegistroProfesorDTO dto = new RegistroProfesorDTO();
+        dto.setNombre("Laura Gómez");
+        dto.setCorreo("laura@correo.com");
+        dto.setContrasena(larga);
+        dto.setConfirmarContrasena(larga);
+
+        assertThrows(IllegalArgumentException.class, () -> servicio.registrarProfesor(dto));
+
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(usuarioRepository, never()).save(any());
     }
 
     @Test

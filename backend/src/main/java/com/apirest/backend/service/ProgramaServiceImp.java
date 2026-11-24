@@ -2,7 +2,6 @@ package com.apirest.backend.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apirest.backend.Enums.EstadoPrograma;
@@ -10,12 +9,13 @@ import com.apirest.backend.exception.RecursoDuplicadoException;
 import com.apirest.backend.exception.RecursoNoEncontradoException;
 import com.apirest.backend.model.Programa;
 import com.apirest.backend.repository.IProgramaRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProgramaServiceImp implements IProgramaService {
 
-    @Autowired
-    IProgramaRepository programaRepository;
+    private final IProgramaRepository programaRepository;
 
     // Listar todos los programas
     @Override

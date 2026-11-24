@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +19,10 @@ import com.apirest.backend.model.Estudiante;
 import com.apirest.backend.model.Pago;
 import com.apirest.backend.repository.IEstudianteRepository;
 import com.apirest.backend.repository.IPagoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PagoServiceImp implements IPagoService {
 
     private static final String CARPETA_COMPROBANTES = "comprobantes";
@@ -30,14 +31,11 @@ public class PagoServiceImp implements IPagoService {
     private static final List<EstadoPago> ESTADOS_VIGENTES =
             List.of(EstadoPago.PENDIENTE, EstadoPago.APROBADO);
 
-    @Autowired
-    IPagoRepository pagoRepository;
+    private final IPagoRepository pagoRepository;
 
-    @Autowired
-    IEstudianteRepository estudianteRepository;
+    private final IEstudianteRepository estudianteRepository;
 
-    @Autowired
-    IArchivoService archivoService;
+    private final IArchivoService archivoService;
 
     // Transaccional: si falla el guardado del pago, el archivo del disco se borra (lo hace ArchivoServiceImp).
     // Se bloquea la fila del estudiante: dos pagos simultáneos del mismo estudiante se ejecutan uno tras otro,

@@ -2,7 +2,6 @@ package com.apirest.backend.controller;
 
 import java.nio.charset.StandardCharsets;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +26,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/archivos")
 @Tag(name = "Archivos")
+@RequiredArgsConstructor
 public class ArchivoController {
 
-    @Autowired
-    IArchivoService archivoService;
+    private final IArchivoService archivoService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Ver o descargar un archivo", description = "Devuelve el contenido del archivo. Por defecto se muestra en el navegador; con descargar=true se fuerza la descarga. Solo su dueño o un ADMINISTRADOR.", security = @SecurityRequirement(name = "bearerAuth"))

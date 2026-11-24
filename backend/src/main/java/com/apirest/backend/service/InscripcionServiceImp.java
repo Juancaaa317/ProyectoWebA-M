@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,21 +21,20 @@ import com.apirest.backend.model.Inscripcion;
 import com.apirest.backend.repository.IClaseRepository;
 import com.apirest.backend.repository.IEstudianteRepository;
 import com.apirest.backend.repository.IInscripcionRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class InscripcionServiceImp implements IInscripcionService {
 
     private static final List<EstadoInscripcion> ESTADOS_QUE_RESERVAN_CUPO =
             List.of(EstadoInscripcion.PENDIENTE, EstadoInscripcion.ACTIVA);
 
-    @Autowired
-    IInscripcionRepository inscripcionRepository;
+    private final IInscripcionRepository inscripcionRepository;
 
-    @Autowired
-    IEstudianteRepository estudianteRepository;
+    private final IEstudianteRepository estudianteRepository;
 
-    @Autowired
-    IClaseRepository claseRepository;
+    private final IClaseRepository claseRepository;
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)

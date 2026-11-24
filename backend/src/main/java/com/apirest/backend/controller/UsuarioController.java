@@ -3,7 +3,6 @@ package com.apirest.backend.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,14 +32,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.apirest.backend.dto.ApiErrorDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @Tag(name = "Usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    IUsuarioService usuarioService;
+    private final IUsuarioService usuarioService;
 
     @GetMapping("/me")
     @Operation(summary = "Ver mi perfil", description = "Devuelve los datos del usuario autenticado, más los propios de su rol (estudiante: tarjeta de identidad y fecha de nacimiento; profesor: área de docencia). Cualquier rol autenticado.", security = @SecurityRequirement(name = "bearerAuth"))

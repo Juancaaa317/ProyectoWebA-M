@@ -1,6 +1,5 @@
 package com.apirest.backend.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -21,11 +20,15 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class SeguridadErrorHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
 
-    @Autowired
-    @Qualifier("handlerExceptionResolver")
-    HandlerExceptionResolver resolver;
+    private final HandlerExceptionResolver resolver;
 
     private final BearerTokenAuthenticationEntryPoint bearer = new BearerTokenAuthenticationEntryPoint();
+
+    // Constructor escrito a mano: Lombok no copia @Qualifier al parámetro, y Spring tiene
+    // varios HandlerExceptionResolver; se necesita el que delega en los @ExceptionHandler
+    public SeguridadErrorHandler(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) {
