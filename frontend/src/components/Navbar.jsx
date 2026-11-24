@@ -215,10 +215,10 @@ function Navbar() {
         {/* Solo se muestran si NO hay sesión */}
         {!user && (
           <>
-            <Link to="/login" className="nav-login">
+            <Link to="/login" className="nav-login nav-auth-bar">
               Ingresar
             </Link>
-            <Link to="/register" className="nav-register">
+            <Link to="/register" className="nav-register nav-auth-bar">
               Inscríbete
             </Link>
           </>
@@ -279,6 +279,18 @@ function Navbar() {
                 </NavLink>
               ))}
             </div>
+
+            {/* En pantallas pequeñas, Ingresar / Inscríbete viven dentro del menú */}
+            {!user && (
+              <div className="menu-auth">
+                <Link to="/login" className="nav-login" onClick={closeAll}>
+                  Ingresar
+                </Link>
+                <Link to="/register" className="nav-register" onClick={closeAll}>
+                  Inscríbete
+                </Link>
+              </div>
+            )}
 
             {/* Pie decorativo del menú */}
             <div className="menu-dropdown-footer" aria-hidden="true">

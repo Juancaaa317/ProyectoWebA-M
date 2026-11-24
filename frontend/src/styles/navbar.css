@@ -293,7 +293,9 @@
   padding: 14px;
   display: flex;
   flex-direction: column;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  /* Casi opaco: dentro de la barra ya desenfocada, el blur propio no se aplica
+     y con más transparencia el texto de la página se cuela detrás */
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
@@ -588,10 +590,18 @@
   color: var(--accent, var(--accent));
 }
 
+/* Ingresar / Inscríbete dentro del menú: solo en pantallas pequeñas */
+.menu-auth {
+  display: none;
+}
+
 /* ============================================================
    RESPONSIVE
+   Los cortes están calculados para que la barra NUNCA sea más
+   ancha que la pantalla. Si se desborda, el móvil amplía la
+   página: la barra deja de quedarse fija y el menú queda fuera.
    ============================================================ */
-@media (max-width: 1200px) {
+@media (max-width: 1320px) {
   .navbar-logo-text {
     font-size: 24px;
   }
@@ -600,12 +610,6 @@
     font-size: 21px;
   }
 
-  .nav-home {
-    padding: 13px 18px;
-  }
-}
-
-@media (max-width: 1000px) {
   /* Inicio y Menú quedan solo con icono */
   .nav-home {
     width: 52px;
@@ -626,13 +630,49 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1060px) {
   .navbar {
     --logo-size: 62px;
   }
 
   .navbar-logo-text {
     display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  /* Los botones de acceso pasan al menú desplegable */
+  .nav-auth-bar {
+    display: none;
+  }
+
+  .menu-auth {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 14px 4px 2px;
+    border-top: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+
+  .menu-auth a {
+    padding: 12px 10px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  /* El menú se ancla a la barra completa y ocupa el ancho de la pantalla */
+  .menu-wrapper {
+    position: static;
+  }
+
+  .menu-dropdown {
+    left: 12px;
+    right: 12px;
+    top: calc(100% + 8px);
+    min-width: 0;
+    transform-origin: top center;
+    background: var(--surface);
   }
 }
 
@@ -686,11 +726,6 @@
   .menu-btn {
     width: 44px;
     height: 44px;
-  }
-
-  .menu-dropdown {
-    min-width: 260px;
-    right: -8px;
   }
 
   .user-btn {
