@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,14 +29,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.apirest.backend.dto.ApiErrorDTO;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/inscripciones")
 @Tag(name = "Inscripciones")
+@RequiredArgsConstructor
 public class InscripcionController {
 
-    @Autowired
-    IInscripcionService inscripcionService;
+    private final IInscripcionService inscripcionService;
 
     @PostMapping
     @Operation(summary = "Solicitar inscripción", description = "El estudiante autenticado solicita cupo en una clase; comienza en estado PENDIENTE. Requiere rol ESTUDIANTE.", security = @SecurityRequirement(name = "bearerAuth"))

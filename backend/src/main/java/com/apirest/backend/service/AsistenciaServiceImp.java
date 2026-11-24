@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,24 +24,21 @@ import com.apirest.backend.repository.IEstudianteRepository;
 import com.apirest.backend.repository.IInscripcionRepository;
 import com.apirest.backend.repository.IProfesorRepository;
 import com.apirest.backend.repository.ISesionClaseRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AsistenciaServiceImp implements IAsistenciaService {
 
-    @Autowired
-    IAsistenciaRepository asistenciaRepository;
+    private final IAsistenciaRepository asistenciaRepository;
 
-    @Autowired
-    IInscripcionRepository inscripcionRepository;
+    private final IInscripcionRepository inscripcionRepository;
 
-    @Autowired
-    ISesionClaseRepository sesionRepository;
+    private final ISesionClaseRepository sesionRepository;
 
-    @Autowired
-    IProfesorRepository profesorRepository;
+    private final IProfesorRepository profesorRepository;
 
-    @Autowired
-    IEstudianteRepository estudianteRepository;
+    private final IEstudianteRepository estudianteRepository;
 
     @Override
     @Transactional(readOnly = true)

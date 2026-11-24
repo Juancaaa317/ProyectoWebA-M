@@ -60,7 +60,7 @@ function AdminClases() {
         setError("");
         try {
             const [listaClases, listaProgramas, listaProfesores] = await Promise.all([
-                claseService.listar(), catalogoService.programas(), esAdmin ? usuarioService.listarProfesores() : Promise.resolve([]),
+                esAdmin ? claseService.listar() : claseService.listarMias(), catalogoService.programas(), esAdmin ? usuarioService.listarProfesores() : Promise.resolve([]),
             ]);
             setClases(listaClases);
             setProgramas(listaProgramas);
@@ -186,10 +186,9 @@ function AdminClases() {
         <header className="admin-header"><div><p className="admin-subtitle">{esAdmin ? "PANEL DE ADMINISTRACIÓN" : "CLASES DE LA ACADEMIA"}</p><h1>{esAdmin ? "Clases y horarios" : "Mis clases"}</h1></div>
             {esAdmin && <button className="login-button" onClick={() => setClaseForm({ ...claseVacia })}>Nueva clase</button>}
         </header>
-        {!esAdmin && <p className="panel-ayuda">El servicio actual no ofrece un listado de clases asignadas al profesor. Aquí puedes consultar clases y horarios; la API valida que seas el profesor asignado antes de permitir registrar asistencia.</p>}
         {mensaje && <p className="admin-exito" role="status">{mensaje}</p>}
         {error && <p className="login-error" role="alert">{error}</p>}
-        {loading ? <div className="admin-estado">Cargando clases...</div> : clases.length === 0 ? <p className="admin-vacio">No hay clases registradas.</p> :
+        {loading ? <div className="admin-estado">Cargando clases...</div> : clases.length === 0 ? <p className="admin-vacio">{esAdmin ? "No hay clases registradas." : "Todavía no tienes clases asignadas."}</p> :
             <div className="admin-tabla-wrapper"><table className="admin-tabla"><thead><tr><th>Clase</th><th>Programa</th><th>Profesor</th><th>Cupo</th><th>Estado</th><th>Acciones</th></tr></thead>
                 <tbody>{clases.map((clase) => <tr key={clase.idClase}>
                     <td>{clase.nombre}</td><td>{clase.nombrePrograma}</td><td>{clase.nombreProfesor}</td><td>{clase.cupoMaximo}</td><td>{clase.estadoClase}</td>

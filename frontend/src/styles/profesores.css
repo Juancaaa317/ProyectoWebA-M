@@ -382,6 +382,60 @@
     text-transform: uppercase;
 }
 
+/* ================= Estados de carga, error y vacío ================= */
+.prof-estado {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: min(100%, 640px);
+    margin: 0 auto;
+    padding: 26px 28px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-radius: 22px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.prof-estado p { margin: 0; }
+
+.prof-estado-punto {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: prof-latido 1s ease-in-out infinite alternate;
+}
+
+@keyframes prof-latido {
+    from { opacity: 0.35; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.15); }
+}
+
+.prof-reintentar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--on-accent);
+    background: var(--gradient);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.prof-reintentar:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.prof-reintentar:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
 @media (max-width: 700px) {
     .profesores { min-height: 700px; padding: 100px 18px 64px; }
     .profesores-header { margin-bottom: 34px; }
@@ -411,7 +465,7 @@
 @media (prefers-reduced-motion: reduce) {
     .prof-beam, .prof-orb, .prof-dust, .profesores-avatar-ring,
     .profesores-subtitle, .profesores-header h1, .profesores-lead,
-    .prof-carrusel {
+    .prof-carrusel, .prof-estado-punto {
         animation: none !important;
     }
     .profesores-subtitle, .profesores-header h1, .profesores-lead, .prof-carrusel {

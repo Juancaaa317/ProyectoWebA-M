@@ -10,14 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 /**
  * Metadatos de un archivo subido. El contenido vive en el sistema de archivos
  * (o en Supabase más adelante); aquí solo se guarda su descripción.
  */
-@Data @Entity @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @Entity @AllArgsConstructor @NoArgsConstructor
 @Table(name = "archivo")
 public class Archivo {
 

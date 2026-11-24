@@ -31,14 +31,14 @@ function Asistencia() {
             if (esEstudiante) {
                 setAsistenciasMias(await asistenciaService.listarMias());
             } else {
-                setClases(await claseService.listar());
+                setClases(await (puedeMarcar ? claseService.listarMias() : claseService.listar()));
             }
         } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);
         }
-    }, [esEstudiante]);
+    }, [esEstudiante, puedeMarcar]);
 
     useEffect(() => { Promise.resolve().then(cargarInicial); }, [cargarInicial]);
 
@@ -145,7 +145,7 @@ function Asistencia() {
                             </tr>;
                         })}</tbody>
                     </table></div>}
-                    {puedeMarcar && <p className="panel-ayuda">La API solo permite al profesor asignado registrar asistencia. Si eliges otra clase, el servidor rechazará la operación.</p>}
+
                 </>
             )}
         </main>

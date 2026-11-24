@@ -77,6 +77,18 @@ public class SecurityConfig {
                             "/api/programas/**"
                     ).permitAll()
 
+                    // Clases asignadas al profesor autenticado (antes de la regla pública de /api/clases/**)
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/clases/mias"
+                    ).hasRole("PROFESOR")
+
+                    // Equipo docente para la landing (sin datos de contacto; ver ProfesorPublicoDTO)
+                    .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/profesores"
+                    ).permitAll()
+
                     // Consultas de clases públicas
                     .requestMatchers(
                             HttpMethod.GET,

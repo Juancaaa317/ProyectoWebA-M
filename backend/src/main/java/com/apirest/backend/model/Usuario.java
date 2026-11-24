@@ -11,14 +11,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 
 @Table(name = "usuario")
 public class Usuario {
@@ -35,7 +36,6 @@ public class Usuario {
     @Column(length = 30)
     protected String telefono;
 
-    @ToString.Exclude
     protected String contrasena;
     
     @Enumerated(EnumType.STRING)

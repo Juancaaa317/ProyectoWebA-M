@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +22,10 @@ import com.apirest.backend.model.SesionClase;
 import com.apirest.backend.repository.IClaseRepository;
 import com.apirest.backend.repository.IHorarioRepository;
 import com.apirest.backend.repository.ISesionClaseRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class SesionClaseServiceImp implements ISesionClaseService {
 
     private static final String MENSAJE_SESION_DUPLICADA = "Ya existe una sesión para esa clase, fecha y hora.";
@@ -32,14 +33,11 @@ public class SesionClaseServiceImp implements ISesionClaseService {
     // Nombre de la restricción UNIQUE (idClase, fecha, horaInicio) de la tabla sesion_clase
     private static final String RESTRICCION_SESION_UNICA = "uq_sesion_clase_fecha_hora";
 
-    @Autowired
-    ISesionClaseRepository sesionRepository;
+    private final ISesionClaseRepository sesionRepository;
 
-    @Autowired
-    IHorarioRepository horarioRepository;
+    private final IHorarioRepository horarioRepository;
 
-    @Autowired
-    IClaseRepository claseRepository;
+    private final IClaseRepository claseRepository;
 
     @Override
     @Transactional(readOnly = true)
